@@ -13,7 +13,7 @@ GameObject:
   m_Layer: 0
   m_Name: PlayerSpawnPoint
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -44,3 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc00d1c339547ba42a41b2f50afa1ff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 0.5
+  color: {r: 0, g: 0, b: 1, a: 1}

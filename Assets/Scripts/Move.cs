@@ -51,7 +51,11 @@ public class Move : MonoBehaviour
         var sp = building.PlayerSpawnPoints[spIndex].transform;
         
         player.transform.SetPositionAndRotation(sp.position, sp.rotation);
-        player.transform.parent = building.transform;
+        //player.transform.parent = building.transform;
+
+        player.Building = building;
+
+        player.OnRespawned();
 
     }
 
@@ -64,5 +68,8 @@ public class Move : MonoBehaviour
     private void LateUpdate()
     {
         PositionCamera(player, building);
+
+        if (player.transform.position.y < -10.0f)
+            PositionPlayer(player, building);
     }
 }
