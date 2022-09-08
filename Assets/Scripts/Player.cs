@@ -67,26 +67,27 @@ public class Player : MonoBehaviour
     public void ReadPathSegment()
     {
         pathPoints = pathPoints.Select(x => {
-            x.y = transform.position.y; return x;
+            x.y = 0; return x;
         }).ToArray();
-        
-        var ordered = pathPoints.OrderBy(x => Vector3.Distance(x, transform.position)).ToArray();
+
+        var plane = transform.position - Vector3.up * transform.position.y;
+        var ordered = pathPoints.OrderBy(x => Vector3.Distance(x, plane)).ToArray();
         
         var closest = ordered.Take(2).ToArray();
         this.closest1 = closest[0];
         this.closest2 = closest[1];
         
-        if (Vector3.Distance(closest[0], transform.position) < treshold)
+        if (Vector3.Distance(closest[0], plane) < treshold)
             SwitchSideTo(closest[0], ordered[2]);
     }
 
     private void ReadLocalAxis()
     {
-        var buildingFloorCenter = new Vector3(
-            building.transform.position.x, transform.position.y, building.transform.position.z);
-        var toCenter = (buildingFloorCenter - transform.position).normalized;
-        var toClosest1 = (closest1 - transform.position).normalized;
-        var toClosest2 = (closest2 - transform.position).normalized;
+        var plane = transform.position - Vector3.up * transform.position.y;
+        var buildingFloorCenter = Vector3.zero;
+        var toCenter = (buildingFloorCenter - plane).normalized;
+        var toClosest1 = (closest1 - plane).normalized;
+        var toClosest2 = (closest2 - plane).normalized;
 
         localRight = (Vector3.SignedAngle(toCenter, toClosest1, transform.up) > 0) ? toClosest1 : toClosest2;
         var r90 = Quaternion.AngleAxis(-90.0f, Vector3.up);
@@ -123,9 +124,9 @@ public class Player : MonoBehaviour
         Gizmos.DrawRay(transform.position, localRight * 10.0f);
 
         Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(closest1, .1f);
+        Gizmos.DrawSphere(closest1 + Vector3.up * transform.position.y, .1f);
         Gizmos.color = Color.magenta;
-        Gizmos.DrawSphere(closest2, .1f);
+        Gizmos.DrawSphere(closest2 + Vector3.up * transform.position.y, .1f);
 
         Gizmos.color = old;
 
@@ -134,19 +135,21 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if ((Vector3.Distance(closest1, transform.position) < treshold ||
-            Vector3.Distance(closest2, transform.position) < treshold) &&
+        var plane = transform.position - Vector3.up * transform.position.y;
+
+        if ((Vector3.Distance(closest1, plane) < treshold ||
+            Vector3.Distance(closest2, plane) < treshold) &&
             targetPosition == default)
             ReadPathSegment();
 
         if (targetPosition != default)
         {
-            if (Vector3.Distance(targetPosition, transform.position) > 0.05f)
+            if (Vector3.Distance(targetPosition, plane) > 0.05f)
             {
-                var dir = (targetPosition - transform.position).normalized;
+                var dir = (targetPosition - plane).normalized;
                 transform.position += dir * Time.deltaTime * speed;
                 
-                var lookDir = (closest2 - transform.position).normalized;
+                var lookDir = (closest2 - plane).normalized;
                 var delta1 = Vector3.SignedAngle(
                     transform.forward, 
                     lookDir, 
@@ -156,7 +159,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                transform.position = targetPosition;
+                transform.position = targetPosition + Vector3.up * transform.position.y;
                 targetPosition = default;
 
                 ReadLocalAxis();
