@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,6 +24,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed = 1.5f;
     [SerializeField] private float rotationSpeed = 30.0f;
     [SerializeField] private float apexSpeed = 15.0f;
+    [SerializeField] private float jumpImpulse = 2.0f;
 
     private Vector3 translatedDir;
     private Vector3 inputDir;
@@ -109,6 +112,49 @@ public class Player : MonoBehaviour
 
         this.closest1 = closest1;
         this.closest2 = closest2;
+
+        StartCoroutine(ApexMove());
+    }
+
+    private IEnumerator ApexMove()
+    {
+        if ((targetPosition - center).sqrMagnitude < tresholdSqr * 2)
+        {
+            targetPosition += 2 * treshold * (targetPosition - center).normalized;
+        }
+
+        while (targetPosition != default)
+        {
+            var grounded = Grounded();
+
+            if ((targetPosition - grounded).sqrMagnitude > tresholdSqr * .1f)
+            {
+                var current = (grounded - sideSwitchPivot).normalized;
+                var target = (targetPosition - sideSwitchPivot).normalized;
+                var step = sideSwitchPivot + sideSwitchRadius * Vector3.RotateTowards(
+                    current, target, apexSpeed * Time.deltaTime, 0.0f);
+
+                var lookDir = (step - grounded).normalized;
+
+                var delta1 = Vector3.SignedAngle(
+                    transform.forward,
+                    lookDir,
+                    transform.up);
+
+                transform.RotateAround(transform.position, transform.up, delta1);
+
+                transform.position = step + transform.up * transform.position.y;
+            }
+            else
+            {
+                transform.position = targetPosition + Vector3.up * transform.position.y;
+                targetPosition = default;
+
+                ReadLocalAxis();
+            }
+            
+            yield return null;
+        }
     }
 
     private void Move_performed(InputAction.CallbackContext obj)
@@ -120,7 +166,8 @@ public class Player : MonoBehaviour
 
     private void Jump_performed(InputAction.CallbackContext obj)
     {
-        Debug.Log($"Jump {obj}");
+        if (rb.velocity.y == 0)
+            rb.AddForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
     }
 
     #if UNITY_EDITOR
@@ -151,7 +198,7 @@ public class Player : MonoBehaviour
         Gizmos.color = old;
 
     }
-#endif
+    #endif
     Vector3 GetClosestPoint(Vector3 point, Vector3 line_start, Vector3 line_end)
     {
         return line_start + Vector3.Project(point - line_start, line_end - line_start);
@@ -183,47 +230,13 @@ public class Player : MonoBehaviour
             ReadPathSegment(true);
         }
 
-        if (targetPosition != default)
+        if (targetPosition == default)
         {
-            if ((targetPosition - center).sqrMagnitude < tresholdSqr * 2)
-            {
-                targetPosition += 2 * treshold * (targetPosition - center).normalized;
-            }
-
-            if ((targetPosition - grounded).sqrMagnitude > tresholdSqr * .1f)
-            {
-                var current = (grounded - sideSwitchPivot).normalized;
-                var target = (targetPosition - sideSwitchPivot).normalized;
-                var step = sideSwitchPivot + sideSwitchRadius * Vector3.RotateTowards(
-                    current, target, apexSpeed * Time.deltaTime, 0.0f);
-
-                var lookDir = (step - grounded).normalized;
-
-                var delta1 = Vector3.SignedAngle(
-                    transform.forward,
-                    lookDir,
-                    transform.up);
-
-                transform.RotateAround(transform.position, transform.up, delta1);
-
-                transform.position = step + transform.up * transform.position.y;
-            }
-            else
-            {
-                transform.position = targetPosition + Vector3.up * transform.position.y;
-                targetPosition = default;
-
-                ReadLocalAxis();
-            }
-
-            return;
+            translatedDir = (inputDir.x * localRight + inputDir.z * localForward);
+            transform.position += speed * Time.deltaTime * translatedDir;
+            var delta2 = Vector3.SignedAngle(transform.forward, translatedDir, transform.up) * Time.deltaTime * rotationSpeed;
+            transform.RotateAround(transform.position, transform.up, delta2);
         }
-
-        translatedDir = (inputDir.x * localRight + inputDir.z * localForward);
-
-        transform.position += speed * Time.deltaTime * translatedDir;
-        var delta2 = Vector3.SignedAngle(transform.forward, translatedDir, transform.up) * Time.deltaTime * rotationSpeed;
-        transform.RotateAround(transform.position, transform.up, delta2);
     }
 
     private Vector3 Grounded(Vector3 position = default)
