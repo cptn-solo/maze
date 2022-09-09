@@ -46,6 +46,8 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        pathPoints = pathPoints.Select(Grounded).ToArray();
+
         OnRespawned();
     }
 
@@ -53,41 +55,30 @@ public class Player : MonoBehaviour
     {
         targetPosition = default;
         rb.velocity = Vector3.zero;
-        StartCoroutine(InitPositionOnSpawn());
-    }
-    private IEnumerator InitPositionOnSpawn()
-    {
-        yield return new WaitForSeconds(2.0f);
 
         ReadPathSegment();
         ReadLocalAxis();
-
     }
 
-    public void ReadPathSegment()
+    public void ReadPathSegment(bool forceSwitchSide = false)
     {
-        pathPoints = pathPoints.Select(x => {
-            x.y = 0; return x;
-        }).ToArray();
-
-        var plane = transform.position - Vector3.up * transform.position.y;
-        var ordered = pathPoints.OrderBy(x => Vector3.Distance(x, plane)).ToArray();
+        var grounded = Grounded();
+        var ordered = pathPoints.OrderBy(x => Vector3.Distance(x, grounded)).ToArray();
         
         var closest = ordered.Take(2).ToArray();
         this.closest1 = closest[0];
         this.closest2 = closest[1];
         
-        if (Vector3.Distance(closest[0], plane) < treshold)
+        if (forceSwitchSide)
             SwitchSideTo(closest[0], ordered[2]);
     }
 
     private void ReadLocalAxis()
     {
-        var plane = transform.position - Vector3.up * transform.position.y;
-        var buildingFloorCenter = Vector3.zero;
-        var toCenter = (buildingFloorCenter - plane).normalized;
-        var toClosest1 = (closest1 - plane).normalized;
-        var toClosest2 = (closest2 - plane).normalized;
+        var closestPointOnSide = GetClosestPoint(Grounded(), closest1, closest2);
+        var toCenter = (Vector3.zero - closestPointOnSide).normalized;
+        var toClosest1 = (closest1 - closestPointOnSide).normalized;
+        var toClosest2 = (closest2 - closestPointOnSide).normalized;
 
         localRight = (Vector3.SignedAngle(toCenter, toClosest1, transform.up) > 0) ? toClosest1 : toClosest2;
         var r90 = Quaternion.AngleAxis(-90.0f, Vector3.up);
@@ -96,7 +87,8 @@ public class Player : MonoBehaviour
 
     private void SwitchSideTo(Vector3 closest1, Vector3 closest2)
     {
-        targetPosition = closest1 + (closest2 - closest1).normalized * (treshold + .05f);
+        var closestPoint = GetClosestPoint(Grounded(), Vector3.zero, closest1);
+        targetPosition = closestPoint + (closest2 - closest1).normalized * (treshold * 2);
         this.closest1 = closest1;
         this.closest2 = closest2;
     }
@@ -132,29 +124,32 @@ public class Player : MonoBehaviour
 
     }
 #endif
+    Vector3 GetClosestPoint(Vector3 point, Vector3 line_start, Vector3 line_end)
+    {
+        return line_start + Vector3.Project(point - line_start, line_end - line_start);
+    }
 
     private void Update()
     {
-        var plane = transform.position - Vector3.up * transform.position.y;
+        var grounded = Grounded();
 
-        if ((Vector3.Distance(closest1, plane) < treshold ||
-            Vector3.Distance(closest2, plane) < treshold) &&
+        if ((ToRay(grounded, closest1) < treshold || ToRay(grounded, closest2) < treshold) &&
             targetPosition == default)
-            ReadPathSegment();
+            ReadPathSegment(true);
 
         if (targetPosition != default)
         {
-            if (Vector3.Distance(targetPosition, plane) > 0.05f)
+            if (Vector3.Distance(targetPosition, grounded) > 0.05f)
             {
-                var dir = (targetPosition - plane).normalized;
-                transform.position += dir * Time.deltaTime * speed;
-                
-                var lookDir = (closest2 - plane).normalized;
+                var moveDir = (targetPosition - grounded).normalized;
+                transform.position += speed * Time.deltaTime * moveDir;
+
+                var lookDir = (closest2 - grounded).normalized;
                 var delta1 = Vector3.SignedAngle(
-                    transform.forward, 
-                    lookDir, 
+                    transform.forward,
+                    lookDir,
                     transform.up) * Time.deltaTime * rotationSpeed;
-                
+
                 transform.RotateAround(transform.position, transform.up, delta1);
             }
             else
@@ -170,8 +165,21 @@ public class Player : MonoBehaviour
 
         translatedDir = (inputDir.x * localRight + inputDir.z * localForward);
 
-        transform.position += translatedDir * Time.deltaTime * speed;
+        transform.position += speed * Time.deltaTime * translatedDir;
         var delta2 = Vector3.SignedAngle(transform.forward, translatedDir, transform.up) * Time.deltaTime * rotationSpeed;
         transform.RotateAround(transform.position, transform.up, delta2);
+    }
+
+    private Vector3 Grounded(Vector3 position = default)
+    {
+        if (position == default)
+            position = transform.position;
+        
+        return position - Vector3.up * position.y;
+    }
+
+    private float ToRay(Vector3 grounded, Vector3 rayEndGrounded)
+    {
+        return Vector3.Distance(grounded, GetClosestPoint(grounded, Vector3.zero, rayEndGrounded));
     }
 }
