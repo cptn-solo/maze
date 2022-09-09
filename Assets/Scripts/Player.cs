@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private Vector3[] pathPoints;
     
     private Vector3 targetPosition;
+    private Vector3 sideSwitchPivot;
     private Vector3 closest1;
     private Vector3 closest2;
 
@@ -54,6 +55,8 @@ public class Player : MonoBehaviour
     public void OnRespawned()
     {
         targetPosition = default;
+        sideSwitchPivot = default;
+
         rb.velocity = Vector3.zero;
 
         ReadPathSegment();
@@ -63,7 +66,7 @@ public class Player : MonoBehaviour
     public void ReadPathSegment(bool forceSwitchSide = false)
     {
         var grounded = Grounded();
-        var ordered = pathPoints.OrderBy(x => Vector3.Distance(x, grounded)).ToArray();
+        var ordered = pathPoints.OrderBy(x => (x - grounded).sqrMagnitude).ToArray();
         
         var closest = ordered.Take(2).ToArray();
         this.closest1 = closest[0];
@@ -90,9 +93,11 @@ public class Player : MonoBehaviour
 
     private void SwitchSideTo(Vector3 closest1, Vector3 closest2)
     {
-        var closestPoint = GetClosestPoint(Grounded(), Vector3.zero, closest1);
+        var grounded = Grounded();
+        var closestPoint = GetClosestPoint(grounded, Vector3.zero, closest1);
         
-        targetPosition = closestPoint + (closest2 - closest1).normalized * (treshold * 2);
+        targetPosition = closestPoint + (closestPoint - grounded).normalized * treshold * 1.001f;
+        sideSwitchPivot = closestPoint;
         
         this.closest1 = closest1;
         this.closest2 = closest2;
