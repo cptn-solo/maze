@@ -53,6 +53,8 @@ MonoBehaviour:
   speed: 1
   rotationSpeed: 30
   apexSpeed: 10
+  jumpImpulse: 2
+  animator: {fileID: 7083121392806204161}
 --- !u!114 &5051959995960565163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,3 +231,29 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5176359850575942934}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &729217043258113627 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5604919755290127181, guid: a51e5d47c0dcd1a44a68d087cbee63dd,
+    type: 3}
+  m_PrefabInstance: {fileID: 5176359850575942934}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &7083121392806204161
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729217043258113627}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d6a1da15fe6d45444b5a312eb789e901, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

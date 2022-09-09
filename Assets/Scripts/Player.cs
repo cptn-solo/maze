@@ -6,13 +6,15 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    private const string AnimJumpBool = "jump";
+    private const string AnimGoBool = "go";
+
     private Rigidbody rb;
     private Building building;
     private Vector3[] pathPoints;
     
     private Vector3 targetPosition;
     private Vector3 sideSwitchPivot;
-    private float sideSwitchAngle;
     private float sideSwitchRadius;
     private Vector3 closest1;
     private Vector3 closest2;
@@ -25,6 +27,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float rotationSpeed = 30.0f;
     [SerializeField] private float apexSpeed = 15.0f;
     [SerializeField] private float jumpImpulse = 2.0f;
+
+    [SerializeField] private Animator animator;
 
     private Vector3 translatedDir;
     private Vector3 inputDir;
@@ -104,10 +108,6 @@ public class Player : MonoBehaviour
         
         targetPosition = closestPoint + 1.01f * treshold * (closestPoint - grounded).normalized;
         sideSwitchPivot = closestPoint + (center - closest1).normalized * treshold;
-        sideSwitchAngle = Vector3.SignedAngle(
-            (grounded - sideSwitchPivot),
-            (targetPosition - sideSwitchPivot),
-            Vector3.up);
         sideSwitchRadius = (sideSwitchPivot - targetPosition).magnitude;
 
         this.closest1 = closest1;
@@ -159,19 +159,29 @@ public class Player : MonoBehaviour
 
     private void Move_performed(InputAction.CallbackContext obj)
     {
-        var dir = obj.ReadValue<Vector3>();
-        
-        inputDir = dir;
+        inputDir = obj.ReadValue<Vector3>();
+        animator.SetBool(AnimGoBool, inputDir.magnitude > 0);
     }
 
     private void Jump_performed(InputAction.CallbackContext obj)
     {
         if (rb.velocity.y == 0)
-            rb.AddForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
+            StartCoroutine(JumpCoroutine());
     }
 
-    #if UNITY_EDITOR
-    private void OnDrawGizmos()
+    private IEnumerator JumpCoroutine()
+    {
+        rb.AddForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
+        animator.SetBool(AnimJumpBool, true);
+        
+        yield return new WaitForSeconds(.3f);
+        
+        animator.SetBool(AnimJumpBool, false);
+    }
+
+
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
     {
         var old = Gizmos.color;
         Gizmos.color = Color.blue;
