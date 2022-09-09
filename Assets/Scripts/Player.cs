@@ -76,19 +76,24 @@ public class Player : MonoBehaviour
     private void ReadLocalAxis()
     {
         var closestPointOnSide = GetClosestPoint(Grounded(), closest1, closest2);
+
         var toCenter = (Vector3.zero - closestPointOnSide).normalized;
         var toClosest1 = (closest1 - closestPointOnSide).normalized;
         var toClosest2 = (closest2 - closestPointOnSide).normalized;
 
         localRight = (Vector3.SignedAngle(toCenter, toClosest1, transform.up) > 0) ? toClosest1 : toClosest2;
+        
         var r90 = Quaternion.AngleAxis(-90.0f, Vector3.up);
+        
         localForward = r90 * localRight;
     }
 
     private void SwitchSideTo(Vector3 closest1, Vector3 closest2)
     {
         var closestPoint = GetClosestPoint(Grounded(), Vector3.zero, closest1);
+        
         targetPosition = closestPoint + (closest2 - closest1).normalized * (treshold * 2);
+        
         this.closest1 = closest1;
         this.closest2 = closest2;
     }
@@ -133,12 +138,35 @@ public class Player : MonoBehaviour
     {
         var grounded = Grounded();
 
+        if (inputDir.z < 0 && ToSide() < treshold)
+        {
+            if (inputDir.x != 0)
+                inputDir.z = 0;
+            else
+                return;
+        }
+
+        if (inputDir.z > 0 && Vector3.Distance(grounded, Vector3.zero) < treshold * 4)
+        {
+            if (inputDir.x != 0)
+                inputDir.z = 0;
+            else
+                return;
+        }
+
         if ((ToRay(grounded, closest1) < treshold || ToRay(grounded, closest2) < treshold) &&
             targetPosition == default)
+        {
             ReadPathSegment(true);
+        }
 
         if (targetPosition != default)
         {
+            if (Vector3.Distance(targetPosition, Vector3.zero) < treshold * 2)
+            {
+                targetPosition += 2 * treshold * (targetPosition - Vector3.zero).normalized;
+            }
+
             if (Vector3.Distance(targetPosition, grounded) > 0.05f)
             {
                 var moveDir = (targetPosition - grounded).normalized;
@@ -176,6 +204,20 @@ public class Player : MonoBehaviour
             position = transform.position;
         
         return position - Vector3.up * position.y;
+    }
+    
+    private float ToSide(Vector3 grounded = default, Vector3 closest1 = default, Vector3 closest2 = default)
+    {
+        if (grounded == default)
+            grounded = Grounded();
+
+        if (closest1 == default)
+            closest1 = this.closest1;
+
+        if (closest2 == default)
+            closest2 = this.closest2;
+
+        return Vector3.Distance(grounded, GetClosestPoint(grounded, closest1, closest2));
     }
 
     private float ToRay(Vector3 grounded, Vector3 rayEndGrounded)
