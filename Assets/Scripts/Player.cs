@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
 
     private Vector3 localRight;
     private Vector3 localForward;
-
+    [SerializeField] private float tresholdSqr = .0025f;
     [SerializeField] private float treshold = .05f;
     [SerializeField] private float speed = 1.5f;
     [SerializeField] private float rotationSpeed = 30.0f;
@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
         var grounded = Grounded();
         var closestPoint = GetClosestPoint(grounded, Vector3.zero, closest1);
         
-        targetPosition = closestPoint + (closestPoint - grounded).normalized * treshold * 1.001f;
+        targetPosition = closestPoint + 1.001f * treshold * (closestPoint - grounded).normalized;
         sideSwitchPivot = closestPoint;
         
         this.closest1 = closest1;
@@ -130,6 +130,17 @@ public class Player : MonoBehaviour
         Gizmos.color = Color.magenta;
         Gizmos.DrawSphere(closest2 + Vector3.up * transform.position.y, .1f);
 
+        if (targetPosition != default)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(targetPosition + Vector3.up * transform.position.y, .02f);
+        }
+        if (sideSwitchPivot != default)
+        {
+            Gizmos.color = Color.black;
+            Gizmos.DrawSphere(sideSwitchPivot + Vector3.up * transform.position.y, .02f);
+        }
+
         Gizmos.color = old;
 
     }
@@ -143,7 +154,7 @@ public class Player : MonoBehaviour
     {
         var grounded = Grounded();
 
-        if (inputDir.z < 0 && ToSide() < treshold)
+        if (inputDir.z < 0 && ToSideSqr() < tresholdSqr)
         {
             if (inputDir.x != 0)
                 inputDir.z = 0;
@@ -151,7 +162,7 @@ public class Player : MonoBehaviour
                 return;
         }
 
-        if (inputDir.z > 0 && Vector3.Distance(grounded, Vector3.zero) < treshold * 4)
+        if (inputDir.z > 0 && (grounded - Vector3.zero).sqrMagnitude < tresholdSqr * 4)
         {
             if (inputDir.x != 0)
                 inputDir.z = 0;
@@ -159,7 +170,7 @@ public class Player : MonoBehaviour
                 return;
         }
 
-        if ((ToRay(grounded, closest1) < treshold || ToRay(grounded, closest2) < treshold) &&
+        if ((ToRaySqr(grounded, closest1) < tresholdSqr || ToRaySqr(grounded, closest2) < tresholdSqr) &&
             targetPosition == default)
         {
             ReadPathSegment(true);
@@ -167,12 +178,12 @@ public class Player : MonoBehaviour
 
         if (targetPosition != default)
         {
-            if (Vector3.Distance(targetPosition, Vector3.zero) < treshold * 2)
+            if ((targetPosition - Vector3.zero).sqrMagnitude < tresholdSqr * 2)
             {
                 targetPosition += 2 * treshold * (targetPosition - Vector3.zero).normalized;
             }
 
-            if (Vector3.Distance(targetPosition, grounded) > 0.05f)
+            if ((targetPosition - grounded).sqrMagnitude > tresholdSqr *.1f)
             {
                 var moveDir = (targetPosition - grounded).normalized;
                 transform.position += speed * Time.deltaTime * moveDir;
@@ -211,7 +222,7 @@ public class Player : MonoBehaviour
         return position - Vector3.up * position.y;
     }
     
-    private float ToSide(Vector3 grounded = default, Vector3 closest1 = default, Vector3 closest2 = default)
+    private float ToSideSqr(Vector3 grounded = default, Vector3 closest1 = default, Vector3 closest2 = default)
     {
         if (grounded == default)
             grounded = Grounded();
@@ -222,11 +233,11 @@ public class Player : MonoBehaviour
         if (closest2 == default)
             closest2 = this.closest2;
 
-        return Vector3.Distance(grounded, GetClosestPoint(grounded, closest1, closest2));
+        return (grounded - GetClosestPoint(grounded, closest1, closest2)).sqrMagnitude;
     }
 
-    private float ToRay(Vector3 grounded, Vector3 rayEndGrounded)
+    private float ToRaySqr(Vector3 grounded, Vector3 rayEndGrounded)
     {
-        return Vector3.Distance(grounded, GetClosestPoint(grounded, Vector3.zero, rayEndGrounded));
+        return (grounded - GetClosestPoint(grounded, Vector3.zero, rayEndGrounded)).sqrMagnitude;
     }
 }
