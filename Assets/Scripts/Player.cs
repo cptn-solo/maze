@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +10,8 @@ public class Player : MonoBehaviour
     
     private Vector3 targetPosition;
     private Vector3 sideSwitchPivot;
+    private float sideSwitchAngle;
+    private float sideSwitchRadius;
     private Vector3 closest1;
     private Vector3 closest2;
 
@@ -20,9 +21,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float treshold = .05f;
     [SerializeField] private float speed = 1.5f;
     [SerializeField] private float rotationSpeed = 30.0f;
+    [SerializeField] private float apexSpeed = 15.0f;
 
     private Vector3 translatedDir;
     private Vector3 inputDir;
+    private Vector3 center = Vector3.zero;
 
     public Building Building
     { 
@@ -80,7 +83,7 @@ public class Player : MonoBehaviour
     {
         var closestPointOnSide = GetClosestPoint(Grounded(), closest1, closest2);
 
-        var toCenter = (Vector3.zero - closestPointOnSide).normalized;
+        var toCenter = (center - closestPointOnSide).normalized;
         var toClosest1 = (closest1 - closestPointOnSide).normalized;
         var toClosest2 = (closest2 - closestPointOnSide).normalized;
 
@@ -94,11 +97,16 @@ public class Player : MonoBehaviour
     private void SwitchSideTo(Vector3 closest1, Vector3 closest2)
     {
         var grounded = Grounded();
-        var closestPoint = GetClosestPoint(grounded, Vector3.zero, closest1);
+        var closestPoint = GetClosestPoint(grounded, center, closest1);
         
-        targetPosition = closestPoint + 1.001f * treshold * (closestPoint - grounded).normalized;
-        sideSwitchPivot = closestPoint;
-        
+        targetPosition = closestPoint + 1.01f * treshold * (closestPoint - grounded).normalized;
+        sideSwitchPivot = closestPoint + (center - closest1).normalized * treshold;
+        sideSwitchAngle = Vector3.SignedAngle(
+            (grounded - sideSwitchPivot),
+            (targetPosition - sideSwitchPivot),
+            Vector3.up);
+        sideSwitchRadius = (sideSwitchPivot - targetPosition).magnitude;
+
         this.closest1 = closest1;
         this.closest2 = closest2;
     }
@@ -106,7 +114,6 @@ public class Player : MonoBehaviour
     private void Move_performed(InputAction.CallbackContext obj)
     {
         var dir = obj.ReadValue<Vector3>();
-        Debug.Log($"Move {dir}");
         
         inputDir = dir;
     }
@@ -162,7 +169,7 @@ public class Player : MonoBehaviour
                 return;
         }
 
-        if (inputDir.z > 0 && (grounded - Vector3.zero).sqrMagnitude < tresholdSqr * 4)
+        if (inputDir.z > 0 && (grounded - center).sqrMagnitude < tresholdSqr * 4)
         {
             if (inputDir.x != 0)
                 inputDir.z = 0;
@@ -170,31 +177,36 @@ public class Player : MonoBehaviour
                 return;
         }
 
-        if ((ToRaySqr(grounded, closest1) < tresholdSqr || ToRaySqr(grounded, closest2) < tresholdSqr) &&
-            targetPosition == default)
+        if (targetPosition == default &&
+            (ToRaySqr(grounded, closest1) < tresholdSqr || ToRaySqr(grounded, closest2) < tresholdSqr))
         {
             ReadPathSegment(true);
         }
 
         if (targetPosition != default)
         {
-            if ((targetPosition - Vector3.zero).sqrMagnitude < tresholdSqr * 2)
+            if ((targetPosition - center).sqrMagnitude < tresholdSqr * 2)
             {
-                targetPosition += 2 * treshold * (targetPosition - Vector3.zero).normalized;
+                targetPosition += 2 * treshold * (targetPosition - center).normalized;
             }
 
-            if ((targetPosition - grounded).sqrMagnitude > tresholdSqr *.1f)
+            if ((targetPosition - grounded).sqrMagnitude > tresholdSqr * .1f)
             {
-                var moveDir = (targetPosition - grounded).normalized;
-                transform.position += speed * Time.deltaTime * moveDir;
+                var current = (grounded - sideSwitchPivot).normalized;
+                var target = (targetPosition - sideSwitchPivot).normalized;
+                var step = sideSwitchPivot + sideSwitchRadius * Vector3.RotateTowards(
+                    current, target, apexSpeed * Time.deltaTime, 0.0f);
 
-                var lookDir = (closest2 - grounded).normalized;
+                var lookDir = (step - grounded).normalized;
+
                 var delta1 = Vector3.SignedAngle(
                     transform.forward,
                     lookDir,
-                    transform.up) * Time.deltaTime * rotationSpeed;
+                    transform.up);
 
                 transform.RotateAround(transform.position, transform.up, delta1);
+
+                transform.position = step + transform.up * transform.position.y;
             }
             else
             {
@@ -238,6 +250,6 @@ public class Player : MonoBehaviour
 
     private float ToRaySqr(Vector3 grounded, Vector3 rayEndGrounded)
     {
-        return (grounded - GetClosestPoint(grounded, Vector3.zero, rayEndGrounded)).sqrMagnitude;
+        return (grounded - GetClosestPoint(grounded, center, rayEndGrounded)).sqrMagnitude;
     }
 }

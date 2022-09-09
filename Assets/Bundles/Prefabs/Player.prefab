@@ -49,9 +49,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tresholdSqr: 0.0025
-  treshold_: 0.05
+  treshold: 0.05
   speed: 1
   rotationSpeed: 30
+  apexSpeed: 10
 --- !u!114 &5051959995960565163
 MonoBehaviour:
   m_ObjectHideFlags: 0
