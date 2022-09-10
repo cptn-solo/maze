@@ -1,19 +1,22 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-public class Building : MonoBehaviour
+namespace Assets.Scripts
 {
-    public Transform[] PlayerSpawnPoints => playerSpawnPoints;
-    
-    private Transform[] playerSpawnPoints;
-    public Transform[] PathPoints { get; private set; }
-
-    private void Awake()
+    public class Building : MonoBehaviour
     {
-        playerSpawnPoints = GetComponentsInChildren<PlayerSpawnPoint>()
-            .Select(x => x.transform).ToArray();
+        public Transform[] PlayerSpawnPoints => playerSpawnPoints;
 
-        PathPoints = GetComponentsInChildren<PathPoint>().Select(x => x.transform).ToArray();
+        private Transform[] playerSpawnPoints;
+        public Transform[] PathPoints { get; private set; }
+
+        private void Awake()
+        {
+            playerSpawnPoints = GetComponentsInChildren<PlayerSpawnPoint>()
+                .Select(x => x.transform).ToArray();
+
+            PathPoints = GetComponentsInChildren<PathPoint>().Select(x => x.transform).ToArray();
+        }
+
     }
-
 }
