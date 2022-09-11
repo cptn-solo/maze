@@ -6,21 +6,6 @@ namespace Assets.Scripts
 {
     public partial class Player
     {
-        private void TogglePhisBody(bool toggle)
-        {
-            if (toggle)
-            {
-                col.enabled = toggle;
-                rb.mass = toggle ? 1.0f : 0.0f;
-                rb.useGravity = toggle;
-            }
-            else
-            {
-                rb.useGravity = toggle;
-                rb.mass = toggle ? 1.0f : 0.0f;
-                col.enabled = toggle;
-            }
-        }
         private IEnumerator EmergencyExit()
         {
             yield return new WaitForSeconds(1.5f);

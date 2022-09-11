@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -8,6 +9,22 @@ namespace Assets.Scripts
 
         private bool fadingOut;
         private bool fadedOut;
+
+        private void TogglePhisBody(bool toggle)
+        {
+            if (toggle)
+            {
+                col.enabled = toggle;
+                rb.mass = toggle ? 1.0f : 0.0f;
+                rb.useGravity = toggle;
+            }
+            else
+            {
+                rb.useGravity = toggle;
+                rb.mass = toggle ? 1.0f : 0.0f;
+                col.enabled = toggle;
+            }
+        }
 
         internal bool FadeOut()
         {
@@ -27,35 +44,40 @@ namespace Assets.Scripts
             var a = 1.0f;
             while (a > 0)
             {
-                a -= .05f;
+                a -= .025f;
+                this.transform.localScale = Vector3.one * a;
 
-                foreach (var m in ren.materials)
-                {
-                    var c = m.GetColor(shaderColorKey);
-                    c.a = a;
-                    m.SetColor(shaderColorKey, c);
-                }
                 yield return null;
             }
+
+            yield return null;
+            
             ren.enabled = false;
             fadedOut = true;
         }
 
         internal void FadeIn()
         {
-            TogglePhisBody(true);
+            StartCoroutine(FadeMeIn());
+        }
 
-            foreach (var m in ren.materials)
-            {
-                var c = m.GetColor(shaderColorKey);
-                c.a = 1.0f;
-                m.SetColor(shaderColorKey, c);
-            }
-
+        private IEnumerator FadeMeIn()
+        {
+            
             ren.enabled = true;
+
+            var a = 0.0f;
+            while (a < 1.0f)
+            {
+                a += .025f;
+                this.transform.localScale = Vector3.one * a;
+                yield return null;
+            }
 
             fadingOut = false;
             fadedOut = false;
+
+            TogglePhisBody(true);
         }
     }
 }

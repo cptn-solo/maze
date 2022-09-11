@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 88673997827893506}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.12, y: 0.895, z: -2.67}
+  m_LocalPosition: {x: 0.12, y: 0.895, z: -2.602}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -75,7 +75,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1619867444387904752}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 1.84, y: 0.895, z: -1.37}
+  m_LocalPosition: {x: 1.787, y: 0.895, z: -1.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -125,7 +125,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653129251385917469}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.208, y: 0.895, z: 0.418}
+  m_LocalPosition: {x: 0.208, y: 0.895, z: 0.368}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -176,7 +176,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4240736831149388265}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -1.246, y: 0.895, z: -1.17}
+  m_LocalPosition: {x: -1.183, y: 0.895, z: -1.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2894,26 +2894,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 79ab41db2a2bbe44eb11b9e55199fd06, type: 3}
---- !u!1 &2733690702714969662 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6347666874009234267, guid: 79ab41db2a2bbe44eb11b9e55199fd06,
-    type: 3}
-  m_PrefabInstance: {fileID: 9072347887694296421}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &6837643873944190046
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2733690702714969662}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: c53c0428804d717479ebe1c45875d8d3, type: 2}
 --- !u!4 &3367520000698827908 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6006853915103326689, guid: 79ab41db2a2bbe44eb11b9e55199fd06,

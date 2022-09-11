@@ -13,6 +13,7 @@ namespace Assets.Scripts
 
         [SerializeField] private float cameraAngle = -35.0f;
         [SerializeField] private float cameraDistance = 2.5f;
+        [SerializeField] private float camSpeed = 4.0f;
 
         private Building building;
         private Player player;
@@ -37,12 +38,16 @@ namespace Assets.Scripts
             var cameraRay = new Ray(
                 buildingFloorY,
                 (player.transform.position + player.transform.up * yOffset - buildingFloorY).normalized);
+            
+            var camCurrent = sceneCamera.transform.position;
 
             var camPosition = player.transform.position + cameraRay.direction * cameraDistance;
             var camDirection = player.transform.position - camPosition;
 
+            var camStep = (camPosition - camCurrent) * camSpeed * Time.deltaTime;
+
             sceneCamera.transform.SetPositionAndRotation(
-                camPosition, Quaternion.LookRotation(camDirection));
+                camCurrent + camStep, Quaternion.LookRotation(camDirection));
         }
 
         private void PositionPlayer(Player player, Building building)

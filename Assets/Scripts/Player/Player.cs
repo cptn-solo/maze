@@ -39,6 +39,7 @@ namespace Assets.Scripts
         private Vector3 translatedDir;
         private Vector3 inputDir;
         private Vector3 center = Vector3.zero;
+        private Vector3 walkPosition;
 
         public Building Building
         {
@@ -152,6 +153,7 @@ namespace Assets.Scripts
 
         private void Update()
         {
+            
             var grounded = Grounded();
 
             if (inputDir.z < 0 && ToSideSqr() < tresholdSqr)
