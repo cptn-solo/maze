@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -76,6 +75,7 @@ namespace Assets.Scripts
             pathPoints = pathPoints.Select(Grounded).ToArray();
 
             rb.velocity = Vector3.zero;
+            rb.MoveRotation(Quaternion.identity);
 
             ReadPathSegment();
             ReadLocalAxis();
@@ -102,7 +102,7 @@ namespace Assets.Scripts
             var toClosest1 = (closest1 - closestPointOnSide).normalized;
             var toClosest2 = (closest2 - closestPointOnSide).normalized;
 
-            localRight = Vector3.SignedAngle(toCenter, toClosest1, transform.up) > 0 ? toClosest1 : toClosest2;
+            localRight = Vector3.SignedAngle(toCenter, toClosest1, Vector3.up) > 0 ? toClosest1 : toClosest2;
 
             var r90 = Quaternion.AngleAxis(-90.0f, Vector3.up);
 
@@ -132,18 +132,22 @@ namespace Assets.Scripts
 
         private void Jump_performed(InputAction.CallbackContext obj)
         {
-            if (rb.velocity.y == 0)
+            if (rb.velocity.y < .01f)
+            {
                 StartCoroutine(JumpCoroutine());
+            }
         }
 
         private IEnumerator JumpCoroutine()
         {
-            rb.AddForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
             animator.SetBool(AnimJumpBool, true);
-
-            yield return new WaitForSeconds(.3f);
-
+            yield return new WaitForSeconds(.01f);
             animator.SetBool(AnimJumpBool, false);
+
+            yield return new WaitForSeconds(.1f);
+            rb.AddForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
+
+
         }
 
         Vector3 GetClosestPoint(Vector3 point, Vector3 line_start, Vector3 line_end)
@@ -151,18 +155,9 @@ namespace Assets.Scripts
             return line_start + Vector3.Project(point - line_start, line_end - line_start);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            
             var grounded = Grounded();
-
-            if (inputDir.z < 0 && ToSideSqr() < tresholdSqr)
-            {
-                if (inputDir.x != 0)
-                    inputDir.z = 0;
-                else
-                    return;
-            }
 
             if (inputDir.z > 0 && (grounded - center).sqrMagnitude < tresholdSqr * 4)
             {
@@ -181,16 +176,23 @@ namespace Assets.Scripts
             if (targetPosition == default && inputDir.magnitude != 0.0f && !fadingOut)
             {
                 translatedDir = inputDir.x * localRight + inputDir.z * localForward;
-                transform.position += speed * Time.deltaTime * translatedDir;
-                var delta2 = Vector3.SignedAngle(transform.forward, translatedDir, transform.up) * Time.deltaTime * rotationSpeed;
-                transform.RotateAround(transform.position, transform.up, delta2);
+                Vector3 rbHorizontalVelocity = default;
+                rbHorizontalVelocity.x = rb.velocity.x;
+                rbHorizontalVelocity.z = rb.velocity.z;
+
+                var deltaPos = (speed - rbHorizontalVelocity.magnitude);
+                if (deltaPos > 0)
+                    rb.AddForce(translatedDir * deltaPos, ForceMode.VelocityChange);
             }
+            var angle = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Time.fixedDeltaTime;
+            var torque = rotationSpeed * angle - rb.angularVelocity.y;
+            rb.AddTorque(0, torque, 0, ForceMode.VelocityChange);            
         }
 
         private Vector3 Grounded(Vector3 position = default)
         {
             if (position == default)
-                position = transform.position;
+                position = rb.position;
 
             return position - Vector3.up * position.y;
         }
