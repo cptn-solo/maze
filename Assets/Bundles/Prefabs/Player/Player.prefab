@@ -52,7 +52,7 @@ MonoBehaviour:
   animator: {fileID: 7083121392806204161}
   tresholdSqr: 0.0025
   treshold: 0.05
-  speed: 0.5
+  speed: 0.7
   rotationSpeed: 12.04
   apexSpeed: 10
   jumpImpulse: 2

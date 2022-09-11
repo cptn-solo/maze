@@ -12,6 +12,11 @@ namespace Assets.Scripts
 
         private void TogglePhisBody(bool toggle)
         {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.ResetCenterOfMass();
+            rb.ResetInertiaTensor();
+
             if (toggle)
             {
                 col.enabled = toggle;
@@ -20,6 +25,10 @@ namespace Assets.Scripts
             }
             else
             {
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.ResetCenterOfMass();
+                rb.ResetInertiaTensor();
                 rb.useGravity = toggle;
                 rb.mass = toggle ? 1.0f : 0.0f;
                 col.enabled = toggle;
@@ -45,7 +54,8 @@ namespace Assets.Scripts
             while (a > 0)
             {
                 a -= .025f;
-                this.transform.localScale = Vector3.one * a;
+                this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up;
+                //this.transform.localScale = Vector3.forward + Vector3.right + Vector3.up * a;
 
                 yield return null;
             }
@@ -70,7 +80,8 @@ namespace Assets.Scripts
             while (a < 1.0f)
             {
                 a += .025f;
-                this.transform.localScale = Vector3.one * a;
+                this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up;
+                //this.transform.localScale = Vector3.forward + Vector3.right + Vector3.up * a;
                 yield return null;
             }
 

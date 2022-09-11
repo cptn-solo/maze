@@ -15,28 +15,6 @@ namespace Assets.Scripts
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.position, localRight * 10.0f);
 
-            if (closest1 != default)
-            {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawSphere(closest1 + Vector3.up * transform.position.y, .1f);
-            }
-            if (closest2 != default)
-            {
-                Gizmos.color = Color.magenta;
-                Gizmos.DrawSphere(closest2 + Vector3.up * transform.position.y, .1f);
-            }
-
-            if (targetPosition != default)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawSphere(targetPosition + Vector3.up * transform.position.y, .02f);
-            }
-            if (sideSwitchPivot != default)
-            {
-                Gizmos.color = Color.black;
-                Gizmos.DrawSphere(sideSwitchPivot + Vector3.up * transform.position.y, .02f);
-            }
-
             Gizmos.color = old;
 
         }

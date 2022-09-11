@@ -488,8 +488,8 @@ MonoBehaviour:
   - {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72, type: 3}
   collectablePrefabs: []
   sceneCamera: {fileID: 330585545}
-  cameraAngle: 20
-  cameraDistance: 1
+  cameraAngle: 18
+  cameraDistance: 1.2
   camSpeed: 8
 --- !u!4 &998581038
 Transform:

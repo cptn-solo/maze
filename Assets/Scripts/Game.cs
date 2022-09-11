@@ -54,27 +54,16 @@ namespace Assets.Scripts
         {
             var spIndex = UnityEngine.Random.Range(0, building.PlayerSpawnPoints.Length);
             var sp = building.PlayerSpawnPoints[spIndex].transform;
-
-            player.transform.SetPositionAndRotation(sp.position, sp.rotation);
-            //player.transform.parent = building.transform;
-
             player.Building = building;
 
-            player.OnRespawned();
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            player.OnRespawned(sp.position, sp.rotation);
         }
 
         private void LateUpdate()
         {
             PositionCamera(player, building);
 
-            if (player.transform.position.y < -10.0f)
+            if ((player.transform.position - Vector3.zero).sqrMagnitude > 100.0f)
                 PositionPlayer(player, building);
         }
     }
