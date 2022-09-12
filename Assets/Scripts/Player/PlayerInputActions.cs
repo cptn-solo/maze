@@ -44,6 +44,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""2849989f-a590-4e67-bfa7-d159a0e0d0d9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +121,85 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9a510bca-0cc5-4748-9cc5-5e3270220b45"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Mobile"",
+            ""id"": ""7027a820-b6f9-46f8-ba32-dbaf03497369"",
+            ""actions"": [
+                {
+                    ""name"": ""LeftStick"",
+                    ""type"": ""Value"",
+                    ""id"": ""0730f2fc-e3f2-41ad-ad45-64038dfe3a5d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""756e6a71-8f2e-4908-8947-a20fe6493587"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""df3903cb-5d2e-499f-82da-acf0598e04ee"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""fd8e8641-c4c9-4eb0-ab61-930111b61a92"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftStick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""165e21ec-0110-49d8-83e4-d2af6580f34f"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5eacadc0-0080-40e4-8084-55f00ee89b96"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,6 +210,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Default = asset.FindActionMap("Default", throwIfNotFound: true);
         m_Default_Move = m_Default.FindAction("Move", throwIfNotFound: true);
         m_Default_Jump = m_Default.FindAction("Jump", throwIfNotFound: true);
+        m_Default_Fire = m_Default.FindAction("Fire", throwIfNotFound: true);
+        // Mobile
+        m_Mobile = asset.FindActionMap("Mobile", throwIfNotFound: true);
+        m_Mobile_LeftStick = m_Mobile.FindAction("LeftStick", throwIfNotFound: true);
+        m_Mobile_Jump = m_Mobile.FindAction("Jump", throwIfNotFound: true);
+        m_Mobile_Fire = m_Mobile.FindAction("Fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,12 +277,14 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private IDefaultActions m_DefaultActionsCallbackInterface;
     private readonly InputAction m_Default_Move;
     private readonly InputAction m_Default_Jump;
+    private readonly InputAction m_Default_Fire;
     public struct DefaultActions
     {
         private @PlayerInputActions m_Wrapper;
         public DefaultActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Default_Move;
         public InputAction @Jump => m_Wrapper.m_Default_Jump;
+        public InputAction @Fire => m_Wrapper.m_Default_Fire;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -204,6 +300,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnJump;
+                @Fire.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnFire;
+                @Fire.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnFire;
+                @Fire.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnFire;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
@@ -214,13 +313,72 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
             }
         }
     }
     public DefaultActions @Default => new DefaultActions(this);
+
+    // Mobile
+    private readonly InputActionMap m_Mobile;
+    private IMobileActions m_MobileActionsCallbackInterface;
+    private readonly InputAction m_Mobile_LeftStick;
+    private readonly InputAction m_Mobile_Jump;
+    private readonly InputAction m_Mobile_Fire;
+    public struct MobileActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public MobileActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @LeftStick => m_Wrapper.m_Mobile_LeftStick;
+        public InputAction @Jump => m_Wrapper.m_Mobile_Jump;
+        public InputAction @Fire => m_Wrapper.m_Mobile_Fire;
+        public InputActionMap Get() { return m_Wrapper.m_Mobile; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MobileActions set) { return set.Get(); }
+        public void SetCallbacks(IMobileActions instance)
+        {
+            if (m_Wrapper.m_MobileActionsCallbackInterface != null)
+            {
+                @LeftStick.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnLeftStick;
+                @LeftStick.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnLeftStick;
+                @LeftStick.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnLeftStick;
+                @Jump.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
+                @Fire.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnFire;
+                @Fire.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnFire;
+                @Fire.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnFire;
+            }
+            m_Wrapper.m_MobileActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @LeftStick.started += instance.OnLeftStick;
+                @LeftStick.performed += instance.OnLeftStick;
+                @LeftStick.canceled += instance.OnLeftStick;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
+            }
+        }
+    }
+    public MobileActions @Mobile => new MobileActions(this);
     public interface IDefaultActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
+    }
+    public interface IMobileActions
+    {
+        void OnLeftStick(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
 }

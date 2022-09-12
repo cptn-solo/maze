@@ -44,11 +44,7 @@ namespace Assets.Scripts
             rb = GetComponent<Rigidbody>();
             col = GetComponent<CapsuleCollider>();
 
-            PlayerInputActions actions = new PlayerInputActions();
-
-            actions.Enable();
-            actions.Default.Jump.performed += Jump_performed;
-            actions.Default.Move.performed += Move_performed;
+            BindInputs();
         }
 
         public void OnRespawned(Vector3 position, Quaternion rotation)
@@ -71,27 +67,28 @@ namespace Assets.Scripts
         {
             localForward = (center - Grounded()).normalized;
 
-            if (Mathf.Abs(localForward.x) > Mathf.Abs(localForward.z) * 1f)
+            if (Mathf.Abs(localForward.x) > Mathf.Abs(localForward.z) * 1.2f)
                 localForward = Mathf.Sign(localForward.x) * Vector3.right;
-            else if (Mathf.Abs(localForward.z) > Mathf.Abs(localForward.x) * 1f)
+            else if (Mathf.Abs(localForward.z) > Mathf.Abs(localForward.x) * 1.2f)
                 localForward = Mathf.Sign(localForward.z) * Vector3.forward;
 
             var r90 = Quaternion.AngleAxis(90.0f, Vector3.up);
             localRight = r90 * localForward;
         }
 
-        private void Move_performed(InputAction.CallbackContext obj)
+        private void OnMove(Vector3 inputDir)
         {
-            inputDir = obj.ReadValue<Vector3>();
+            this.inputDir = inputDir;
             var go = inputDir.sqrMagnitude > 0;
             animator.SetBool(AnimGoBool, go);
             animator.SetFloat(AnimSpeedFloat, go ? 1 + speed : 1);
         }
 
-        private void Jump_performed(InputAction.CallbackContext obj)
+        private void OnJump()
         {
             if (rb.velocity.y < .01f && !fadingOut)
                 StartCoroutine(JumpCoroutine());
+
         }
 
         private IEnumerator JumpCoroutine()
@@ -127,14 +124,25 @@ namespace Assets.Scripts
                 if (deltaPos > 0)
                     rb.AddForce(translatedDir * deltaPos, ForceMode.VelocityChange);
             }
+            Vector3 torqueCombined = Vector3.zero;
 
-            var angle = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Time.fixedDeltaTime;
             rb.ResetCenterOfMass();
-            if (Mathf.Abs(angle) > 0.001f)
-            {
-                var torque = rotationSpeed * angle - rb.angularVelocity.y;
-                rb.AddTorque(0, torque, 0, ForceMode.VelocityChange);
-            }
+
+            var angleY = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Time.fixedDeltaTime;
+            if (Mathf.Abs(angleY) > 0.001f)
+                torqueCombined.y = rotationSpeed * angleY - rb.angularVelocity.y;
+
+            var angleX = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.right) * Time.fixedDeltaTime;
+            if (Mathf.Abs(angleX) > 0.001f)
+                torqueCombined.x = rotationSpeed * -angleX - rb.angularVelocity.x;
+
+            var angleZ = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.forward) * Time.fixedDeltaTime;
+            if (Mathf.Abs(angleZ) > 0.001f)
+                torqueCombined.z = rotationSpeed * -angleZ - rb.angularVelocity.z;
+
+            rb.AddTorque(torqueCombined, ForceMode.VelocityChange);
+            
+            rb.ResetCenterOfMass();
         }
 
         private Vector3 Grounded(Vector3 position = default)
