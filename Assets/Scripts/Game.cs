@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -15,8 +16,12 @@ namespace Assets.Scripts
         [SerializeField] private float cameraDistance = 2.5f;
         [SerializeField] private float camSpeed = 4.0f;
 
+        private float camDistanceFactor = 1.0f;
+
         private Building building;
         private Player player;
+        private bool listenForScreenOrientation;
+        private bool listeningForScreenOrientation;
 
         // Start is called before the first frame update
         void Start()
@@ -25,7 +30,30 @@ namespace Assets.Scripts
             player = Instantiate(playerPrefab).GetComponent<Player>();
 
             PositionPlayer(player, building);
-            PositionCamera(player, building);
+            PositionCamera(player, building);            
+        }
+
+        private void OnEnable()
+        {
+            listenForScreenOrientation = true;
+            if (!listeningForScreenOrientation)
+                StartCoroutine(ScreenOrientationMonitor());
+        }
+
+        private void OnDisable()
+        {
+            listenForScreenOrientation = false;
+        }
+
+        private IEnumerator ScreenOrientationMonitor()
+        {
+            listeningForScreenOrientation = true;
+            while (listenForScreenOrientation)
+            {
+                camDistanceFactor = ((float) Screen.height) / Screen.width;
+                yield return new WaitForSecondsRealtime(1.0f);
+            }
+
         }
 
         private void PositionCamera(Player player, Building building)
@@ -41,7 +69,7 @@ namespace Assets.Scripts
             
             var camCurrent = sceneCamera.transform.position;
 
-            var camPosition = player.transform.position + cameraRay.direction * cameraDistance;
+            var camPosition = player.transform.position + cameraRay.direction * cameraDistance * camDistanceFactor;
             var camDirection = player.transform.position - camPosition;
 
             var camStep = (camPosition - camCurrent) * camSpeed * Time.deltaTime;

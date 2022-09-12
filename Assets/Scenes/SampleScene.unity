@@ -563,8 +563,8 @@ MonoBehaviour:
   collectablePrefabs: []
   sceneCamera: {fileID: 330585545}
   cameraAngle: 18
-  cameraDistance: 1.2
-  camSpeed: 8
+  cameraDistance: 2.5
+  camSpeed: 10
 --- !u!4 &998581038
 Transform:
   m_ObjectHideFlags: 0
