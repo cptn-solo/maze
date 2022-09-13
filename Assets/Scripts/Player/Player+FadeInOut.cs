@@ -53,7 +53,7 @@ namespace Assets.Scripts
             var a = 1.0f;
             while (a > 0)
             {
-                a -= .025f;
+                a -= .05f;
                 this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up;
                 //this.transform.localScale = Vector3.forward + Vector3.right + Vector3.up * a;
 
@@ -79,7 +79,7 @@ namespace Assets.Scripts
             var a = 0.0f;
             while (a < 1.0f)
             {
-                a += .025f;
+                a += .05f;
                 this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up;
                 //this.transform.localScale = Vector3.forward + Vector3.right + Vector3.up * a;
                 yield return null;
