@@ -12,11 +12,13 @@ public class FrameRateManager : MonoBehaviour
     void Awake()
     {
         QualitySettings.vSyncCount = 0;
+        Time.fixedDeltaTime = 0.02f;
         if (Application.isMobilePlatform)
         {
             QualitySettings.vSyncCount = 2;
             TargetFrameRate = 30.0f;
             MaxRate = 30;
+            Time.fixedDeltaTime = 0.0334f;
         }
 
 
