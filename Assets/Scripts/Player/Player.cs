@@ -1,7 +1,5 @@
 ﻿using System.Collections;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Assets.Scripts
 {
@@ -19,6 +17,8 @@ namespace Assets.Scripts
 
         [SerializeField] private float speed = 1.5f;
         [SerializeField] private float rotationSpeed = 30.0f;
+        [SerializeField] private float fadeSpeed = 1.0f;
+        
         [SerializeField] private float jumpImpulse = 2.0f;
 
         private Building building;
