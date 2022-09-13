@@ -83,8 +83,11 @@ namespace Assets.Scripts
         {
             this.inputDir = inputDir;
             var go = inputDir.sqrMagnitude > 0;
-            animator.SetBool(AnimGoBool, go);
-            animator.SetFloat(AnimSpeedFloat, go ? 1 + speed : 1);
+            if (animator != null)
+            {
+                animator.SetBool(AnimGoBool, go);
+                animator.SetFloat(AnimSpeedFloat, go ? 1 + speed : 1);
+            }
         }
 
         private void OnJump()
@@ -96,9 +99,12 @@ namespace Assets.Scripts
 
         private IEnumerator JumpCoroutine()
         {
-            animator.SetBool(AnimJumpBool, true);
-            yield return new WaitForSeconds(.01f);
-            animator.SetBool(AnimJumpBool, false);
+            if (animator != null)
+            {
+                animator.SetBool(AnimJumpBool, true);
+                yield return new WaitForSeconds(.01f);
+                animator.SetBool(AnimJumpBool, false);
+            }
 
             yield return new WaitForSeconds(.1f);
             
