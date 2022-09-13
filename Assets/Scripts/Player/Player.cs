@@ -32,7 +32,7 @@ namespace Assets.Scripts
         
         private Vector3 torqueCombined;
         private float deltaPos;
-        private bool rotationsEnabled;
+        private bool rotationsEnabled = true;
 
         public Building Building
         {
