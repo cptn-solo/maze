@@ -32,6 +32,7 @@ namespace Assets.Scripts
         
         private Vector3 torqueCombined;
         private float deltaPos;
+        private bool rotationsEnabled;
 
         public Building Building
         {
@@ -119,14 +120,17 @@ namespace Assets.Scripts
 
             torqueCombined = default;
             
-            var angleY = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Time.fixedDeltaTime;
-            torqueCombined.y = rotationSpeed * angleY - rb.angularVelocity.y;
+            if (rotationsEnabled)
+            {
+                var angleY = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Time.fixedDeltaTime;
+                torqueCombined.y = rotationSpeed * angleY - rb.angularVelocity.y;
 
-            var angleX = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.right) * Time.fixedDeltaTime;
-            torqueCombined.x = rotationSpeed * -angleX - rb.angularVelocity.x;
+                var angleX = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.right) * Time.fixedDeltaTime;
+                torqueCombined.x = rotationSpeed * -angleX - rb.angularVelocity.x;
 
-            var angleZ = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.forward) * Time.fixedDeltaTime;
-            torqueCombined.z = rotationSpeed * -angleZ - rb.angularVelocity.z;
+                var angleZ = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.forward) * Time.fixedDeltaTime;
+                torqueCombined.z = rotationSpeed * -angleZ - rb.angularVelocity.z;
+            }
 
             translatedDir = inputDir.x * localRight + inputDir.z * localForward;
             Vector3 rbHorizontalVelocity = default;
@@ -144,7 +148,8 @@ namespace Assets.Scripts
             if (!fadingOut)
                 rb.AddForce(translatedDir * deltaPos, ForceMode.VelocityChange);
             
-            rb.AddTorque(torqueCombined, ForceMode.VelocityChange);            
+            if (rotationsEnabled)
+                rb.AddTorque(torqueCombined, ForceMode.VelocityChange);            
         }
 
         private Vector3 Grounded(Vector3 position = default)
