@@ -12,6 +12,14 @@ public class FrameRateManager : MonoBehaviour
     void Awake()
     {
         QualitySettings.vSyncCount = 0;
+        if (Application.isMobilePlatform)
+        {
+            QualitySettings.vSyncCount = 2;
+            TargetFrameRate = 30.0f;
+            MaxRate = 30;
+        }
+
+
         Application.targetFrameRate = MaxRate;
         currentFrameTime = Time.realtimeSinceStartup;
         StartCoroutine("WaitForNextFrame");
