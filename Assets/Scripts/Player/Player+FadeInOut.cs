@@ -53,12 +53,13 @@ namespace Assets.Scripts
             var a = 1.0f;
             while (a > 0)
             {
-                a -= .05f;
+                a -= fadeSpeed * Time.deltaTime;
                 this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up;
-                //this.transform.localScale = Vector3.forward + Vector3.right + Vector3.up * a;
 
                 yield return null;
             }
+
+            this.transform.localScale = Vector3.forward * 0 + Vector3.right * 0 + Vector3.up;
 
             yield return null;
             
@@ -79,11 +80,13 @@ namespace Assets.Scripts
             var a = 0.0f;
             while (a < 1.0f)
             {
-                a += .05f;
+                a += fadeSpeed * Time.deltaTime;
                 this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up;
-                //this.transform.localScale = Vector3.forward + Vector3.right + Vector3.up * a;
+
                 yield return null;
             }
+            
+            this.transform.localScale = Vector3.forward * 1 + Vector3.right * 1 + Vector3.up;
 
             fadingOut = false;
             fadedOut = false;

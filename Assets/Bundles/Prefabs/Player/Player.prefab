@@ -50,11 +50,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ren: {fileID: 5976979107319490515}
   animator: {fileID: 7083121392806204161}
-  tresholdSqr: 0.0025
-  treshold: 0.05
   speed: 0.7
   rotationSpeed: 12.04
-  apexSpeed: 10
+  fadeSpeed: 3
   jumpImpulse: 2
 --- !u!114 &5051959995960565163
 MonoBehaviour:
