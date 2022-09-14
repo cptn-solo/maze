@@ -78,6 +78,9 @@ namespace Assets.Scripts
 
             var r90 = Quaternion.AngleAxis(90.0f, Vector3.up);
             localRight = r90 * localForward;
+
+            translatedDir = inputDir.x * localRight + inputDir.z * localForward;
+
         }
 
         private void OnMove(Vector3 inputDir)
@@ -117,9 +120,9 @@ namespace Assets.Scripts
         {
             if ((inputDir.sqrMagnitude != 0.0f || rb.velocity.x != 0.0f || rb.velocity.z != 0.0f) && !fadingOut)
                 ReadLocalAxis();
-
-            torqueCombined = default;
             
+            torqueCombined = default;
+
             if (rotationsEnabled)
             {
                 var angleY = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Time.deltaTime;
@@ -132,13 +135,12 @@ namespace Assets.Scripts
                 torqueCombined.z = rotationSpeed * -angleZ - rb.angularVelocity.z;
             }
 
-            translatedDir = inputDir.x * localRight + inputDir.z * localForward;
             Vector3 rbHorizontalVelocity = default;
             rbHorizontalVelocity.x = rb.velocity.x;
             rbHorizontalVelocity.z = rb.velocity.z;
 
             var desiredSpeed = (inputDir.sqrMagnitude != 0.0f && !fadingOut) ? speed : 0;
-            deltaPos = (speed - rbHorizontalVelocity.magnitude);
+            deltaPos = (desiredSpeed - rbHorizontalVelocity.magnitude);
         }
 
         private void FixedUpdate()
