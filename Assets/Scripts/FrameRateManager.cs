@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class FrameRateManager : MonoBehaviour
 {
@@ -8,6 +9,10 @@ public class FrameRateManager : MonoBehaviour
     public int MaxRate = 9999;
     public float TargetFrameRate = 60.0f;
     float currentFrameTime;
+    
+    public int avgFrameRate;
+    public string display_Text;
+    GUIStyle textStyle = new GUIStyle();
 
     void Awake()
     {
@@ -27,6 +32,20 @@ public class FrameRateManager : MonoBehaviour
         StartCoroutine("WaitForNextFrame");
     }
 
+    private void Start()
+    {
+        textStyle.fontStyle = FontStyle.Bold;
+        textStyle.normal.textColor = Color.white;
+    }
+
+    public void Update()
+    {
+        float current = 0;
+        current = (int)(1f / Time.unscaledDeltaTime);
+        avgFrameRate = (int)current;
+        display_Text = avgFrameRate.ToString() + " FPS";
+    }
+
     IEnumerator WaitForNextFrame()
     {
         while (true)
@@ -40,5 +59,9 @@ public class FrameRateManager : MonoBehaviour
             while (t < currentFrameTime)
                 t = Time.realtimeSinceStartup;
         }
+    }
+    private void OnGUI()
+    {
+        GUI.Label(new Rect(5, 5, 100, 25), display_Text, textStyle);
     }
 }
