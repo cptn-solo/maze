@@ -62,6 +62,6 @@ public class FrameRateManager : MonoBehaviour
     }
     private void OnGUI()
     {
-        GUI.Label(new Rect(5, 5, 100, 25), display_Text, textStyle);
+        GUI.Label(new Rect(55, 55, 100, 25), display_Text, textStyle);
     }
 }
