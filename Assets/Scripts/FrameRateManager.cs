@@ -21,9 +21,9 @@ public class FrameRateManager : MonoBehaviour
         if (Application.isMobilePlatform)
         {
             QualitySettings.vSyncCount = 2;
-            TargetFrameRate = 20.0f;
-            MaxRate = 20;
-            Time.fixedDeltaTime = 0.05f;
+            TargetFrameRate = 30.0f;
+            MaxRate = 30;
+            Time.fixedDeltaTime = 0.0334f;
         }
 
 
