@@ -35,7 +35,6 @@ namespace Assets.Scripts
 
         private void LeftStick_performed(InputAction.CallbackContext obj)
         {
-            Debug.Log(obj);
             var rawInput = obj.ReadValue<Vector2>();
             Vector3 mappedInput = default;
             mappedInput.x = rawInput.x;

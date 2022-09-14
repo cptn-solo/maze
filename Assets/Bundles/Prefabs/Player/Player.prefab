@@ -131,10 +131,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afe28b7d5709ad34d979d9f56f3bb938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ren: {fileID: 0}
-  animator: {fileID: 0}
+  ren: {fileID: 5976979107319490515}
+  animator: {fileID: 7083121392806204161}
   speed: 0.7
-  rotationSpeed: 2.5
+  rotationSpeed: 3
   fadeSpeed: 3
   jumpImpulse: 2
 --- !u!114 &5051959995960565163
@@ -350,3 +350,9 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!137 &5976979107319490515 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1523449292664730309, guid: a51e5d47c0dcd1a44a68d087cbee63dd,
+    type: 3}
+  m_PrefabInstance: {fileID: 5176359850575942934}
+  m_PrefabAsset: {fileID: 0}
