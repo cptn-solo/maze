@@ -122,13 +122,13 @@ namespace Assets.Scripts
             
             if (rotationsEnabled)
             {
-                var angleY = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Time.fixedDeltaTime;
+                var angleY = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Time.deltaTime;
                 torqueCombined.y = rotationSpeed * angleY - rb.angularVelocity.y;
 
-                var angleX = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.right) * Time.fixedDeltaTime;
+                var angleX = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.right) * Time.deltaTime;
                 torqueCombined.x = rotationSpeed * -angleX - rb.angularVelocity.x;
 
-                var angleZ = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.forward) * Time.fixedDeltaTime;
+                var angleZ = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.forward) * Time.deltaTime;
                 torqueCombined.z = rotationSpeed * -angleZ - rb.angularVelocity.z;
             }
 
