@@ -5,13 +5,13 @@ namespace Assets.Scripts
 {
     public class PortalGate : MonoBehaviour
     {
-        public event Action<PortalGate, Player> OnEnterGate;
-        public LayerMask PlayerMask { get; set; }
+        public event Action<PortalGate, Movable> OnEnterGate;
+        public LayerMask PassengerMask { get; set; }
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CheckColliderMask(PlayerMask) &&
-                other.gameObject.TryGetComponent<Player>(out var player))
-                OnEnterGate?.Invoke(this, player);
+            if (other.CheckColliderMask(PassengerMask) &&
+                other.gameObject.TryGetComponent<Movable>(out var passenger))
+                OnEnterGate?.Invoke(this, passenger);
         }
 
     }

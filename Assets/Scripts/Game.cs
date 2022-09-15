@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -6,9 +7,12 @@ namespace Assets.Scripts
     public class Game : MonoBehaviour
     {
         [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private EnemyType[] enemyKeys;
         [SerializeField] private GameObject[] enemyPrefabs;
         [SerializeField] private GameObject[] buildingPrefabs;
         [SerializeField] private GameObject[] collectablePrefabs;
+        
+        [SerializeField] private int MaxZombieCount = 50;
 
         [SerializeField] private Camera sceneCamera;
 
@@ -23,14 +27,38 @@ namespace Assets.Scripts
         private bool listenForScreenOrientation;
         private bool listeningForScreenOrientation;
 
+        private Zombie[] zombies = new Zombie[1];
+
         // Start is called before the first frame update
         void Start()
         {
             building = Instantiate(buildingPrefabs[0]).GetComponent<Building>();
             player = Instantiate(playerPrefab).GetComponent<Player>();
 
+            for (int i = 0; i < enemyPrefabs.Length; i++)
+            {
+                StartCoroutine(StartSpawnEnemy(i));
+            }
+
             PositionPlayer(player, building);
             PositionCamera(player, building);            
+        }
+
+        private IEnumerator StartSpawnEnemy(int i)
+        {
+            while (true)
+            {
+                Zombie zombie = zombies.Length >= MaxZombieCount ?
+                    zombies[Random.Range(0, zombies.Length)] :
+                    Instantiate(enemyPrefabs[i]).GetComponent<Zombie>();
+
+                PositionZombie(zombie, building);
+
+                if (zombies.Contains(zombie))
+                    zombies.Append(zombie);
+
+                yield return new WaitForSeconds(5.0f);
+            }
         }
 
         private void OnEnable()
@@ -85,6 +113,16 @@ namespace Assets.Scripts
             player.Building = building;
 
             player.OnRespawned(sp.position, sp.rotation);
+        }
+
+        private void PositionZombie(Zombie zombie, Building building)
+        {
+            var spIndex = UnityEngine.Random.Range(0, building.ZombieSpawnPoints.Length);
+            var sp = building.ZombieSpawnPoints[spIndex].transform;
+            zombie.Building = building;
+
+            zombie.OnRespawned(sp.position, sp.rotation);
+
         }
 
         private void LateUpdate()

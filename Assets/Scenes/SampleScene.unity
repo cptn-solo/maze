@@ -1374,7 +1374,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 2409413581255877363, guid: b2665cec2428a70499e06ca1e4d05c6a,
     type: 3}
-  enemyPrefabs: []
+  enemyKeys: 00000000
+  enemyPrefabs:
+  - {fileID: 3935691605891884070, guid: c2ca2e6b7acd509449249dbc0c130581, type: 3}
   buildingPrefabs:
   - {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72, type: 3}
   collectablePrefabs: []

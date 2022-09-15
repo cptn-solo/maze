@@ -34,7 +34,7 @@ namespace Assets.Scripts
                 tp.OnEnterPortal += Tp_OnEnterPortal;
         }
 
-        private void Tp_OnEnterPortal(Vector3 point, Vector3 dir, Player player)
+        private void Tp_OnEnterPortal(Vector3 point, Vector3 dir, Movable passenger)
         {
             var filtered = points.Where(x => x != point);
             var ordered = filtered.OrderBy(x => (x - point).sqrMagnitude).ToArray();
@@ -44,31 +44,31 @@ namespace Assets.Scripts
 
             var dest = closest[idx];
 
-            StartCoroutine(TransferPlayerTo(player, dest + dir * 0.2f));
+            StartCoroutine(TransferTo(passenger, dest + dir * 0.2f));
         }
 
-        private IEnumerator TransferPlayerTo(Player player, Vector3 dest)
+        private IEnumerator TransferTo(Movable passenger, Vector3 dest)
         {
-            while (!player.FadeOut())
+            while (!passenger.FadeOut())
                 yield return null;
 
             bool transferFinished = false;
-            var startPos = player.transform.position;
+            var startPos = passenger.transform.position;
             var distance = Vector3.Distance(startPos, dest);
-            var dir = (dest - player.transform.position).normalized;
+            var dir = (dest - passenger.transform.position).normalized;
             var step = distance * transferSpeed * Time.deltaTime * dir;
 
             while (!transferFinished)
             {
-                player.transform.position += step;
+                passenger.transform.position += step;
                 distance -= step.magnitude;
                 transferFinished = distance <= 0.0001;
                 yield return null;
             }
 
-            player.transform.position = dest;
+            passenger.transform.position = dest;
 
-            player.FadeIn();
+            passenger.FadeIn();
         }
 
     }

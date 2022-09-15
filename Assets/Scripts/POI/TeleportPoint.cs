@@ -11,7 +11,7 @@ namespace Assets.Scripts
         private Animator animator;
         private PortalGate[] tpGates;
 
-        public event Action<Vector3, Vector3, Player> OnEnterPortal;
+        public event Action<Vector3, Vector3, Movable> OnEnterPortal;
 
         private void Awake()
         {
@@ -28,16 +28,16 @@ namespace Assets.Scripts
             foreach (var tp in tpGates)
             {
                 tp.OnEnterGate += Tp_OnEnterGate;
-                tp.PlayerMask = playerMask;
+                tp.PassengerMask = playerMask;
             }
         }
 
-        private void Tp_OnEnterGate(PortalGate gate, Player player)
+        private void Tp_OnEnterGate(PortalGate gate, Movable passenger)
         {
             OnEnterPortal?.Invoke(
                      transform.position,
                      (transform.position - gate.transform.position).normalized,
-                     player);
+                     passenger);
         }
 
         private void Start()
