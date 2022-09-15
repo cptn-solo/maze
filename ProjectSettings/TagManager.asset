@@ -13,9 +13,9 @@ TagManager:
   - UI
   - Player
   - Portal
-  - 
-  - 
-  - 
+  - Enemy
+  - Wall
+  - Floor
   - 
   - 
   - 
