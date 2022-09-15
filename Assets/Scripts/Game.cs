@@ -12,7 +12,7 @@ namespace Assets.Scripts
         [SerializeField] private GameObject[] buildingPrefabs;
         [SerializeField] private GameObject[] collectablePrefabs;
         
-        [SerializeField] private int MaxZombieCount = 50;
+        [SerializeField] private int MaxZombieCount = 10;
 
         [SerializeField] private Camera sceneCamera;
 

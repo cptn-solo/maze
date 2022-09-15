@@ -1380,6 +1380,7 @@ MonoBehaviour:
   buildingPrefabs:
   - {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72, type: 3}
   collectablePrefabs: []
+  MaxZombieCount: 10
   sceneCamera: {fileID: 330585545}
   cameraAngle: 18
   cameraDistance: 2.5
