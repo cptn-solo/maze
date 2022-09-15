@@ -1684,6 +1684,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ZombieSpawnPoint (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8670657754396459015, guid: fd5f76038f8582048895bce4ee7ca157,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd5f76038f8582048895bce4ee7ca157, type: 3}
 --- !u!4 &2245542957532478604 stripped
@@ -1758,6 +1763,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ZombieSpawnPoint (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8670657754396459015, guid: fd5f76038f8582048895bce4ee7ca157,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd5f76038f8582048895bce4ee7ca157, type: 3}
@@ -2023,6 +2033,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ZombieSpawnPoint (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8670657754396459015, guid: fd5f76038f8582048895bce4ee7ca157,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd5f76038f8582048895bce4ee7ca157, type: 3}
@@ -2459,6 +2474,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ZombieSpawnPoint (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 8670657754396459015, guid: fd5f76038f8582048895bce4ee7ca157,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd5f76038f8582048895bce4ee7ca157, type: 3}
 --- !u!4 &7612526791142263545 stripped
@@ -2687,7 +2707,7 @@ PrefabInstance:
     - target: {fileID: 4270302030150939136, guid: fd5f76038f8582048895bce4ee7ca157,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.251
+      value: 2.284
       objectReference: {fileID: 0}
     - target: {fileID: 4270302030150939136, guid: fd5f76038f8582048895bce4ee7ca157,
         type: 3}
@@ -2733,6 +2753,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ZombieSpawnPoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 8670657754396459015, guid: fd5f76038f8582048895bce4ee7ca157,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd5f76038f8582048895bce4ee7ca157, type: 3}

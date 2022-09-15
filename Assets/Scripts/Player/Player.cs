@@ -30,7 +30,6 @@ namespace Assets.Scripts
         {
             if (rb.velocity.y < .01f && !fadingOut)
                 StartCoroutine(JumpCoroutine());
-
         }
 
         private IEnumerator JumpCoroutine()

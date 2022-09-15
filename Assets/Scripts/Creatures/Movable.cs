@@ -70,10 +70,15 @@ namespace Assets.Scripts
         }
 
         protected virtual void OnAwake()
-        {
-        }
+        { }
 
         protected virtual void OnStart()
+        { }
+
+        protected virtual void OnObjEnable()
+        { }
+
+        protected virtual void OnObjDisable()
         { }
 
         private void Awake()
@@ -88,6 +93,18 @@ namespace Assets.Scripts
         {
             OnStart();
         }
+
+        private void OnEnable()
+        {
+            OnObjEnable();
+
+        }
+        
+        private void OnDisable()
+        {
+            OnObjDisable();
+        }
+
 
         private void Update()
         {

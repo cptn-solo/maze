@@ -162,7 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ren: {fileID: 3729761692795717920}
   animator: {fileID: 3226120018503811090}
-  speed: 0.3
+  speed: 0.1
   rotationSpeed: 360
   fadeSpeed: 1
   jumpImpulse: 0

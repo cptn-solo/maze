@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
@@ -27,7 +29,9 @@ namespace Assets.Scripts
         private bool listenForScreenOrientation;
         private bool listeningForScreenOrientation;
 
-        private Zombie[] zombies = new Zombie[1];
+        private Zombie[] zombies = new Zombie[10];
+
+        private int zombiesArrayIncrementSize = 10; 
 
         // Start is called before the first frame update
         void Start()
@@ -44,18 +48,23 @@ namespace Assets.Scripts
             PositionCamera(player, building);            
         }
 
-        private IEnumerator StartSpawnEnemy(int i)
+        private IEnumerator StartSpawnEnemy(int enemyPrefabIdx)
         {
+
+            Array.Resize(ref zombies, MaxZombieCount);
+            var prefab = enemyPrefabs[enemyPrefabIdx];
+            for (int i = 0; i < MaxZombieCount; i++)
+            {
+                var zombie = Instantiate(prefab).GetComponent<Zombie>();
+                zombie.gameObject.SetActive(false);
+                zombies[i] = zombie;
+            }
+
             while (true)
             {
-                Zombie zombie = zombies.Length >= MaxZombieCount ?
-                    zombies[Random.Range(0, zombies.Length)] :
-                    Instantiate(enemyPrefabs[i]).GetComponent<Zombie>();
+                var zombie = zombies[Random.Range(0, zombies.Length)];
 
                 PositionZombie(zombie, building);
-
-                if (zombies.Contains(zombie))
-                    zombies.Append(zombie);
 
                 yield return new WaitForSeconds(5.0f);
             }
@@ -117,11 +126,17 @@ namespace Assets.Scripts
 
         private void PositionZombie(Zombie zombie, Building building)
         {
+            zombie.gameObject.SetActive(false);
+
             var spIndex = UnityEngine.Random.Range(0, building.ZombieSpawnPoints.Length);
             var sp = building.ZombieSpawnPoints[spIndex].transform;
             zombie.Building = building;
+            
+            zombie.gameObject.SetActive(true);
 
             zombie.OnRespawned(sp.position, sp.rotation);
+            
+
 
         }
 
