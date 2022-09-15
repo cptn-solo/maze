@@ -30,9 +30,9 @@ namespace Assets.Scripts
         private Vector3 inputDir;
         private Vector3 center = Vector3.zero;
         
-        private Vector3 torqueCombined;
-        private float deltaPos;
+        private Vector3 desiredRotVelocity;
         private bool rotationsEnabled = true;
+        private Vector3 desiredVelocity;
 
         public Building Building
         {
@@ -121,37 +121,55 @@ namespace Assets.Scripts
             if ((inputDir.sqrMagnitude != 0.0f || rb.velocity.x != 0.0f || rb.velocity.z != 0.0f) && !fadingOut)
                 ReadLocalAxis();
             
-            torqueCombined = default;
+            desiredRotVelocity = default;
 
             if (rotationsEnabled)
             {
-                var angleY = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Time.deltaTime;
-                torqueCombined.y = rotationSpeed * angleY - rb.angularVelocity.y;
+                var rs = rotationSpeed * Mathf.Deg2Rad; // 3 ~ 180 deg/s
+                var angleY = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Mathf.Deg2Rad;
+                desiredRotVelocity.y = rs * angleY;
 
-                var angleX = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.right) * Time.deltaTime;
-                torqueCombined.x = rotationSpeed * -angleX - rb.angularVelocity.x;
+                var angleX = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.right) * Mathf.Deg2Rad;
+                desiredRotVelocity.x = rs * -angleX;
 
-                var angleZ = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.forward) * Time.deltaTime;
-                torqueCombined.z = rotationSpeed * -angleZ - rb.angularVelocity.z;
+                var angleZ = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.forward) * Mathf.Deg2Rad;
+                desiredRotVelocity.z = rs * -angleZ;
             }
 
-            Vector3 rbHorizontalVelocity = default;
-            rbHorizontalVelocity.x = rb.velocity.x;
-            rbHorizontalVelocity.z = rb.velocity.z;
-
             var desiredSpeed = (inputDir.sqrMagnitude != 0.0f && !fadingOut) ? speed : 0;
-            deltaPos = (desiredSpeed - rbHorizontalVelocity.magnitude);
+            
+            desiredVelocity = translatedDir * desiredSpeed;
         }
 
         private void FixedUpdate()
         {
             rb.ResetCenterOfMass();
             
-            if (!fadingOut)
-                rb.AddForce(translatedDir * deltaPos, ForceMode.VelocityChange);
-            
+            if (fadingOut)
+                return;
+
+            var velocity = rb.velocity;
+            float maxSpeedChange = speed * 4 * Time.fixedDeltaTime;
+            velocity.x =
+                Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
+            velocity.z =
+                Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
+            rb.velocity = velocity;
+
             if (rotationsEnabled)
-                rb.AddTorque(torqueCombined, ForceMode.VelocityChange);            
+            {
+                var rotVelocity = rb.angularVelocity;
+                float maxRotSpeedChange = rotationSpeed * 4 * Time.fixedDeltaTime;
+                rotVelocity.x =
+                    Mathf.MoveTowards(rotVelocity.x, desiredRotVelocity.x, maxRotSpeedChange);
+                rotVelocity.y =
+                    Mathf.MoveTowards(rotVelocity.y, desiredRotVelocity.y, maxRotSpeedChange);
+                rotVelocity.z =
+                    Mathf.MoveTowards(rotVelocity.z, desiredRotVelocity.z, maxRotSpeedChange);
+
+                rb.angularVelocity = rotVelocity;
+            }
+
         }
 
         private Vector3 Grounded(Vector3 position = default)

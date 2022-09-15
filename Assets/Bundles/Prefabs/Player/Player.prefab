@@ -134,7 +134,7 @@ MonoBehaviour:
   ren: {fileID: 5976979107319490515}
   animator: {fileID: 7083121392806204161}
   speed: 0.7
-  rotationSpeed: 3
+  rotationSpeed: 360
   fadeSpeed: 3
   jumpImpulse: 2
 --- !u!114 &5051959995960565163
@@ -171,6 +171,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 4dab0cdc-2e53-4a1c-b62b-37a5a649c848
     m_ActionName: Default/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2849989f-a590-4e67-bfa7-d159a0e0d0d9
+    m_ActionName: Default/Fire[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0730f2fc-e3f2-41ad-ad45-64038dfe3a5d
+    m_ActionName: Mobile/LeftStick
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 756e6a71-8f2e-4908-8947-a20fe6493587
+    m_ActionName: Mobile/Jump
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: df3903cb-5d2e-499f-82da-acf0598e04ee
+    m_ActionName: Mobile/Fire
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Default
@@ -200,7 +216,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 1
+  m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1

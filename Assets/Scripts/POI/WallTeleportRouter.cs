@@ -44,7 +44,7 @@ namespace Assets.Scripts
 
             var dest = closest[idx];
 
-            StartCoroutine(TransferPlayerTo(player, dest + dir * 0.16f));
+            StartCoroutine(TransferPlayerTo(player, dest + dir * 0.2f));
         }
 
         private IEnumerator TransferPlayerTo(Player player, Vector3 dest)

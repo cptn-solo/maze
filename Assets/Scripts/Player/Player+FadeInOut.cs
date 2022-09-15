@@ -16,6 +16,7 @@ namespace Assets.Scripts
             rb.angularVelocity = Vector3.zero;
             rb.ResetCenterOfMass();
             rb.ResetInertiaTensor();
+            desiredVelocity = Vector3.zero;
 
             if (toggle)
             {
