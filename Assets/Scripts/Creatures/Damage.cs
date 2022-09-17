@@ -29,6 +29,7 @@ namespace Assets.Scripts
             }
         }
 
+
         private void Hitbox_OnZeroHealthReached()
         {
             if (this.hitbox != null)

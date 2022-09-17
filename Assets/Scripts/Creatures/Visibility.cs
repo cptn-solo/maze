@@ -40,6 +40,7 @@ namespace Assets.Scripts
         private void Battle_OnBattleInfoChange(BattleInfo obj)
         {
             unitInfo.Score = obj.CurrentHP;
+            unitInfo.ScoreColor = obj.CriticalHP ? Color.red : Color.green;
             OnInfoChanged?.Invoke(this, unitInfo);            
         }
 

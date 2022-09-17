@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -9,12 +10,30 @@ namespace Assets.Scripts
         private const string AnimGoBool = "go";
         private const string AnimDieBool = "die";
         private const string AnimFireBool = "fire";
+        private const string AnimDamageBool = "damage";
         private const string AnimSpeedFloat = "speed";
         
         protected override void OnAwake()
         {
             base.OnAwake();
             BindInputs();
+        }
+
+        protected override void OnTakingDamage(bool critical)
+        {
+            base.OnTakingDamage(critical);
+
+            StartCoroutine(DamageAnimation());
+        }
+
+        private IEnumerator DamageAnimation()
+        {
+            animator.SetBool(AnimDamageBool, true);
+
+            yield return new WaitForSeconds(.3f);
+
+            animator.SetBool(AnimDamageBool, false);
+
         }
 
         protected override void OnGotKilled()
@@ -24,7 +43,9 @@ namespace Assets.Scripts
             ToggleInput(false);            
             
             animator.SetBool(AnimDieBool, true);
-
+            animator.SetBool(AnimGoBool, false);
+            animator.SetBool(AnimFireBool, false);
+            animator.SetBool(AnimJumpBool, false);
         }
 
         protected override void OnResurrected()
@@ -34,6 +55,9 @@ namespace Assets.Scripts
             ToggleInput(true);
 
             animator.SetBool(AnimDieBool, false);
+            animator.SetBool(AnimGoBool, false);
+            animator.SetBool(AnimFireBool, false);
+            animator.SetBool(AnimJumpBool, false);
         }
         private void OnMove(Vector3 inputDir)
         {

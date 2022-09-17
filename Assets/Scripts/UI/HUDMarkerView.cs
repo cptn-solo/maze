@@ -54,6 +54,7 @@ namespace Assets.Scripts.UI
         internal void SetInfo(UnitInfo e)
         {
             infoLabel.text = $"{e.Score}";
+            infoLabel.color = e.ScoreColor;
         }
 
         private void LateUpdate()

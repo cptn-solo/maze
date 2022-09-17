@@ -173,7 +173,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &3976723928491671586
@@ -229,9 +229,6 @@ MonoBehaviour:
   titleLabel: {fileID: 3976723927965987681}
   infoLabel: {fileID: 4173828285131032207}
   worldYOffset: 0.17
-  targetLayerMask:
-    serializedVersion: 2
-    m_Bits: 320
 --- !u!1 &8506971924448675964
 GameObject:
   m_ObjectHideFlags: 0

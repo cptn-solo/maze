@@ -7,17 +7,21 @@ namespace Assets.Scripts.UI
         public string NickName;
         public Color BodyTintColor;
         public int Score;
+        public Color ScoreColor;
 
-        public UnitInfo(string nickName, Color bodyTintColor, int score)
+        public UnitInfo(string nickName, Color bodyTintColor, int score, Color scoreColor)
         {
             NickName = nickName;
             BodyTintColor = bodyTintColor;
             Score = score;
+            ScoreColor = scoreColor;
         }
         public string Serialize()
         {
             var colorHex = HexStringFromColor(BodyTintColor);
-            return $"{NickName}:{colorHex}:{Score}";
+            var scoreColorHex = HexStringFromColor(ScoreColor);
+
+            return $"{NickName}:{colorHex}:{Score}:{scoreColorHex}";
         }
 
         public static UnitInfo Deserialize(string playerInfo)
@@ -30,6 +34,7 @@ namespace Assets.Scripts.UI
             info.NickName = props[0];
             info.BodyTintColor = ColorFromHexString(props[1]);
             info.Score = int.Parse(props[2]);
+            info.ScoreColor = ColorFromHexString(props[3]);
             return info;
         }
         public static string HexStringFromColor(Color color)

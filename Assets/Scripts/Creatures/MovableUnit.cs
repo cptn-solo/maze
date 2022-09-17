@@ -34,6 +34,7 @@ namespace Assets.Scripts
 
         public event Action<MovableUnit> OnUnitRespawned;
         public event Action<MovableUnit> OnUnitKilled;
+        public event Action<MovableUnit> OnUnitDamaged;
 
         private event Action OnAwakeAction;
         private event Action OnStartAction;
@@ -78,6 +79,8 @@ namespace Assets.Scripts
             battle = GetComponent<Battle>();
 
             battle.OnBattleInfoChange += Battle_OnBattleInfoChange;
+            battle.OnTakingDamage += Battle_OnTakingDamage;
+            
             OnAwakeAction?.Invoke();
         }
 
@@ -89,6 +92,15 @@ namespace Assets.Scripts
         protected virtual void OnResurrected()
         {
 
+        }
+
+        protected virtual void OnTakingDamage(bool critical)
+        {
+
+        }
+        private void Battle_OnTakingDamage(bool critical)
+        {
+            OnTakingDamage(critical);
         }
 
         private void Battle_OnBattleInfoChange(BattleInfo obj)
