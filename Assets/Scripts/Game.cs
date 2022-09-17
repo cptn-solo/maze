@@ -1,3 +1,4 @@
+using Assets.Scripts.UI;
 using System;
 using System.Collections;
 using System.Linq;
@@ -15,12 +16,15 @@ namespace Assets.Scripts
         [SerializeField] private GameObject[] collectablePrefabs;
         
         [SerializeField] private int MaxZombieCount = 10;
+        [SerializeField] private float enemySpawnInterval = 5.0f;
 
         [SerializeField] private Camera sceneCamera;
 
         [SerializeField] private float cameraAngle = -35.0f;
         [SerializeField] private float cameraDistance = 2.5f;
         [SerializeField] private float camSpeed = 4.0f;
+
+        [SerializeField] private HUDMarkersView markers;
 
         private float camDistanceFactor = 1.0f;
 
@@ -30,8 +34,6 @@ namespace Assets.Scripts
         private bool listeningForScreenOrientation;
 
         private Zombie[] zombies = new Zombie[10];
-
-        private int zombiesArrayIncrementSize = 10; 
 
         // Start is called before the first frame update
         void Start()
@@ -66,7 +68,7 @@ namespace Assets.Scripts
 
                 PositionZombie(zombie, building);
 
-                yield return new WaitForSeconds(5.0f);
+                yield return new WaitForSeconds(enemySpawnInterval);
             }
         }
 
@@ -90,7 +92,6 @@ namespace Assets.Scripts
                 camDistanceFactor = ((float) Screen.height) / Screen.width;
                 yield return new WaitForSecondsRealtime(1.0f);
             }
-
         }
 
         private void PositionCamera(Player player, Building building)
@@ -122,6 +123,8 @@ namespace Assets.Scripts
             player.Building = building;
 
             player.OnRespawned(sp.position, sp.rotation);
+
+            markers.AddPlayer(player);
         }
 
         private void PositionZombie(Zombie zombie, Building building)
@@ -133,11 +136,9 @@ namespace Assets.Scripts
             zombie.Building = building;
             
             zombie.gameObject.SetActive(true);
-
             zombie.OnRespawned(sp.position, sp.rotation);
-            
 
-
+            markers.AddEnemy(zombie, EnemyType.Zombie);
         }
 
         private void LateUpdate()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Assets.Scripts
 {
@@ -20,6 +21,8 @@ namespace Assets.Scripts
         {
 
             preset = FrameRatePreset.Default();
+
+            GraphicsSettings.useScriptableRenderPipelineBatching ^= true;
 
             if (Application.isMobilePlatform)
                 preset = FrameRatePreset.Mobile();

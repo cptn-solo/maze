@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.UI;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -8,6 +7,8 @@ namespace Assets.Scripts
     {
         [SerializeField] private SettingsScreen SettingsScreen;
         [SerializeField] private HUDScreen HUDScreen;
+        [SerializeField] private HUDMarkersView Markers;
+        [SerializeField] private HUDLeaderBoardView Leaderboard;
 
         private void OnEnable()
         {

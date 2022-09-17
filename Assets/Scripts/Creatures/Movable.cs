@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -27,6 +28,9 @@ namespace Assets.Scripts
         protected Vector3 localRight;
         protected Vector3 localForward;
 
+        private Action OnAwakeAction;
+        private Action OnStartAction;
+
         public Building Building
         {
             get => building;
@@ -51,7 +55,7 @@ namespace Assets.Scripts
             rb.MovePosition(position);
             rb.MoveRotation(rotation);
 
-            TogglePhisBody(true);
+            TogglePhisBody(true);            
         }
 
         private void ReadLocalAxis()
@@ -70,16 +74,29 @@ namespace Assets.Scripts
         }
 
         protected virtual void OnAwake()
-        { }
+        {
+            OnAwakeAction?.Invoke();
+        }
 
         protected virtual void OnStart()
-        { }
+        {
+            OnStartAction?.Invoke();
+        }
+
 
         protected virtual void OnObjEnable()
-        { }
+        {
+            var visChecker = GetComponentInChildren<VizibilityChecker>();
+            if (visChecker)
+                visChecker.OnVisibilityChanged += VisChecker_OnVisibilityChanged;
+        }
 
         protected virtual void OnObjDisable()
-        { }
+        {
+            var visChecker = GetComponentInChildren<VizibilityChecker>();
+            if (visChecker)
+                visChecker.OnVisibilityChanged -= VisChecker_OnVisibilityChanged;
+        }
 
         private void Awake()
         {

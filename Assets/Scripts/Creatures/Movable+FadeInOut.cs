@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
+
     public partial class Movable
     {
         protected bool fadingOut;
@@ -21,6 +22,8 @@ namespace Assets.Scripts
                 col.enabled = toggle;
                 rb.mass = toggle ? 1.0f : 0.0f;
                 rb.useGravity = toggle;
+
+                transform.localScale = Vector3.one;
             }
             else
             {
