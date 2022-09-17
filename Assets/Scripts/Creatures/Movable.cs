@@ -86,16 +86,14 @@ namespace Assets.Scripts
 
         protected virtual void OnObjEnable()
         {
-            var visChecker = GetComponentInChildren<VizibilityChecker>();
-            if (visChecker)
-                visChecker.OnVisibilityChanged += VisChecker_OnVisibilityChanged;
+            if (TryGetComponent<VizibilityChecker>(out var vizibilityChecker))
+                vizibilityChecker.OnVisibilityChanged += VisChecker_OnVisibilityChanged;
         }
 
         protected virtual void OnObjDisable()
         {
-            var visChecker = GetComponentInChildren<VizibilityChecker>();
-            if (visChecker)
-                visChecker.OnVisibilityChanged -= VisChecker_OnVisibilityChanged;
+            if (TryGetComponent<VizibilityChecker>(out var vizibilityChecker))
+                vizibilityChecker.OnVisibilityChanged -= VisChecker_OnVisibilityChanged;
         }
 
         private void Awake()

@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 2596737671482863991}
   - component: {fileID: 717244323772607735}
   - component: {fileID: 937377309934359970}
+  - component: {fileID: -6112605953365222906}
   m_Layer: 8
   m_Name: Zombie
   m_TagString: Untagged
@@ -166,6 +167,22 @@ MonoBehaviour:
   rotationSpeed: 360
   fadeSpeed: 1
   jumpImpulse: 0
+--- !u!114 &-6112605953365222906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3935691605891884070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c73dfb7b5cd8a254e838a82e0dee6d3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkDistance: 10
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 257
 --- !u!1 &7230279664965516463
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,24 +344,6 @@ SkinnedMeshRenderer:
     type: 3}
   m_PrefabInstance: {fileID: 5538288329909713238}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8562750809472691746 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4183548950872807284, guid: 1348cf7822df3064db5b2e0a32c9ab71,
-    type: 3}
-  m_PrefabInstance: {fileID: 5538288329909713238}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8517336510181667281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8562750809472691746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c73dfb7b5cd8a254e838a82e0dee6d3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &8696986617678930366
 PrefabInstance:
   m_ObjectHideFlags: 0

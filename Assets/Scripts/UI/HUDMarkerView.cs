@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace Assets.Scripts.UI
         [SerializeField] private TextMeshProUGUI titleLabel;
         [SerializeField] private TextMeshProUGUI infoLabel;
         [SerializeField] private float worldYOffset = .17f;
-        [SerializeField] private LayerMask targetLayerMask;
+
+        public event Action<HUDMarkerView, Transform> OnMarkerBeingDestroyed;
 
         private RectTransform rectTransform;
 
@@ -56,6 +58,10 @@ namespace Assets.Scripts.UI
             titleLabel.text = label;
             titleLabel.color = color;
             infoLabel.text = info;
+        }
+        private void OnDestroy()
+        {
+            OnMarkerBeingDestroyed?.Invoke(this, worldTarget);
         }
     }
 }
