@@ -12,8 +12,8 @@ namespace Assets.Scripts
         private int currentHP;
         public int CurrentHP => currentHP;
 
-        public event Action OnDamage;
-        public event Action OnCriticalDamage;
+        public event Action<int> OnDamage;
+        public event Action<int> OnCriticalDamage;
         public event Action OnZeroHealthReached;
         public event Action OnDestroyedOrDisabled;
 
@@ -32,12 +32,12 @@ namespace Assets.Scripts
             else if (currentHP - damage <= criticalHP)
             {
                 currentHP -= damage;
-                OnCriticalDamage?.Invoke();
+                OnCriticalDamage?.Invoke(currentHP);
             }
             else if (currentHP > damage)
             {
                 currentHP -= damage;
-                OnDamage?.Invoke();
+                OnDamage?.Invoke(currentHP);
             }
 
             Debug.Log($"Damaged, current HP: {CurrentHP}");

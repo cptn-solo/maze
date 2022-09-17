@@ -40,6 +40,7 @@ namespace Assets.Scripts
         {
             building = Instantiate(buildingPrefabs[0]).GetComponent<Building>();
             player = Instantiate(playerPrefab).GetComponent<Player>();
+            player.OnUnitKilled += Player_OnUnitKilled;
 
             for (int i = 0; i < enemyPrefabs.Length; i++)
             {
@@ -50,6 +51,11 @@ namespace Assets.Scripts
             PositionCamera(player, building);            
         }
 
+        private void Player_OnUnitKilled(MovableUnit obj)
+        {
+            PositionPlayer((Player)obj, building);
+        }
+
         private IEnumerator StartSpawnEnemy(int enemyPrefabIdx)
         {
 
@@ -58,18 +64,24 @@ namespace Assets.Scripts
             for (int i = 0; i < MaxZombieCount; i++)
             {
                 var zombie = Instantiate(prefab).GetComponent<Zombie>();
+                zombie.OnUnitKilled += Zombie_OnUnitKilled;
                 zombie.gameObject.SetActive(false);
                 zombies[i] = zombie;
             }
 
-            while (true)
+            for (int i = 0; i < MaxZombieCount; i++)
             {
-                var zombie = zombies[Random.Range(0, zombies.Length)];
+                var zombie = zombies[i];
 
                 PositionZombie(zombie, building);
 
                 yield return new WaitForSeconds(enemySpawnInterval);
             }
+        }
+
+        private void Zombie_OnUnitKilled(MovableUnit obj)
+        {
+            PositionZombie((Zombie)obj, building);
         }
 
         private void OnEnable()

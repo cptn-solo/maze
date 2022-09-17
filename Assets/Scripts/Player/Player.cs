@@ -7,6 +7,8 @@ namespace Assets.Scripts
     {
         private const string AnimJumpBool = "jump";
         private const string AnimGoBool = "go";
+        private const string AnimDieBool = "die";
+        private const string AnimFireBool = "fire";
         private const string AnimSpeedFloat = "speed";
         
         protected override void OnAwake()
@@ -15,6 +17,24 @@ namespace Assets.Scripts
             BindInputs();
         }
 
+        protected override void OnGotKilled()
+        {
+            base.OnGotKilled();
+            
+            ToggleInput(false);            
+            
+            animator.SetBool(AnimDieBool, true);
+
+        }
+
+        protected override void OnResurrected()
+        {
+            base.OnResurrected();
+
+            ToggleInput(true);
+
+            animator.SetBool(AnimDieBool, false);
+        }
         private void OnMove(Vector3 inputDir)
         {
             moveDir = inputDir;

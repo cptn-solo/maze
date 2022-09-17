@@ -6,11 +6,21 @@ namespace Assets.Scripts
 {
     public partial class Player
     {
+        private PlayerInputActions actions;
+
+        private void ToggleInput(bool toggle)
+        {
+            if (toggle)
+                actions.Enable();
+            else
+                actions.Disable();
+        }
+
         private void BindInputs()
         {
-            PlayerInputActions actions = new PlayerInputActions();
+            actions = new PlayerInputActions();
 
-            actions.Enable();
+            ToggleInput(true);
             
             actions.Default.Move.performed += Move_performed;
             actions.Default.Jump.performed += Jump_performed;

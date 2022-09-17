@@ -3,10 +3,18 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
+    public struct BattleInfo
+    {
+        public int CurrentHP;
+    }
     public class Battle : MonoBehaviour
     {
         private Hitbox hitbox;
         private MovableUnit unit;
+
+        private BattleInfo battleInfo = default;
+
+        public event Action<BattleInfo> OnBattleInfoChange;
 
         private void Awake()
         {
@@ -16,10 +24,14 @@ namespace Assets.Scripts
             unit.OnUnitRespawned += Unit_OnUnitRespawned;
         }
 
-        private void Unit_OnUnitRespawned()
+        private void Unit_OnUnitRespawned(MovableUnit unit)
         {
             if (hitbox)
+            {
                 hitbox.ResetHP();
+                battleInfo.CurrentHP = hitbox.CurrentHP;
+                OnBattleInfoChange?.Invoke(battleInfo);
+            }
         }
 
         private void OnEnable()
@@ -43,11 +55,14 @@ namespace Assets.Scripts
 
         private void Hitbox_OnZeroHealthReached()
         {
+            battleInfo.CurrentHP = 0;
+            OnBattleInfoChange?.Invoke(battleInfo);
         }
 
-        private void Hitbox_OnDamage()
+        private void Hitbox_OnDamage(int currentHP)
         {
-
+            battleInfo.CurrentHP = currentHP;
+            OnBattleInfoChange?.Invoke(battleInfo);
         }
 
     }

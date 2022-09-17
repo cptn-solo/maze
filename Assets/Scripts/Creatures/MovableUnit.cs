@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -7,6 +8,7 @@ namespace Assets.Scripts
     {
         protected Rigidbody rb;
         protected Collider col;
+        private Battle battle;
 
         [SerializeField] protected Renderer ren;
         [SerializeField] protected Animator animator;
@@ -30,7 +32,8 @@ namespace Assets.Scripts
         private Vector3 translatedDir;
         private Vector3 center = Vector3.zero;
 
-        public event Action OnUnitRespawned;
+        public event Action<MovableUnit> OnUnitRespawned;
+        public event Action<MovableUnit> OnUnitKilled;
 
         private event Action OnAwakeAction;
         private event Action OnStartAction;
@@ -50,6 +53,7 @@ namespace Assets.Scripts
 
         public void OnRespawned(Vector3 position, Quaternion rotation)
         {
+
             TogglePhisBody(false);
 
             rb.velocity = Vector3.zero;
@@ -62,15 +66,47 @@ namespace Assets.Scripts
 
             TogglePhisBody(true);
 
-            OnUnitRespawned?.Invoke();
+            OnResurrected();
+
+            OnUnitRespawned?.Invoke(this);
         }
 
         protected virtual void OnAwake()
         {
             rb = GetComponent<Rigidbody>();
             col = GetComponent<CapsuleCollider>();
-           
+            battle = GetComponent<Battle>();
+
+            battle.OnBattleInfoChange += Battle_OnBattleInfoChange;
             OnAwakeAction?.Invoke();
+        }
+
+        protected virtual void OnGotKilled()
+        {
+            moveDir = Vector3.zero;
+        }
+
+        protected virtual void OnResurrected()
+        {
+
+        }
+
+        private void Battle_OnBattleInfoChange(BattleInfo obj)
+        {
+            if (obj.CurrentHP <= 0)
+            {
+                StartCoroutine(Killed());
+            }
+        }
+
+        private IEnumerator Killed()
+        {
+            OnGotKilled();
+
+            yield return new WaitForSeconds(3.0f);
+
+            OnUnitKilled?.Invoke(this);
+
         }
 
         protected virtual void OnStart() => OnStartAction?.Invoke();

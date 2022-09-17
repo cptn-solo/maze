@@ -21,6 +21,7 @@ namespace Assets.Scripts.UI
                 return markers[transform];
 
             unit.OnVisibilityChanged += Unit_OnVisibilityChanged;
+            unit.OnInfoChanged += Unit_OnInfoChanged;
 
             var marker = Instantiate(markerPrefab).GetComponent<HUDMarkerView>();
             marker.OnMarkerBeingDestroyed += Marker_OnMarkerBeingDestroyed;
@@ -33,6 +34,12 @@ namespace Assets.Scripts.UI
         private void Marker_OnMarkerBeingDestroyed(HUDMarkerView arg1, Transform arg2)
         {
             markers.Remove(arg2);
+        }
+        private void Unit_OnInfoChanged(object sender, UnitInfo e)
+        {
+            var owner = (IVisibleObject)sender;
+            if (markers.TryGetValue(owner.Transform, out var marker))
+                marker.SetInfo(e);
         }
 
         private void Unit_OnVisibilityChanged(object sender, bool e)
@@ -51,13 +58,6 @@ namespace Assets.Scripts.UI
                 marker.Detach();
                 Destroy(marker.gameObject);
             }
-        }
-
-        internal void UpdateUnit(IVisibleObject unit, UnitInfo unitInfo)
-        {
-            var transform = unit.Transform;
-            if (markers.TryGetValue(transform, out var marker))
-                marker.SetInfo(unitInfo.NickName, unitInfo.BodyTintColor, $"{unitInfo.Score}");
         }
 
         private void Awake() => rectTransform = GetComponent<RectTransform>();

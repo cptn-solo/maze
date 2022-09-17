@@ -42,15 +42,6 @@ namespace Assets.Scripts.UI
             this.gameObject.SetActive(false);
         }
 
-        private void LateUpdate()
-        {
-            if (cam != null && worldTarget != null)
-            {
-                var pos = worldTarget.position + Vector3.up * worldYOffset;
-                rectTransform.position = cam.WorldToScreenPoint(pos);
-            }       
-        }
-
         internal void SetInfo(string label, Color color, string info)
         {
             Info.SetInfo(label, color, info);
@@ -59,9 +50,25 @@ namespace Assets.Scripts.UI
             titleLabel.color = color;
             infoLabel.text = info;
         }
+
+        internal void SetInfo(UnitInfo e)
+        {
+            infoLabel.text = $"{e.Score}";
+        }
+
+        private void LateUpdate()
+        {
+            if (cam != null && worldTarget != null)
+            {
+                var pos = worldTarget.position + Vector3.up * worldYOffset;
+                rectTransform.position = cam.WorldToScreenPoint(pos);
+            }
+        }
+
         private void OnDestroy()
         {
             OnMarkerBeingDestroyed?.Invoke(this, worldTarget);
         }
+
     }
 }
