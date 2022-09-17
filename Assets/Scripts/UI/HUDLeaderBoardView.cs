@@ -26,7 +26,7 @@ namespace Assets.Scripts.UI
             var playerView = Instantiate(itemPrefab).GetComponent<LeaderBoardItemView>();
             var listRectTransform = layoutGroup.GetComponent<RectTransform>();
             playerView.Attach(listRectTransform, id, rectTransform.localScale.x);
-            playerView.SetInfo(new PlayerInfo(), false);
+            playerView.SetInfo(new UnitInfo(), false);
             leaders.Add(id, playerView);
         }
         internal void RemovePlayer(string id)
@@ -38,7 +38,7 @@ namespace Assets.Scripts.UI
             }
         }
 
-        internal void UpdatePlayer(string id, PlayerInfo playerInfo, bool localPlayer)
+        internal void UpdatePlayer(string id, UnitInfo playerInfo, bool localPlayer)
         {
             if (leaders.TryGetValue(id, out var leaderView) && !leaderView.gameObject.IsDestroyed())
             {

@@ -11,7 +11,7 @@ namespace Assets.Scripts
         private Animator animator;
         private PortalGate[] tpGates;
 
-        public event Action<Vector3, Vector3, Movable> OnEnterPortal;
+        public event Action<Vector3, Vector3, MovableUnit> OnEnterPortal;
 
         private void Awake()
         {
@@ -32,7 +32,7 @@ namespace Assets.Scripts
             }
         }
 
-        private void Tp_OnEnterGate(PortalGate gate, Movable passenger)
+        private void Tp_OnEnterGate(PortalGate gate, MovableUnit passenger)
         {
             OnEnterPortal?.Invoke(
                      transform.position,

@@ -22,17 +22,6 @@ namespace Assets.Scripts
             actions.Mobile.Fire.performed += Fire_performed;
         }
 
-
-        private void Fire_performed(InputAction.CallbackContext obj)
-        {
-            
-        }
-
-        private void LeftStick_canceled(InputAction.CallbackContext obj)
-        {
-            OnMove(Vector3.zero);
-        }
-
         private void LeftStick_performed(InputAction.CallbackContext obj)
         {
             var rawInput = obj.ReadValue<Vector2>();
@@ -42,6 +31,10 @@ namespace Assets.Scripts
             mappedInput.z = rawInput.y;
 
             OnMove(mappedInput);
+        }
+        private void LeftStick_canceled(InputAction.CallbackContext obj)
+        {
+            OnMove(Vector3.zero);
         }
 
         private void Move_performed(InputAction.CallbackContext obj)
@@ -54,6 +47,10 @@ namespace Assets.Scripts
             OnJump();
         }
 
+        private void Fire_performed(InputAction.CallbackContext obj)
+        {
+            OnFire();
+        }
 
     }
 }

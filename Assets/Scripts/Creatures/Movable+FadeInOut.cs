@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Assets.Scripts
 {
 
-    public partial class Movable
+    public partial class MovableUnit
     {
         protected bool fadingOut;
         protected bool fadedOut;

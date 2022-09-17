@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public partial class Movable
+    public partial class MovableUnit
     {
 
 #if UNITY_EDITOR

@@ -2,13 +2,13 @@
 
 namespace Assets.Scripts.UI
 {
-    public struct PlayerInfo
+    public struct UnitInfo
     {
         public string NickName;
         public Color BodyTintColor;
         public int Score;
 
-        public PlayerInfo(string nickName, Color bodyTintColor, int score)
+        public UnitInfo(string nickName, Color bodyTintColor, int score)
         {
             NickName = nickName;
             BodyTintColor = bodyTintColor;
@@ -20,13 +20,13 @@ namespace Assets.Scripts.UI
             return $"{NickName}:{colorHex}:{Score}";
         }
 
-        public static PlayerInfo Deserialize(string playerInfo)
+        public static UnitInfo Deserialize(string playerInfo)
         {
             Debug.Log($"PlayerInfo Deserialize {playerInfo}");
 
             var props = playerInfo.Split(":");
 
-            PlayerInfo info = default;
+            UnitInfo info = default;
             info.NickName = props[0];
             info.BodyTintColor = ColorFromHexString(props[1]);
             info.Score = int.Parse(props[2]);

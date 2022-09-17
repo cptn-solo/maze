@@ -124,7 +124,8 @@ namespace Assets.Scripts
 
             player.OnRespawned(sp.position, sp.rotation);
 
-            markers.AddPlayer(player);
+            if (player.TryGetComponent<Visibility>(out var unit))
+                markers.AddUnit(unit);
         }
 
         private void PositionZombie(Zombie zombie, Building building)
@@ -138,7 +139,8 @@ namespace Assets.Scripts
             zombie.gameObject.SetActive(true);
             zombie.OnRespawned(sp.position, sp.rotation);
 
-            markers.AddEnemy(zombie, EnemyType.Zombie);
+            if (zombie.TryGetComponent<Visibility>(out var unit)) 
+                markers.AddEnemy(unit, EnemyType.Zombie);
         }
 
         private void LateUpdate()

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public partial class Player : Movable
+    public partial class Player : MovableUnit
     {
         private const string AnimJumpBool = "jump";
         private const string AnimGoBool = "go";
@@ -30,6 +30,11 @@ namespace Assets.Scripts
         {
             if (rb.velocity.y < .01f && !fadingOut)
                 StartCoroutine(JumpCoroutine());
+        }
+
+        private void OnFire()
+        {
+
         }
 
         private IEnumerator JumpCoroutine()

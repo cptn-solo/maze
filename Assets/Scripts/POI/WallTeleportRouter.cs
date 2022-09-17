@@ -34,7 +34,7 @@ namespace Assets.Scripts
                 tp.OnEnterPortal += Tp_OnEnterPortal;
         }
 
-        private void Tp_OnEnterPortal(Vector3 point, Vector3 dir, Movable passenger)
+        private void Tp_OnEnterPortal(Vector3 point, Vector3 dir, MovableUnit passenger)
         {
             var filtered = points.Where(x => x != point);
             var ordered = filtered.OrderBy(x => (x - point).sqrMagnitude).ToArray();
@@ -47,7 +47,7 @@ namespace Assets.Scripts
             StartCoroutine(TransferTo(passenger, dest + dir * 0.2f));
         }
 
-        private IEnumerator TransferTo(Movable passenger, Vector3 dest)
+        private IEnumerator TransferTo(MovableUnit passenger, Vector3 dest)
         {
             while (!passenger.FadeOut())
                 yield return null;

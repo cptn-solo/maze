@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts.UI
@@ -12,16 +11,16 @@ namespace Assets.Scripts.UI
         private RectTransform rectTransform;
 
         internal HUDMarkerView AddEnemy(IVisibleObject enemy, EnemyType enemyType) => 
-            AddPlayer(enemy);
+            AddUnit(enemy);
 
-        internal HUDMarkerView AddPlayer(IVisibleObject player)
+        internal HUDMarkerView AddUnit(IVisibleObject unit)
         {
-            var transform = player.Transform;
+            var transform = unit.Transform;
 
             if (markers.ContainsKey(transform))
                 return markers[transform];
 
-            player.OnVisibilityChanged += Player_OnVisibilityChanged;
+            unit.OnVisibilityChanged += Unit_OnVisibilityChanged;
 
             var marker = Instantiate(markerPrefab).GetComponent<HUDMarkerView>();
             marker.OnMarkerBeingDestroyed += Marker_OnMarkerBeingDestroyed;
@@ -36,28 +35,29 @@ namespace Assets.Scripts.UI
             markers.Remove(arg2);
         }
 
-        private void Player_OnVisibilityChanged(object sender, bool e)
+        private void Unit_OnVisibilityChanged(object sender, bool e)
         {
             var owner = (IVisibleObject)sender;
             if (markers.TryGetValue(owner.Transform, out var marker))
                 marker.gameObject.SetActive(e);
         }
 
-        internal void RemoveMarker(IVisibleObject owner)
+        internal void RemoveMarker(IVisibleObject unit)
         {
-            var transform = owner.Transform;
+            var transform = unit.Transform;
             if (markers.TryGetValue(transform, out var marker))
             {
-                owner.OnVisibilityChanged -= Player_OnVisibilityChanged;
+                unit.OnVisibilityChanged -= Unit_OnVisibilityChanged;
                 marker.Detach();
                 Destroy(marker.gameObject);
             }
         }
 
-        internal void UpdatePlayer(Transform transform, PlayerInfo playerInfo)
+        internal void UpdateUnit(IVisibleObject unit, UnitInfo unitInfo)
         {
+            var transform = unit.Transform;
             if (markers.TryGetValue(transform, out var marker))
-                marker.SetInfo(playerInfo.NickName, playerInfo.BodyTintColor, $"{playerInfo.Score}");
+                marker.SetInfo(unitInfo.NickName, unitInfo.BodyTintColor, $"{unitInfo.Score}");
         }
 
         private void Awake() => rectTransform = GetComponent<RectTransform>();

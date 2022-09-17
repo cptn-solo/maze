@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public partial class Movable : MonoBehaviour
+    public partial class MovableUnit : MonoBehaviour
     {
         protected Rigidbody rb;
         protected Collider col;
@@ -28,8 +27,17 @@ namespace Assets.Scripts
         protected Vector3 localRight;
         protected Vector3 localForward;
 
-        private Action OnAwakeAction;
-        private Action OnStartAction;
+        private Vector3 translatedDir;
+        private Vector3 center = Vector3.zero;
+
+        public event Action OnUnitRespawned;
+
+        private event Action OnAwakeAction;
+        private event Action OnStartAction;
+
+        private event Action OnEnabledAction;
+        private event Action OnDisabledAction;
+        private event Action OnDestroyAction;
 
         public Building Building
         {
@@ -39,9 +47,6 @@ namespace Assets.Scripts
                 building = value;
             }
         }
-
-        private Vector3 translatedDir;
-        private Vector3 center = Vector3.zero;
 
         public void OnRespawned(Vector3 position, Quaternion rotation)
         {
@@ -55,8 +60,36 @@ namespace Assets.Scripts
             rb.MovePosition(position);
             rb.MoveRotation(rotation);
 
-            TogglePhisBody(true);            
+            TogglePhisBody(true);
+
+            OnUnitRespawned?.Invoke();
         }
+
+        protected virtual void OnAwake()
+        {
+            rb = GetComponent<Rigidbody>();
+            col = GetComponent<CapsuleCollider>();
+           
+            OnAwakeAction?.Invoke();
+        }
+
+        protected virtual void OnStart() => OnStartAction?.Invoke();
+
+        protected virtual void OnObjEnable() => OnEnabledAction?.Invoke();
+
+        protected virtual void OnObjDisable() => OnDisabledAction?.Invoke();            
+
+        protected virtual void OnObjDestroy() => OnDestroyAction?.Invoke();
+
+        private void Awake() => OnAwake();
+
+        private void Start() => OnStart();
+
+        private void OnEnable() => OnObjEnable();
+        
+        private void OnDisable() => OnObjDisable();
+
+        private void OnDestroy() => OnObjDestroy();
 
         private void ReadLocalAxis()
         {
@@ -72,54 +105,6 @@ namespace Assets.Scripts
 
             translatedDir = moveDir.x * localRight + moveDir.z * localForward;
         }
-
-        protected virtual void OnAwake()
-        {
-            OnAwakeAction?.Invoke();
-        }
-
-        protected virtual void OnStart()
-        {
-            OnStartAction?.Invoke();
-        }
-
-
-        protected virtual void OnObjEnable()
-        {
-            if (TryGetComponent<VizibilityChecker>(out var vizibilityChecker))
-                vizibilityChecker.OnVisibilityChanged += VisChecker_OnVisibilityChanged;
-        }
-
-        protected virtual void OnObjDisable()
-        {
-            if (TryGetComponent<VizibilityChecker>(out var vizibilityChecker))
-                vizibilityChecker.OnVisibilityChanged -= VisChecker_OnVisibilityChanged;
-        }
-
-        private void Awake()
-        {
-            rb = GetComponent<Rigidbody>();
-            col = GetComponent<CapsuleCollider>();
-
-            OnAwake();
-        }
-
-        private void Start()
-        {
-            OnStart();
-        }
-
-        private void OnEnable()
-        {
-            OnObjEnable();
-
-        }
-        
-        private void OnDisable()
-        {
-            OnObjDisable();
-        }
-
 
         private void Update()
         {

@@ -15,7 +15,7 @@ namespace Assets.Scripts.UI
         
         private RectTransform rectTransform;
 
-        public PlayerInfo Info { get; private set; }
+        public UnitInfo Info { get; private set; }
         public void Attach(RectTransform parent, string networkId, float scale)
         {
             rectTransform.SetParent(parent);
@@ -24,7 +24,7 @@ namespace Assets.Scripts.UI
             this.networkId = networkId;
         }
 
-        internal void SetInfo(PlayerInfo info, bool localPlayer)
+        internal void SetInfo(UnitInfo info, bool localPlayer)
         {
             nameLabel.text = info.NickName;
             nameLabel.color = info.BodyTintColor;

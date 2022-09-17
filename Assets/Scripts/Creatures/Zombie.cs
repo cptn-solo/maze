@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts
 {
-    public class Zombie : Movable
+    public class Zombie : MovableUnit
     {
         private const string AnimGoBool = "go";
         private const string AnimDieBool = "die";
