@@ -11,9 +11,12 @@ namespace Assets.Scripts
 
         private Hitbox hitbox;
 
+        public bool Active { get; set; }
+
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CheckColliderMask(damageTo) && 
+            if (Active &&
+                other.CheckColliderMask(damageTo) && 
                 other.gameObject.TryGetComponent<Hitbox>(out var hitbox) &&
                 hitbox.CurrentHP > 0)
             {
@@ -51,10 +54,10 @@ namespace Assets.Scripts
 
         private IEnumerator RepeatDamage()
         {
-            while (hitbox != null)
+            while (Active && hitbox != null)
             {
                 yield return new WaitForSeconds(damageInterval);
-                if (hitbox != null && hitbox.CurrentHP > 0)
+                if (Active && hitbox != null && hitbox.CurrentHP > 0)
                     hitbox.DealDamage(damagePerHit);                
             }
         }

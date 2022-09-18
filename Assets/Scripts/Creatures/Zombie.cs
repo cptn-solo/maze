@@ -9,15 +9,14 @@ namespace Assets.Scripts
         private const string AnimDieBool = "die";
         private const string AnimAttackBool = "attack";
         private const string AnimDamageBool = "damage";
+        
+        private Damage damage;
 
-        protected override void OnStart()
+        protected override void OnAwake()
         {
-            base.OnStart();
-
-            var dirRandom = Random.Range(0, 2);
-            moveDir = dirRandom == 0 ? Vector3.right : Vector3.left;
+            base.OnAwake();
+            damage = GetComponentInChildren<Damage>();
         }
-
         protected override void OnTakingDamage(bool critical)
         {
             base.OnTakingDamage(critical);
@@ -39,6 +38,8 @@ namespace Assets.Scripts
         {
             base.OnGotKilled();
 
+            damage.Active = false;
+
             animator.SetBool(AnimDieBool, true);
             animator.SetBool(AnimGoBool, false);
             animator.SetBool(AnimAttackBool, false);
@@ -47,9 +48,14 @@ namespace Assets.Scripts
         protected override void OnResurrected()
         {
             base.OnResurrected();
+            
+            var dirRandom = Random.Range(0, 2);
+            moveDir = dirRandom == 0 ? Vector3.right : Vector3.left;
+
+            damage.Active = true;
 
             animator.SetBool(AnimDieBool, false);
-            animator.SetBool(AnimGoBool, false);
+            animator.SetBool(AnimGoBool, true);
             animator.SetBool(AnimAttackBool, false);
         }
 
@@ -58,8 +64,8 @@ namespace Assets.Scripts
             base.OnObjDisable();
 
             animator.SetBool(AnimDieBool, false);
-            animator.SetBool(AnimAttackBool, false);
             animator.SetBool(AnimGoBool, false);
+            animator.SetBool(AnimAttackBool, false);
         }
 
         protected override void OnObjEnable()
@@ -67,8 +73,8 @@ namespace Assets.Scripts
             base.OnObjEnable();
             
             animator.SetBool(AnimDieBool, false);
-            animator.SetBool(AnimAttackBool, false);
             animator.SetBool(AnimGoBool, true);
+            animator.SetBool(AnimAttackBool, false);
         }
     }
 }
