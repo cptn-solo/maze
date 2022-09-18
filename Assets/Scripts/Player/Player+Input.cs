@@ -24,12 +24,12 @@ namespace Assets.Scripts
             
             actions.Default.Move.performed += Move_performed;
             actions.Default.Jump.performed += Jump_performed;
-            actions.Default.Fire.performed += Fire_performed;
+            actions.Default.Attack.performed += Attack_performed;
 
             actions.Mobile.LeftStick.performed += LeftStick_performed;
             actions.Mobile.LeftStick.canceled += LeftStick_canceled;
             actions.Mobile.Jump.performed += Jump_performed;
-            actions.Mobile.Fire.performed += Fire_performed;
+            actions.Mobile.Attack.performed += Attack_performed;
         }
 
         private void LeftStick_performed(InputAction.CallbackContext obj)
@@ -57,9 +57,10 @@ namespace Assets.Scripts
             OnJump();
         }
 
-        private void Fire_performed(InputAction.CallbackContext obj)
+        private void Attack_performed(InputAction.CallbackContext obj)
         {
-            OnFire();
+            Debug.Log($"Attack_performed {obj}");
+            OnAttack(obj.ReadValueAsButton());
         }
 
     }

@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Fire",
+                    "name": "Attack",
                     "type": "Button",
                     "id": "2849989f-a590-4e67-bfa7-d159a0e0d0d9",
                     "expectedControlType": "Button",
@@ -104,10 +104,10 @@
                     "name": "",
                     "id": "9a510bca-0cc5-4748-9cc5-5e3270220b45",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "",
-                    "action": "Fire",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -136,7 +136,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Fire",
+                    "name": "Attack",
                     "type": "Button",
                     "id": "df3903cb-5d2e-499f-82da-acf0598e04ee",
                     "expectedControlType": "Button",
@@ -172,10 +172,10 @@
                     "name": "",
                     "id": "5eacadc0-0080-40e4-8084-55f00ee89b96",
                     "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "",
-                    "action": "Fire",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

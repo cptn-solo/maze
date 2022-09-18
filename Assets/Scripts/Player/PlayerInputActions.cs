@@ -46,7 +46,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Fire"",
+                    ""name"": ""Attack"",
                     ""type"": ""Button"",
                     ""id"": ""2849989f-a590-4e67-bfa7-d159a0e0d0d9"",
                     ""expectedControlType"": ""Button"",
@@ -126,10 +126,10 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""9a510bca-0cc5-4748-9cc5-5e3270220b45"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fire"",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -158,7 +158,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Fire"",
+                    ""name"": ""Attack"",
                     ""type"": ""Button"",
                     ""id"": ""df3903cb-5d2e-499f-82da-acf0598e04ee"",
                     ""expectedControlType"": ""Button"",
@@ -194,10 +194,10 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""5eacadc0-0080-40e4-8084-55f00ee89b96"",
                     ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Fire"",
+                    ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -210,12 +210,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Default = asset.FindActionMap("Default", throwIfNotFound: true);
         m_Default_Move = m_Default.FindAction("Move", throwIfNotFound: true);
         m_Default_Jump = m_Default.FindAction("Jump", throwIfNotFound: true);
-        m_Default_Fire = m_Default.FindAction("Fire", throwIfNotFound: true);
+        m_Default_Attack = m_Default.FindAction("Attack", throwIfNotFound: true);
         // Mobile
         m_Mobile = asset.FindActionMap("Mobile", throwIfNotFound: true);
         m_Mobile_LeftStick = m_Mobile.FindAction("LeftStick", throwIfNotFound: true);
         m_Mobile_Jump = m_Mobile.FindAction("Jump", throwIfNotFound: true);
-        m_Mobile_Fire = m_Mobile.FindAction("Fire", throwIfNotFound: true);
+        m_Mobile_Attack = m_Mobile.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -277,14 +277,14 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private IDefaultActions m_DefaultActionsCallbackInterface;
     private readonly InputAction m_Default_Move;
     private readonly InputAction m_Default_Jump;
-    private readonly InputAction m_Default_Fire;
+    private readonly InputAction m_Default_Attack;
     public struct DefaultActions
     {
         private @PlayerInputActions m_Wrapper;
         public DefaultActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Default_Move;
         public InputAction @Jump => m_Wrapper.m_Default_Jump;
-        public InputAction @Fire => m_Wrapper.m_Default_Fire;
+        public InputAction @Attack => m_Wrapper.m_Default_Attack;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -300,9 +300,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnJump;
-                @Fire.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnFire;
-                @Fire.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnFire;
-                @Fire.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnFire;
+                @Attack.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
@@ -313,9 +313,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
-                @Fire.started += instance.OnFire;
-                @Fire.performed += instance.OnFire;
-                @Fire.canceled += instance.OnFire;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
             }
         }
     }
@@ -326,14 +326,14 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private IMobileActions m_MobileActionsCallbackInterface;
     private readonly InputAction m_Mobile_LeftStick;
     private readonly InputAction m_Mobile_Jump;
-    private readonly InputAction m_Mobile_Fire;
+    private readonly InputAction m_Mobile_Attack;
     public struct MobileActions
     {
         private @PlayerInputActions m_Wrapper;
         public MobileActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @LeftStick => m_Wrapper.m_Mobile_LeftStick;
         public InputAction @Jump => m_Wrapper.m_Mobile_Jump;
-        public InputAction @Fire => m_Wrapper.m_Mobile_Fire;
+        public InputAction @Attack => m_Wrapper.m_Mobile_Attack;
         public InputActionMap Get() { return m_Wrapper.m_Mobile; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -349,9 +349,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
-                @Fire.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnFire;
-                @Fire.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnFire;
-                @Fire.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnFire;
+                @Attack.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnAttack;
             }
             m_Wrapper.m_MobileActionsCallbackInterface = instance;
             if (instance != null)
@@ -362,9 +362,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
-                @Fire.started += instance.OnFire;
-                @Fire.performed += instance.OnFire;
-                @Fire.canceled += instance.OnFire;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
             }
         }
     }
@@ -373,12 +373,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnFire(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
     public interface IMobileActions
     {
         void OnLeftStick(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnFire(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }

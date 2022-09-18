@@ -9,10 +9,14 @@ namespace Assets.Scripts
         private const string AnimJumpBool = "jump";
         private const string AnimGoBool = "go";
         private const string AnimDieBool = "die";
-        private const string AnimFireBool = "fire";
+        private const string AnimAttackBool = "attack";
         private const string AnimDamageBool = "damage";
         private const string AnimSpeedFloat = "speed";
-        
+
+        [SerializeField] private Transform launcher;
+        [SerializeField] private Shell shell;
+        private bool inAttackState;
+
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -40,11 +44,13 @@ namespace Assets.Scripts
         {
             base.OnGotKilled();
             
-            ToggleInput(false);            
-            
+            ToggleInput(false);
+
+            inAttackState = false;
+
             animator.SetBool(AnimDieBool, true);
             animator.SetBool(AnimGoBool, false);
-            animator.SetBool(AnimFireBool, false);
+            animator.SetBool(AnimAttackBool, false);
             animator.SetBool(AnimJumpBool, false);
         }
 
@@ -56,7 +62,7 @@ namespace Assets.Scripts
 
             animator.SetBool(AnimDieBool, false);
             animator.SetBool(AnimGoBool, false);
-            animator.SetBool(AnimFireBool, false);
+            animator.SetBool(AnimAttackBool, false);
             animator.SetBool(AnimJumpBool, false);
         }
         private void OnMove(Vector3 inputDir)
@@ -76,9 +82,32 @@ namespace Assets.Scripts
                 StartCoroutine(JumpCoroutine());
         }
 
-        private void OnFire()
+        private void OnAttack(bool toggle)
         {
+            if (toggle && !inAttackState)
+                StartCoroutine(AttackCoroutine());
 
+            inAttackState = toggle;
+        }
+
+        private IEnumerator AttackCoroutine()
+        {
+            inAttackState = true;
+
+            while (inAttackState && !fadingOut)
+            {
+                shell.transform.SetParent(null, true);
+                shell.gameObject.SetActive(true);
+
+                yield return new WaitForSeconds(.3f);
+
+                shell.gameObject.SetActive(false);
+                shell.transform.SetParent(launcher, false);
+                shell.transform.localPosition = Vector3.zero;
+                shell.transform.localRotation = Quaternion.identity;
+                
+                yield return new WaitForSeconds(.1f);
+            }
         }
 
         private IEnumerator JumpCoroutine()
