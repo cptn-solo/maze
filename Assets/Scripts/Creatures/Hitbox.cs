@@ -39,8 +39,6 @@ namespace Assets.Scripts
                 currentHP -= damage;
                 OnDamage?.Invoke(currentHP);
             }
-
-            Debug.Log($"Damaged, current HP: {CurrentHP}");
         }
 
         private void OnDestroy()
