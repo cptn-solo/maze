@@ -7,6 +7,8 @@ namespace Assets.Scripts
         [SerializeField] private float speed = 1.0f;
         private Damage damage;
 
+        public LayerMask DamageTo => damage != null ? damage.DamageTo : default;
+
         private void Awake()
         {
             damage = GetComponent<Damage>();

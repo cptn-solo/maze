@@ -15,12 +15,16 @@ namespace Assets.Scripts
 
         [SerializeField] private Transform launcher;
         [SerializeField] private Shell shell;
+        
         private bool inAttackState;
+        private AimTarget aim;
 
         protected override void OnAwake()
         {
             base.OnAwake();
             BindInputs();
+
+            aim = GetComponent<AimTarget>();
         }
 
         protected override void OnTakingDamage(bool critical)
@@ -85,9 +89,25 @@ namespace Assets.Scripts
         private void OnAttack(bool toggle)
         {
             if (toggle && !inAttackState)
+            {
+                aim.Engage(true);
                 StartCoroutine(AttackCoroutine());
+            }
 
             inAttackState = toggle;
+
+            if (!inAttackState)
+                aim.Engage(false);
+
+        }
+
+
+        protected override Vector3 CurrentRotationDir(Vector3 translatedDir)
+        {
+            if (!inAttackState || aim.AttackTarget == null)
+                return base.CurrentRotationDir(translatedDir);
+
+            return aim.AttackTarget.position - transform.position;
         }
 
         private IEnumerator AttackCoroutine()

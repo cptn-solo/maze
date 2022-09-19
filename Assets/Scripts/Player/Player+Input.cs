@@ -59,7 +59,6 @@ namespace Assets.Scripts
 
         private void Attack_performed(InputAction.CallbackContext obj)
         {
-            Debug.Log($"Attack_performed {obj}");
             OnAttack(obj.ReadValueAsButton());
         }
 

@@ -161,8 +161,10 @@ namespace Assets.Scripts
 
             desiredRotVelocity = default;
 
+            var rotationDir = CurrentRotationDir(translatedDir);
+
             var rs = rotationSpeed * Mathf.Deg2Rad; // 3 ~ 180 deg/s
-            var angleY = Vector3.SignedAngle(transform.forward, translatedDir, Vector3.up) * Mathf.Deg2Rad;
+            var angleY = Vector3.SignedAngle(transform.forward, rotationDir, Vector3.up) * Mathf.Deg2Rad;
             desiredRotVelocity.y = rs * angleY;
 
             var angleX = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.right) * Mathf.Deg2Rad;
@@ -173,7 +175,17 @@ namespace Assets.Scripts
 
             var desiredSpeed = (moveDir.sqrMagnitude != 0.0f && !fadingOut) ? speed : 0;
 
-            desiredVelocity = translatedDir * desiredSpeed;
+            desiredVelocity = CurrentMoveDir(translatedDir) * desiredSpeed;
+        }
+
+        protected virtual Vector3 CurrentMoveDir(Vector3 translatedDir)
+        {
+            return translatedDir;
+        }
+
+        protected virtual Vector3 CurrentRotationDir(Vector3 translatedDir)
+        {
+            return translatedDir;
         }
 
         private void FixedUpdate()

@@ -11,6 +11,8 @@ namespace Assets.Scripts
 
         private Hitbox hitbox;
 
+        public LayerMask DamageTo => damageTo;
+
         public bool Active { get; set; }
 
         private void OnTriggerEnter(Collider other)

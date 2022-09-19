@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -11,12 +12,17 @@ namespace Assets.Scripts
         private const string AnimDamageBool = "damage";
         
         private Damage damage;
+        private AimTarget aim;
+        private bool scouting;
 
         protected override void OnAwake()
         {
             base.OnAwake();
+
             damage = GetComponentInChildren<Damage>();
+            aim = GetComponent<AimTarget>();
         }
+
         protected override void OnTakingDamage(bool critical)
         {
             base.OnTakingDamage(critical);
@@ -34,11 +40,40 @@ namespace Assets.Scripts
 
         }
 
+        private IEnumerator LookForTarget()
+        {
+            while (scouting)
+            {                
+                yield return new WaitForSeconds(1.0f);
+
+                if (scouting)
+                    aim.Engage(aim.AttackTarget == null || aim.AttackTargetLost);
+            }
+        }
+
+        protected override Vector3 CurrentMoveDir(Vector3 translatedDir)
+        {
+            if (aim.AttackTarget)
+                return (aim.AttackTarget.position - transform.position).normalized;
+
+            return base.CurrentMoveDir(translatedDir);
+        }
+        protected override Vector3 CurrentRotationDir(Vector3 translatedDir)
+        {
+            if (!scouting|| aim.AttackTarget == null)
+                return base.CurrentRotationDir(translatedDir);
+
+            return aim.AttackTarget.position - transform.position;
+        }
+
         protected override void OnGotKilled()
         {
             base.OnGotKilled();
 
             damage.Active = false;
+            
+            scouting = false;
+            StopCoroutine(LookForTarget());
 
             animator.SetBool(AnimDieBool, true);
             animator.SetBool(AnimGoBool, false);
@@ -53,6 +88,9 @@ namespace Assets.Scripts
             moveDir = dirRandom == 0 ? Vector3.right : Vector3.left;
 
             damage.Active = true;
+            
+            scouting = true;            
+            StartCoroutine(LookForTarget());
 
             animator.SetBool(AnimDieBool, false);
             animator.SetBool(AnimGoBool, true);
