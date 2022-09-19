@@ -109,6 +109,25 @@ namespace Assets.Scripts
 
             return aim.AttackTarget.position - transform.position;
         }
+        protected override float CurrentMoveSpeed(float speed)
+        {
+            var baseSpeed = base.CurrentMoveSpeed(speed);
+            if (aim.AttackTarget != null)
+                return baseSpeed * .8f;
+
+            return baseSpeed;
+        }
+
+        protected override float CurrentRotationSpeed(float rotationSpeed)
+        {
+            var baseRotationSpeed = base.CurrentRotationSpeed(rotationSpeed);
+            if (aim.AttackTarget != null)
+                return baseRotationSpeed * 3.0f;
+
+            return baseRotationSpeed;
+        }
+
+
 
         private IEnumerator AttackCoroutine()
         {
@@ -118,7 +137,9 @@ namespace Assets.Scripts
             {
                 shell.transform.SetParent(null, true);
                 shell.gameObject.SetActive(true);
-
+                
+                aim.TryGetAttackTarget(true);
+                
                 yield return new WaitForSeconds(.3f);
 
                 shell.gameObject.SetActive(false);

@@ -175,7 +175,7 @@ MonoBehaviour:
   targetMask:
     serializedVersion: 2
     m_Bits: 8192
-  attackDistance: 1
+  attackDistance: 1.4
 --- !u!114 &5354519564394010553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -600,6 +600,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3186845904827486015, guid: 5b32617e44bdd3c478f6fcd68d591159,
+        type: 3}
+      propertyPath: speed
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 7003453499246156522, guid: 5b32617e44bdd3c478f6fcd68d591159,
         type: 3}

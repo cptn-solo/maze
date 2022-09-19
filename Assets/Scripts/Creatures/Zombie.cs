@@ -46,8 +46,8 @@ namespace Assets.Scripts
             {                
                 yield return new WaitForSeconds(1.0f);
 
-                if (scouting)
-                    aim.Engage(aim.AttackTarget == null || aim.AttackTargetLost);
+                if (scouting && (aim.AttackTarget == null || aim.AttackTargetLost))
+                    aim.Engage(true);
             }
         }
 
@@ -64,6 +64,23 @@ namespace Assets.Scripts
                 return base.CurrentRotationDir(translatedDir);
 
             return aim.AttackTarget.position - transform.position;
+        }
+
+        protected override float CurrentMoveSpeed(float speed)
+        {
+            var baseSpeed = base.CurrentMoveSpeed(speed);
+            if (aim.AttackTarget != null)
+                return baseSpeed * 3.0f;
+
+            return baseSpeed;
+        }
+        protected override float CurrentRotationSpeed(float rotationSpeed)
+        {
+            var baseRotationSpeed = base.CurrentRotationSpeed(rotationSpeed);
+            if (aim.AttackTarget != null)
+                return baseRotationSpeed * 3.0f;
+
+            return baseRotationSpeed;
         }
 
         protected override void OnGotKilled()

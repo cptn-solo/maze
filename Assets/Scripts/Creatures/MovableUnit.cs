@@ -161,10 +161,12 @@ namespace Assets.Scripts
 
             desiredRotVelocity = default;
 
-            var rotationDir = CurrentRotationDir(translatedDir);
+            var rotationDirCur = CurrentRotationDir(translatedDir);
+            var rotSpeedCur = CurrentRotationSpeed(rotationSpeed);
+            var speedCur = CurrentMoveSpeed(speed);
 
-            var rs = rotationSpeed * Mathf.Deg2Rad; // 3 ~ 180 deg/s
-            var angleY = Vector3.SignedAngle(transform.forward, rotationDir, Vector3.up) * Mathf.Deg2Rad;
+            var rs = rotSpeedCur * Mathf.Deg2Rad; // 3 ~ 180 deg/s
+            var angleY = Vector3.SignedAngle(transform.forward, rotationDirCur, Vector3.up) * Mathf.Deg2Rad;
             desiredRotVelocity.y = rs * angleY;
 
             var angleX = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.right) * Mathf.Deg2Rad;
@@ -173,9 +175,18 @@ namespace Assets.Scripts
             var angleZ = Vector3.SignedAngle(Vector3.up, transform.up, Vector3.forward) * Mathf.Deg2Rad;
             desiredRotVelocity.z = rs * -angleZ;
 
-            var desiredSpeed = (moveDir.sqrMagnitude != 0.0f && !fadingOut) ? speed : 0;
+            var desiredSpeed = (moveDir.sqrMagnitude != 0.0f && !fadingOut) ? speedCur : 0;
 
             desiredVelocity = CurrentMoveDir(translatedDir) * desiredSpeed;
+        }
+        protected virtual float CurrentMoveSpeed(float speed)
+        {
+            return speed;
+        }
+
+        protected virtual float CurrentRotationSpeed(float rotationSpeed)
+        {
+            return rotationSpeed;
         }
 
         protected virtual Vector3 CurrentMoveDir(Vector3 translatedDir)
@@ -196,7 +207,9 @@ namespace Assets.Scripts
                 return;
 
             var velocity = rb.velocity;
-            float maxSpeedChange = speed * 4 * Time.fixedDeltaTime;
+            var speedCur = CurrentMoveSpeed(speed);
+
+            float maxSpeedChange = speedCur * 4 * Time.fixedDeltaTime;
             velocity.x =
                 Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
             velocity.z =
@@ -204,7 +217,9 @@ namespace Assets.Scripts
             rb.velocity = velocity;
 
             var rotVelocity = rb.angularVelocity;
-            float maxRotSpeedChange = rotationSpeed * 4 * Time.fixedDeltaTime;
+            var rotSpeedCur = CurrentRotationSpeed(rotationSpeed);
+
+            float maxRotSpeedChange = rotSpeedCur * 4 * Time.fixedDeltaTime;
             rotVelocity.x =
                 Mathf.MoveTowards(rotVelocity.x, desiredRotVelocity.x, maxRotSpeedChange);
             rotVelocity.y =

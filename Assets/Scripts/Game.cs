@@ -25,6 +25,7 @@ namespace Assets.Scripts
         [SerializeField] private float camSpeed = 4.0f;
 
         [SerializeField] private HUDMarkersView markers;
+        [SerializeField] private HUDLeaderBoardView score;
 
         private float camDistanceFactor = 1.0f;
 
@@ -35,12 +36,24 @@ namespace Assets.Scripts
 
         private Zombie[] zombies = new Zombie[10];
 
+        private readonly string playerId = "Player";
+        private readonly string zombiesId = "Zombies";
+
+        private UnitInfo playerScoreInfo = new("Player", Color.green, 0, Color.green);
+        private UnitInfo zombiesScoreInfo = new("Zombies", Color.red, 0, Color.red);
+
         // Start is called before the first frame update
         void Start()
         {
             building = Instantiate(buildingPrefabs[0]).GetComponent<Building>();
             player = Instantiate(playerPrefab).GetComponent<Player>();
             player.OnUnitKilled += Player_OnUnitKilled;
+
+            score.AddPlayer(playerId);
+            score.UpdatePlayer(playerId, playerScoreInfo, true);
+            
+            score.AddPlayer(zombiesId);
+            score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
 
             for (int i = 0; i < enemyPrefabs.Length; i++)
             {
@@ -54,6 +67,8 @@ namespace Assets.Scripts
         private void Player_OnUnitKilled(MovableUnit obj)
         {
             PositionPlayer((Player)obj, building);
+            zombiesScoreInfo.Score++;
+            score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
         }
 
         private IEnumerator StartSpawnEnemy(int enemyPrefabIdx)
@@ -82,6 +97,9 @@ namespace Assets.Scripts
         private void Zombie_OnUnitKilled(MovableUnit obj)
         {
             PositionZombie((Zombie)obj, building);
+            zombiesScoreInfo.Score++;
+            score.UpdatePlayer(zombiesId, zombiesScoreInfo, true);
+
         }
 
         private void OnEnable()
@@ -130,8 +148,10 @@ namespace Assets.Scripts
 
         private void PositionPlayer(Player player, Building building)
         {
-            var spIndex = UnityEngine.Random.Range(0, building.PlayerSpawnPoints.Length);
-            var sp = building.PlayerSpawnPoints[spIndex].transform;
+            var filtered = building.PlayerSpawnPoints.Where(x => x.gameObject.activeSelf).ToArray();
+
+            var spIndex = UnityEngine.Random.Range(0, filtered.Length);
+            var sp = filtered[spIndex].transform;
             player.Building = building;
 
             player.OnRespawned(sp.position, sp.rotation);
@@ -143,9 +163,10 @@ namespace Assets.Scripts
         private void PositionZombie(Zombie zombie, Building building)
         {
             zombie.gameObject.SetActive(false);
-
-            var spIndex = UnityEngine.Random.Range(0, building.ZombieSpawnPoints.Length);
-            var sp = building.ZombieSpawnPoints[spIndex].transform;
+            
+            var filtered = building.ZombieSpawnPoints.Where(x => x.gameObject.activeSelf).ToArray();
+            var spIndex = UnityEngine.Random.Range(0, filtered.Length);
+            var sp = filtered[spIndex].transform;
             zombie.Building = building;
             
             zombie.gameObject.SetActive(true);

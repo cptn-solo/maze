@@ -20,10 +20,11 @@ namespace Assets.Scripts
         public bool AttackTargetLost =>
             attackTarget == null || Vector3.Distance(attackTarget.position, transform.position) > attackDistance;
 
-        public Transform TryGetAttackTarget()
+        public Transform TryGetAttackTarget(bool recheck = false)
         {
 
-            attackTarget = null;
+            if (!recheck)
+                attackTarget = null;
 
             var cnt = Physics.OverlapSphereNonAlloc(transform.position, attackDistance, hitColliders, targetMask);
 
