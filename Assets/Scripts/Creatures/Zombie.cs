@@ -23,6 +23,11 @@ namespace Assets.Scripts
             aim = GetComponent<AimTarget>();
         }
 
+        private void Damage_OnDealingDamage(Hitbox obj)
+        {
+            StartCoroutine(AttackAnimation());
+        }
+
         protected override void OnTakingDamage(bool critical)
         {
             base.OnTakingDamage(critical);
@@ -39,6 +44,16 @@ namespace Assets.Scripts
             animator.SetBool(AnimDamageBool, false);
 
         }
+        private IEnumerator AttackAnimation()
+        {
+            animator.SetBool(AnimAttackBool, true);
+
+            yield return new WaitForSeconds(.5f);
+
+            animator.SetBool(AnimAttackBool, false);
+
+        }
+
 
         private IEnumerator LookForTarget()
         {
@@ -118,6 +133,9 @@ namespace Assets.Scripts
         {
             base.OnObjDisable();
 
+            if (damage)
+                damage.OnDealingDamage += Damage_OnDealingDamage;
+
             animator.SetBool(AnimDieBool, false);
             animator.SetBool(AnimGoBool, false);
             animator.SetBool(AnimAttackBool, false);
@@ -126,6 +144,9 @@ namespace Assets.Scripts
         protected override void OnObjEnable()
         {
             base.OnObjEnable();
+
+            if (damage)
+                damage.OnDealingDamage += Damage_OnDealingDamage;
             
             animator.SetBool(AnimDieBool, false);
             animator.SetBool(AnimGoBool, true);

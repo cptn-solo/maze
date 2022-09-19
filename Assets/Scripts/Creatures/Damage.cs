@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -15,6 +16,8 @@ namespace Assets.Scripts
 
         public bool Active { get; set; }
 
+        public event Action<Hitbox> OnDealingDamage;
+
         private void OnTriggerEnter(Collider other)
         {
             if (Active &&
@@ -22,7 +25,7 @@ namespace Assets.Scripts
                 other.gameObject.TryGetComponent<Hitbox>(out var hitbox) &&
                 hitbox.CurrentHP > 0)
             {
-                hitbox.DealDamage(damagePerHit);
+                DealDamage(hitbox);
 
                 if (damageInterval > 0)
                 {
@@ -34,6 +37,11 @@ namespace Assets.Scripts
             }
         }
 
+        private void DealDamage(Hitbox hitbox)
+        {
+            OnDealingDamage?.Invoke(hitbox);
+            hitbox.DealDamage(damagePerHit);
+        }
 
         private void Hitbox_OnZeroHealthReached()
         {
@@ -60,7 +68,7 @@ namespace Assets.Scripts
             {
                 yield return new WaitForSeconds(damageInterval);
                 if (Active && hitbox != null && hitbox.CurrentHP > 0)
-                    hitbox.DealDamage(damagePerHit);                
+                    DealDamage(hitbox);
             }
         }
 
