@@ -97,8 +97,8 @@ namespace Assets.Scripts
         private void Zombie_OnUnitKilled(MovableUnit obj)
         {
             PositionZombie((Zombie)obj, building);
-            zombiesScoreInfo.Score++;
-            score.UpdatePlayer(zombiesId, zombiesScoreInfo, true);
+            playerScoreInfo.Score++;
+            score.UpdatePlayer(playerId, playerScoreInfo, true);
 
         }
 
