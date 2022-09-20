@@ -35,10 +35,8 @@ namespace Assets.Scripts
         public IngameSoundEvents SoundEvents { get; set; }
 
         public event Action<MovableUnit> OnUnitBeforeKilled;
-
         public event Action<MovableUnit> OnUnitRespawned;
         public event Action<MovableUnit> OnUnitKilled;
-        public event Action<MovableUnit> OnUnitDamaged;
 
         private event Action OnAwakeAction;
         private event Action OnStartAction;

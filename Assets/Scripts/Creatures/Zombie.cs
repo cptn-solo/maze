@@ -13,6 +13,8 @@ namespace Assets.Scripts
         
         private Damage damage;
         private AimTarget aim;
+        private ObstacleAvoidance pilot;
+
         private bool scouting;
 
         protected override void OnAwake()
@@ -21,6 +23,7 @@ namespace Assets.Scripts
 
             damage = GetComponentInChildren<Damage>();
             aim = GetComponent<AimTarget>();
+            pilot = GetComponent<ObstacleAvoidance>();
         }
 
         private void Damage_OnDealingDamage(Hitbox obj)
@@ -28,6 +31,27 @@ namespace Assets.Scripts
             SoundEvents.ZombieAttack();
 
             StartCoroutine(AttackAnimation());
+        }
+
+        private void Pilot_OnDeadlock(object sender, System.EventArgs e)
+        {
+            moveDir.x *= -1;
+
+            StartCoroutine(StopScouting(Random.Range(3.0f, 5.0f)));
+        }
+
+        private IEnumerator StopScouting(float interval)
+        {
+            scouting = false;
+         
+            StopCoroutine(LookForTarget());
+            aim.Engage(false);
+
+            yield return new WaitForSeconds(interval);
+
+            scouting = true;
+
+            StartCoroutine(LookForTarget());
         }
 
         protected override void OnTakingDamage(bool critical)
@@ -73,14 +97,14 @@ namespace Assets.Scripts
         protected override Vector3 CurrentMoveDir(Vector3 translatedDir)
         {
             if (aim.AttackTarget)
-                return (aim.AttackTarget.position - transform.position).normalized;
+                return (pilot.SuggestedDir(aim.AttackTarget.position - transform.position).normalized);
 
-            return base.CurrentMoveDir(translatedDir);
+            return base.CurrentMoveDir(pilot.SuggestedDir(translatedDir));
         }
         protected override Vector3 CurrentRotationDir(Vector3 translatedDir)
         {
-            if (!scouting|| aim.AttackTarget == null)
-                return base.CurrentRotationDir(translatedDir);
+            if (!scouting || aim.AttackTarget == null)
+                return base.CurrentRotationDir(pilot.SuggestedDir(translatedDir));
 
             return aim.AttackTarget.position - transform.position;
         }
@@ -140,6 +164,9 @@ namespace Assets.Scripts
             if (damage)
                 damage.OnDealingDamage += Damage_OnDealingDamage;
 
+            if (pilot)
+                pilot.OnDeadlock -= Pilot_OnDeadlock;
+
             animator.SetBool(AnimDieBool, false);
             animator.SetBool(AnimGoBool, false);
             animator.SetBool(AnimAttackBool, false);
@@ -151,10 +178,14 @@ namespace Assets.Scripts
 
             if (damage)
                 damage.OnDealingDamage += Damage_OnDealingDamage;
+
+            if (pilot)
+                pilot.OnDeadlock += Pilot_OnDeadlock;
             
             animator.SetBool(AnimDieBool, false);
             animator.SetBool(AnimGoBool, true);
             animator.SetBool(AnimAttackBool, false);
         }
+
     }
 }
