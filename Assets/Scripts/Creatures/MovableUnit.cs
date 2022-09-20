@@ -32,6 +32,10 @@ namespace Assets.Scripts
         private Vector3 translatedDir;
         private Vector3 center = Vector3.zero;
 
+        public IngameSoundEvents SoundEvents { get; set; }
+
+        public event Action<MovableUnit> OnUnitBeforeKilled;
+
         public event Action<MovableUnit> OnUnitRespawned;
         public event Action<MovableUnit> OnUnitKilled;
         public event Action<MovableUnit> OnUnitDamaged;
@@ -54,9 +58,6 @@ namespace Assets.Scripts
 
         public void OnRespawned(Vector3 position, Quaternion rotation)
         {
-
-            TogglePhisBody(false);
-
             rb.velocity = Vector3.zero;
 
             rb.ResetInertiaTensor();
@@ -64,8 +65,6 @@ namespace Assets.Scripts
 
             rb.MovePosition(position);
             rb.MoveRotation(rotation);
-
-            TogglePhisBody(true);
 
             OnResurrected();
 
@@ -86,6 +85,7 @@ namespace Assets.Scripts
 
         protected virtual void OnGotKilled()
         {
+            OnUnitBeforeKilled?.Invoke(this);
             moveDir = Vector3.zero;
         }
 

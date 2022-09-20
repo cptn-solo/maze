@@ -5,7 +5,7 @@ namespace Assets.Scripts
 {
     public class UIManager : MonoBehaviour
     {
-        [SerializeField] private SettingsScreen SettingsScreen;
+        [SerializeField] private ApplicationSettingsScreen SettingsScreen;
         [SerializeField] private HUDScreen HUDScreen;
         [SerializeField] private HUDMarkersView Markers;
         [SerializeField] private HUDLeaderBoardView Leaderboard;

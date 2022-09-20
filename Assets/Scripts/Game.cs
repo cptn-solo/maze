@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
-    public class Game : MonoBehaviour
+    public class Game : MonoBehaviour, IIngameMusicEvents
     {
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private EnemyType[] enemyKeys;
@@ -19,7 +19,7 @@ namespace Assets.Scripts
         [SerializeField] private float enemySpawnInterval = 5.0f;
 
         [SerializeField] private Camera sceneCamera;
-
+        
         [SerializeField] private float cameraAngle = -35.0f;
         [SerializeField] private float cameraDistance = 2.5f;
         [SerializeField] private float camSpeed = 4.0f;
@@ -42,12 +42,24 @@ namespace Assets.Scripts
         private UnitInfo playerScoreInfo = new("Player", Color.green, 0, Color.green);
         private UnitInfo zombiesScoreInfo = new("Zombies", Color.red, 0, Color.red);
 
-        // Start is called before the first frame update
+        public event EventHandler OnPlayerSpawned;
+        public event EventHandler OnPlayerKilled;
+
+        private IngameSoundEvents soundEvents;
+
+        private void Awake()
+        {
+            soundEvents = GetComponent<IngameSoundEvents>();
+        }
+
         void Start()
         {
             building = Instantiate(buildingPrefabs[0]).GetComponent<Building>();
             player = Instantiate(playerPrefab).GetComponent<Player>();
+
+            player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
             player.OnUnitKilled += Player_OnUnitKilled;
+            player.SoundEvents = soundEvents;
 
             score.AddPlayer(playerId);
             score.UpdatePlayer(playerId, playerScoreInfo, true);
@@ -60,15 +72,20 @@ namespace Assets.Scripts
                 StartCoroutine(StartSpawnEnemy(i));
             }
 
-            PositionPlayer(player, building);
-            PositionCamera(player, building);            
+            StartCoroutine(PositionPlayer(player, building));
+        }
+
+        private void Player_OnUnitBeforeKilled(MovableUnit obj)
+        {
+            OnPlayerKilled?.Invoke(obj, null);
+            
+            zombiesScoreInfo.Score++;
+            score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
         }
 
         private void Player_OnUnitKilled(MovableUnit obj)
         {
-            PositionPlayer((Player)obj, building);
-            zombiesScoreInfo.Score++;
-            score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
+            StartCoroutine(PositionPlayer((Player)obj, building));
         }
 
         private IEnumerator StartSpawnEnemy(int enemyPrefabIdx)
@@ -79,27 +96,37 @@ namespace Assets.Scripts
             for (int i = 0; i < MaxZombieCount; i++)
             {
                 var zombie = Instantiate(prefab).GetComponent<Zombie>();
+                zombie.OnUnitBeforeKilled += Zombie_OnUnitBeforeKilled;
                 zombie.OnUnitKilled += Zombie_OnUnitKilled;
+                zombie.SoundEvents = soundEvents;
+                
                 zombie.gameObject.SetActive(false);
+
                 zombies[i] = zombie;
+                yield return null;
             }
 
             for (int i = 0; i < MaxZombieCount; i++)
             {
+                yield return new WaitForSeconds(enemySpawnInterval);
+
                 var zombie = zombies[i];
 
-                PositionZombie(zombie, building);
-
-                yield return new WaitForSeconds(enemySpawnInterval);
+                StartCoroutine(PositionZombie(zombie, building));
             }
+        }
+
+        private void Zombie_OnUnitBeforeKilled(MovableUnit obj)
+        {
+            soundEvents.ZombieKilled();
+
+            playerScoreInfo.Score++;
+            score.UpdatePlayer(playerId, playerScoreInfo, true);
         }
 
         private void Zombie_OnUnitKilled(MovableUnit obj)
         {
-            PositionZombie((Zombie)obj, building);
-            playerScoreInfo.Score++;
-            score.UpdatePlayer(playerId, playerScoreInfo, true);
-
+            StartCoroutine(PositionZombie((Zombie)obj, building));
         }
 
         private void OnEnable()
@@ -146,8 +173,11 @@ namespace Assets.Scripts
                 camCurrent + camStep, Quaternion.LookRotation(camDirection));
         }
 
-        private void PositionPlayer(Player player, Building building)
+        private IEnumerator PositionPlayer(Player player, Building building)
         {
+            while (!player.FadeOut())
+                yield return null;
+
             var filtered = building.PlayerSpawnPoints.Where(x => x.gameObject.activeSelf).ToArray();
 
             var spIndex = UnityEngine.Random.Range(0, filtered.Length);
@@ -158,12 +188,20 @@ namespace Assets.Scripts
 
             if (player.TryGetComponent<Visibility>(out var unit))
                 markers.AddUnit(unit);
+
+            player.FadeIn();
+
+            OnPlayerSpawned?.Invoke(player, null);
         }
 
-        private void PositionZombie(Zombie zombie, Building building)
+        private IEnumerator PositionZombie(Zombie zombie, Building building)
         {
-            zombie.gameObject.SetActive(false);
-            
+            if (zombie.isActiveAndEnabled)
+            {
+                while (!zombie.FadeOut())
+                    yield return null;
+            }
+
             var filtered = building.ZombieSpawnPoints.Where(x => x.gameObject.activeSelf).ToArray();
             var spIndex = UnityEngine.Random.Range(0, filtered.Length);
             var sp = filtered[spIndex].transform;
@@ -174,6 +212,8 @@ namespace Assets.Scripts
 
             if (zombie.TryGetComponent<Visibility>(out var unit)) 
                 markers.AddEnemy(unit, EnemyType.Zombie);
+
+            zombie.FadeIn();
         }
 
         private void LateUpdate()
@@ -181,7 +221,7 @@ namespace Assets.Scripts
             PositionCamera(player, building);
 
             if ((player.transform.position - Vector3.zero).sqrMagnitude > 100.0f)
-                PositionPlayer(player, building);
+                StartCoroutine(PositionPlayer(player, building));
         }
     }
 }

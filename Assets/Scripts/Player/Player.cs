@@ -29,8 +29,9 @@ namespace Assets.Scripts
 
         protected override void OnTakingDamage(bool critical)
         {
-            base.OnTakingDamage(critical);
+            SoundEvents.PlayerDamaged();
 
+            base.OnTakingDamage(critical);
             StartCoroutine(DamageAnimation());
         }
 
@@ -135,11 +136,14 @@ namespace Assets.Scripts
 
             while (inAttackState && !fadingOut)
             {
-                shell.transform.SetParent(null, true);
-                shell.gameObject.SetActive(true);
                 
                 aim.TryGetAttackTarget(true);
-                
+
+                shell.transform.SetParent(null, true);
+                shell.gameObject.SetActive(true);
+
+                SoundEvents.PlayerAttack();
+
                 yield return new WaitForSeconds(.3f);
 
                 shell.gameObject.SetActive(false);

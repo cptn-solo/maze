@@ -543,6 +543,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1192204679185080938, guid: 5b32617e44bdd3c478f6fcd68d591159,
         type: 3}
+      propertyPath: damagePerHit
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1192204679185080938, guid: 5b32617e44bdd3c478f6fcd68d591159,
+        type: 3}
       propertyPath: damageTo.m_Bits
       value: 12288
       objectReference: {fileID: 0}

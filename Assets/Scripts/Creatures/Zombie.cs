@@ -25,11 +25,15 @@ namespace Assets.Scripts
 
         private void Damage_OnDealingDamage(Hitbox obj)
         {
+            SoundEvents.ZombieAttack();
+
             StartCoroutine(AttackAnimation());
         }
 
         protected override void OnTakingDamage(bool critical)
         {
+            SoundEvents.ZombieDamaged();
+            
             base.OnTakingDamage(critical);
 
             StartCoroutine(DamageAnimation());
