@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
@@ -36,11 +38,17 @@ namespace Assets.Scripts
 
         private void Tp_OnEnterPortal(Vector3 point, Vector3 dir, MovableUnit passenger)
         {
-            var filtered = points.Where(x => x != point);
+            var filtered = points.Where(x => x != point && x.y != Mathf.Clamp(x.y, point.y - .01f, point.y + .01f));
+            filtered = filtered.Where(x =>
+            {
+                var exitGate = portals[x].ExitGate(dir);
+                return exitGate != null;
+            });
+
             var ordered = filtered.OrderBy(x => (x - point).sqrMagnitude).ToArray();
 
-            var closest = ordered.Take(2).ToArray();
-            var idx = Random.Range(0, 2);
+            var closest = ordered.Length > 2 ? ordered.Take(2).ToArray() :  new[] { ordered[0] };
+            var idx = Random.Range(0, closest.Length);
 
             var dest = closest[idx];
 

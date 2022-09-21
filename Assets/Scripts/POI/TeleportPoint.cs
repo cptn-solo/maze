@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,6 +13,17 @@ namespace Assets.Scripts
         private PortalGate[] tpGates;
 
         public event Action<Vector3, Vector3, MovableUnit> OnEnterPortal;
+
+        public PortalGate ExitGate(Vector3 dir)
+        {
+            foreach (var gate in tpGates.Where(x => x.isActiveAndEnabled).ToArray())
+            {
+                var exitDir = (gate.transform.position - transform.position).normalized;
+                if (dir == exitDir)
+                    return gate;
+            }
+            return null;
+        }
 
         private void Awake()
         {
@@ -44,7 +56,7 @@ namespace Assets.Scripts
         {
             if (animator)
             {
-                animator.SetBool("mirror", Random.Range(0, 2) == 1 ? true : false);
+                animator.SetBool("mirror", Random.Range(0, 2) == 1);
                 animator.SetFloat("speed", Random.Range(0.02f, 0.05f));
             }
         }
