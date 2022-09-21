@@ -15,6 +15,7 @@ namespace Assets.Scripts
         public LayerMask DamageTo => damageTo;
 
         public bool Active { get; set; }
+        public float SizeScale { get; set; } = 1.0f;
 
         public event Action<Hitbox> OnDealingDamage;
 
@@ -40,7 +41,7 @@ namespace Assets.Scripts
         private void DealDamage(Hitbox hitbox)
         {
             OnDealingDamage?.Invoke(hitbox);
-            hitbox.DealDamage(damagePerHit);
+            hitbox.DealDamage(Mathf.FloorToInt(damagePerHit * SizeScale));
         }
 
         private void Hitbox_OnZeroHealthReached()

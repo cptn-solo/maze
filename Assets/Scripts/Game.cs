@@ -2,6 +2,7 @@ using Assets.Scripts.UI;
 using System;
 using System.Collections;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -99,7 +100,8 @@ namespace Assets.Scripts
                 zombie.OnUnitBeforeKilled += Zombie_OnUnitBeforeKilled;
                 zombie.OnUnitKilled += Zombie_OnUnitKilled;
                 zombie.SoundEvents = soundEvents;
-                
+                zombie.SizeScale = Random.Range(.5f, 2.0f);
+
                 zombie.gameObject.SetActive(false);
 
                 zombies[i] = zombie;

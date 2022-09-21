@@ -12,6 +12,7 @@ namespace Assets.Scripts
         private const string AnimDamageBool = "damage";
         
         private Damage damage;
+        private Hitbox hitbox;
         private AimTarget aim;
         private ObstacleAvoidance pilot;
 
@@ -22,10 +23,23 @@ namespace Assets.Scripts
             base.OnAwake();
 
             damage = GetComponentInChildren<Damage>();
+            hitbox = GetComponentInChildren<Hitbox>();
             aim = GetComponent<AimTarget>();
             pilot = GetComponent<ObstacleAvoidance>();
         }
 
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            for (var i = 0; i < ren.materials.Length; i++)// in new[] {0, 4, 8 , 10})
+            {
+                var mat = ren.materials[i];
+                Color.RGBToHSV(mat.color, out var h, out var s, out var v);
+                h = Random.Range(.01f, .99f);
+                mat.color =  Color.HSVToRGB(h, 1, v);
+            }
+        }
         private void Damage_OnDealingDamage(Hitbox obj)
         {
             SoundEvents.ZombieAttack();
@@ -113,7 +127,7 @@ namespace Assets.Scripts
         {
             var baseSpeed = base.CurrentMoveSpeed(speed);
             if (aim.AttackTarget != null)
-                return baseSpeed * 3.0f;
+                return baseSpeed * 3.0f / SizeScale;
 
             return baseSpeed;
         }
@@ -121,7 +135,7 @@ namespace Assets.Scripts
         {
             var baseRotationSpeed = base.CurrentRotationSpeed(rotationSpeed);
             if (aim.AttackTarget != null)
-                return baseRotationSpeed * 3.0f;
+                return baseRotationSpeed * 3.0f / SizeScale;
 
             return baseRotationSpeed;
         }
@@ -148,6 +162,8 @@ namespace Assets.Scripts
             moveDir = dirRandom == 0 ? Vector3.right : Vector3.left;
 
             damage.Active = true;
+            damage.SizeScale = SizeScale;
+            hitbox.SizeScale = SizeScale;
             
             scouting = true;            
             StartCoroutine(LookForTarget());

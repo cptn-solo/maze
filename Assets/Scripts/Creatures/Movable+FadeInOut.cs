@@ -23,7 +23,7 @@ namespace Assets.Scripts
                 rb.mass = toggle ? 1.0f : 0.0f;
                 rb.useGravity = toggle;
 
-                transform.localScale = Vector3.one;
+                transform.localScale = Vector3.one * SizeScale;
             }
             else
             {
@@ -32,7 +32,7 @@ namespace Assets.Scripts
                 rb.ResetCenterOfMass();
                 rb.ResetInertiaTensor();
                 rb.useGravity = toggle;
-                rb.mass = toggle ? 1.0f : 0.0f;
+                rb.mass = toggle ? 1.0f * SizeScale : 0.0f;
                 col.enabled = toggle;
             }
         }
@@ -52,16 +52,16 @@ namespace Assets.Scripts
         {
             TogglePhisBody(false);
 
-            var a = 1.0f;
+            var a = 1.0f * SizeScale;
             while (a > 0)
             {
                 a -= fadeSpeed * Time.deltaTime;
-                this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up;
+                this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up * SizeScale;
 
                 yield return null;
             }
 
-            this.transform.localScale = Vector3.forward * 0 + Vector3.right * 0 + Vector3.up;
+            this.transform.localScale = Vector3.forward * 0 + Vector3.right * 0 + Vector3.up * SizeScale;
             yield return null;
 
             ren.enabled = false;
@@ -79,15 +79,15 @@ namespace Assets.Scripts
             ren.enabled = true;
 
             var a = 0.0f;
-            while (a < 1.0f)
+            while (a < 1.0f * SizeScale)
             {
                 a += fadeSpeed * Time.deltaTime;
-                this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up;
+                this.transform.localScale = Vector3.forward * a + Vector3.right * a + Vector3.up * SizeScale;
 
                 yield return null;
             }
 
-            this.transform.localScale = Vector3.forward * 1 + Vector3.right * 1 + Vector3.up;
+            this.transform.localScale = Vector3.one * SizeScale;
 
             fadingOut = false;
             fadedOut = false;

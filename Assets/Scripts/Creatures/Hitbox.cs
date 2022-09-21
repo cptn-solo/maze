@@ -12,6 +12,8 @@ namespace Assets.Scripts
         private int currentHP;
         public int CurrentHP => currentHP;
 
+        public float SizeScale { get; set; } = 1.0f;
+
         public event Action<int> OnDamage;
         public event Action<int> OnCriticalDamage;
         public event Action OnZeroHealthReached;
@@ -19,7 +21,7 @@ namespace Assets.Scripts
 
         public void ResetHP()
         {
-            currentHP = maxHP;
+            currentHP = Mathf.FloorToInt(maxHP * SizeScale);
         }
 
         public void DealDamage(int damage)

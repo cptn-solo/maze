@@ -382,8 +382,8 @@ MonoBehaviour:
   damagedBy:
     serializedVersion: 2
     m_Bits: 18432
-  maxHP: 20
-  criticalHP: 5
+  maxHP: 50
+  criticalHP: 10
 --- !u!1 &8333501297849399930
 GameObject:
   m_ObjectHideFlags: 0

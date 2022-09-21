@@ -62,8 +62,8 @@ MonoBehaviour:
   damagedBy:
     serializedVersion: 2
     m_Bits: 2048
-  maxHP: 10
-  criticalHP: 4
+  maxHP: 50
+  criticalHP: 10
 --- !u!1 &1762397133780055631
 GameObject:
   m_ObjectHideFlags: 0
@@ -374,7 +374,7 @@ MonoBehaviour:
   damageTo:
     serializedVersion: 2
     m_Bits: 4096
-  damagePerHit: 2
+  damagePerHit: 5
   damageInterval: 1
 --- !u!1 &7230279664965516463
 GameObject:

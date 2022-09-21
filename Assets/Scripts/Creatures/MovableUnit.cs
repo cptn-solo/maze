@@ -45,6 +45,17 @@ namespace Assets.Scripts
         private event Action OnDisabledAction;
         private event Action OnDestroyAction;
 
+        private float sizeScale = 1.0f;
+        public float SizeScale
+        {
+            get => sizeScale;
+            internal set
+            {
+                sizeScale = value;
+                transform.localScale *= value;
+            }
+        }
+
         public Building Building
         {
             get => building;
