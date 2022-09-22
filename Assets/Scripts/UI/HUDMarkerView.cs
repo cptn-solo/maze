@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
@@ -9,6 +10,11 @@ namespace Assets.Scripts.UI
         [SerializeField] private TextMeshProUGUI titleLabel;
         [SerializeField] private TextMeshProUGUI infoLabel;
         [SerializeField] private float worldYOffset = .17f;
+
+        [SerializeField] private Image shieldImage;
+        [SerializeField] private Image hpImage;
+
+        [SerializeField] private float baseBarWidth = 150.0f;
 
         public event Action<HUDMarkerView, Transform> OnMarkerBeingDestroyed;
 
@@ -55,13 +61,21 @@ namespace Assets.Scripts.UI
         {
             infoLabel.text = $"{e.Score}";
             infoLabel.color = e.ScoreColor;
+
+            SetImageWidth(hpImage, e.Hp);
+            SetImageWidth(shieldImage, e.Shield);
+        }
+
+        private void SetImageWidth(Image image, int val)
+        {
+            image.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, val);
         }
 
         private void LateUpdate()
         {
             if (cam != null && worldTarget != null)
             {
-                var pos = worldTarget.position + Vector3.up * worldYOffset;
+                var pos = worldTarget.position + worldTarget.localScale.y * worldYOffset * Vector3.up;
                 rectTransform.position = cam.WorldToScreenPoint(pos);
             }
         }

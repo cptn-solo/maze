@@ -384,6 +384,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 18432
   maxHP: 50
+  maxShield: 80
   criticalHP: 10
 --- !u!114 &2155997363376368433
 MonoBehaviour:

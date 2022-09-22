@@ -43,8 +43,8 @@ namespace Assets.Scripts
         private readonly string playerId = "Player";
         private readonly string zombiesId = "Zombies";
 
-        private UnitInfo playerScoreInfo = new("Player", Color.green, 0, Color.green);
-        private UnitInfo zombiesScoreInfo = new("Zombies", Color.red, 0, Color.red);
+        private UnitInfo playerScoreInfo = new("Player", Color.green, 0, Color.green, 0, 0);
+        private UnitInfo zombiesScoreInfo = new("Zombies", Color.red, 0, Color.red, 0, 0);
 
         public event EventHandler OnPlayerSpawned;
         public event EventHandler OnPlayerKilled;

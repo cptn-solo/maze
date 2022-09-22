@@ -3,12 +3,6 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public struct BattleInfo
-    {
-        public int CurrentHP;
-        public int CurrentShield;
-        public bool CriticalHP;
-    }
     public class Battle : MonoBehaviour
     {
         private Hitbox hitbox;
@@ -34,11 +28,11 @@ namespace Assets.Scripts
                 hitbox.OnAddShield += Hitbox_OnAddShield;
                 hitbox.OnAddHP += Hitbox_OnAddHP;
                 hitbox.OnDamage += Hitbox_OnDamage;
+                hitbox.OnShieldDamage += Hitbox_OnShieldDamage;
                 hitbox.OnZeroHealthReached += Hitbox_OnZeroHealthReached;
                 hitbox.OnCriticalDamage += Hitbox_OnCriticalDamage;
             }
         }
-
         private void OnDisable()
         {
             if (hitbox != null)
@@ -46,6 +40,7 @@ namespace Assets.Scripts
                 hitbox.OnAddShield -= Hitbox_OnAddShield;
                 hitbox.OnAddHP -= Hitbox_OnAddHP;
                 hitbox.OnDamage -= Hitbox_OnDamage;
+                hitbox.OnShieldDamage -= Hitbox_OnShieldDamage;
                 hitbox.OnZeroHealthReached -= Hitbox_OnZeroHealthReached;
                 hitbox.OnCriticalDamage -= Hitbox_OnCriticalDamage;
             }
@@ -55,8 +50,8 @@ namespace Assets.Scripts
         {
             if (hitbox)
             {
-                hitbox.ResetHP();
-                battleInfo.CurrentHP = hitbox.CurrentHP;
+                battleInfo = hitbox.ResetHP();
+                
                 battleInfo.CriticalHP = false;
 
                 OnBattleInfoChange?.Invoke(battleInfo);
@@ -70,7 +65,14 @@ namespace Assets.Scripts
 
         private void Hitbox_OnAddShield(int currentShield)
         {
-            battleInfo.CurrentHP = currentShield;
+            battleInfo.CurrentShield = currentShield;
+            OnBattleInfoChange?.Invoke(battleInfo);
+        }
+        private void Hitbox_OnShieldDamage(int currentShield)
+        {
+            battleInfo.CurrentShield = currentShield;
+
+            OnTakingDamage?.Invoke(battleInfo.CriticalHP);
             OnBattleInfoChange?.Invoke(battleInfo);
         }
 

@@ -35,6 +35,7 @@ namespace Assets.Scripts.UI
         {
             markers.Remove(arg2);
         }
+
         private void Unit_OnInfoChanged(object sender, UnitInfo e)
         {
             var owner = (IVisibleObject)sender;

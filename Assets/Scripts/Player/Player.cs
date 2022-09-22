@@ -38,10 +38,14 @@ namespace Assets.Scripts
 
             switch (collectableType)
             {
+                case CollectableType.Shield:
+                    {
+                        hitbox.AddShield(cnt);
+                        break;
+                    }
                 default:
                     {
-                        if (hitbox != null)
-                            hitbox.AddHP(cnt);                        
+                        hitbox.AddHP(cnt);
                         break;
                     }
             }

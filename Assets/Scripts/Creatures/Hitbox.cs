@@ -7,61 +7,93 @@ namespace Assets.Scripts
     {
         [SerializeField] private LayerMask damagedBy;
         [SerializeField] private int maxHP;
+        [SerializeField] private int maxShield;
         [SerializeField] private int criticalHP;
 
-        private int currentHP;
-        public int CurrentHP => currentHP;
+        public int CurrentHP { get; private set; }
+        public int CurrentShield { get; private set; }
 
         public float SizeScale { get; set; } = 1.0f;
 
+        public event Action<int> OnShieldDamage;
         public event Action<int> OnDamage;
         public event Action<int> OnCriticalDamage;
-        public event Action OnZeroHealthReached;
-        public event Action OnDestroyedOrDisabled;
         public event Action<int> OnAddHP;
         public event Action<int> OnAddShield;
 
-        public void ResetHP()
+        public event Action OnZeroHealthReached;
+        public event Action OnDestroyedOrDisabled;
+
+        public BattleInfo ResetHP()
         {
-            currentHP = Mathf.FloorToInt(maxHP * SizeScale);
+            CurrentHP = Mathf.FloorToInt(maxHP * SizeScale);
+            CurrentShield = Mathf.FloorToInt(maxShield * SizeScale);
+
+            BattleInfo battleInfo = default;
+            battleInfo.CurrentHP = CurrentHP;
+            battleInfo.CurrentShield = CurrentShield;
+            battleInfo.MaxHP = CurrentHP;
+            battleInfo.MaxShield = CurrentShield;
+            
+            return battleInfo;
         }
 
         public void DealDamage(int damage)
         {
-            if (currentHP <= damage)
+            if (CurrentShield >= damage)
             {
-                currentHP = 0;
+                CurrentShield -= damage;
+                OnShieldDamage?.Invoke(CurrentShield);
+                damage = 0;
+            }
+            else
+            {
+                CurrentShield = 0;
+                OnShieldDamage?.Invoke(CurrentShield);
+                damage -= CurrentShield;
+            }
+
+            if (CurrentHP <= damage)
+            {
+                CurrentHP = 0;
                 OnZeroHealthReached?.Invoke();
             }
-            else if (currentHP - damage <= criticalHP)
+            else if (CurrentHP - damage <= criticalHP)
             {
-                currentHP -= damage;
-                OnCriticalDamage?.Invoke(currentHP);
+                CurrentHP -= damage;
+                OnCriticalDamage?.Invoke(CurrentHP);
             }
-            else if (currentHP > damage)
+            else if (CurrentHP > damage)
             {
-                currentHP -= damage;
-                OnDamage?.Invoke(currentHP);
+                CurrentHP -= damage;
+                OnDamage?.Invoke(CurrentHP);
             }
         }
 
-        private void OnDestroy()
+        internal void AddHP(int cnt)
         {
-            OnDestroyedOrDisabled?.Invoke();
-        }
-
-        private void OnDisable()
-        {
-            OnDestroyedOrDisabled?.Invoke();
-        }
-
-        internal void AddHP(int v)
-        {
-            if (currentHP + v <= maxHP * SizeScale)
+            if (CurrentHP + cnt <= maxHP * SizeScale)
             {
-                currentHP += v;
-                OnAddHP?.Invoke(currentHP);
+                CurrentHP += cnt;
+                OnAddHP?.Invoke(CurrentHP);
             }
         }
+
+        internal void AddShield(int cnt)
+        {
+            if (CurrentHP < maxHP * SizeScale)
+            {
+                CurrentHP += cnt;
+                OnAddHP?.Invoke(CurrentHP);
+            }
+            else if (CurrentShield + cnt <= maxShield * SizeScale)
+            {
+                CurrentShield += cnt;
+                OnAddShield?.Invoke(CurrentShield);
+            }
+        }
+        private void OnDestroy() => OnDestroyedOrDisabled?.Invoke();
+        private void OnDisable() => OnDestroyedOrDisabled?.Invoke();
+
     }
 }

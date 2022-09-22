@@ -41,7 +41,7 @@ namespace Assets.Scripts
                 if (!Time.inFixedTimeStep)
                     yield return new WaitForFixedUpdate();
 
-                var direction = transform.position + Vector3.up * .1f - cam.position;
+                var direction = transform.position + Vector3.up * .1f * transform.localScale.y - cam.position;
                 Ray ray = default;
                 ray.direction = direction;
                 ray.origin = cam.position;
