@@ -18,6 +18,8 @@ namespace Assets.Scripts
         
         private bool inAttackState;
         private AimTarget aim;
+        private Collector collector;
+        private Hitbox hitbox;
 
         protected override void OnAwake()
         {
@@ -25,6 +27,25 @@ namespace Assets.Scripts
             BindInputs();
 
             aim = GetComponent<AimTarget>();
+            hitbox = GetComponentInChildren<Hitbox>();
+            collector = GetComponentInChildren<Collector>();
+            collector.OnCollected += Collector_OnCollected;
+        }
+
+        private void Collector_OnCollected(CollectableType collectableType, int cnt)
+        {
+            SoundEvents.CollectedItem();
+
+            switch (collectableType)
+            {
+                default:
+                    {
+                        if (hitbox != null)
+                            hitbox.AddHP(cnt);                        
+                        break;
+                    }
+            }
+
         }
 
         protected override void OnTakingDamage(bool critical)
@@ -160,6 +181,7 @@ namespace Assets.Scripts
             if (animator != null)
             {
                 animator.SetBool(AnimJumpBool, true);
+                SoundEvents.PlayerJump();
                 yield return new WaitForSeconds(.01f);
                 animator.SetBool(AnimJumpBool, false);
             }

@@ -331,6 +331,7 @@ GameObject:
   - component: {fileID: 261899085089717321}
   - component: {fileID: 2099704192925827697}
   - component: {fileID: 4511395873154740728}
+  - component: {fileID: 2155997363376368433}
   m_Layer: 12
   m_Name: Hitbox
   m_TagString: Untagged
@@ -384,6 +385,18 @@ MonoBehaviour:
     m_Bits: 18432
   maxHP: 50
   criticalHP: 10
+--- !u!114 &2155997363376368433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8095894777513288092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7953b68efc69ced49b6bf0b612209a83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8333501297849399930
 GameObject:
   m_ObjectHideFlags: 0

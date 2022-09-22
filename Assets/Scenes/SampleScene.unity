@@ -1488,7 +1488,9 @@ MonoBehaviour:
   - {fileID: 3935691605891884070, guid: c2ca2e6b7acd509449249dbc0c130581, type: 3}
   buildingPrefabs:
   - {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72, type: 3}
-  collectablePrefabs: []
+  collectablePrefabs:
+  - {fileID: 8099999383400644917, guid: d7a12035a7ed65b4586c29f655d22762, type: 3}
+  - {fileID: 1930925136135088810, guid: d01b558f8e1d81b45a3dc8bae8f51fae, type: 3}
   MaxZombieCount: 50
   enemySpawnInterval: 5
   sceneCamera: {fileID: 330585545}
@@ -1782,7 +1784,9 @@ MonoBehaviour:
   damageZombie: {fileID: 8300000, guid: f7b9d58eb495cea4988e4382fd1fc211, type: 3}
   killedZombie: {fileID: 8300000, guid: bdda34f6bc082a04a9e87e4c1d29f150, type: 3}
   walkPlayer: {fileID: 0}
-  jumpPlayer: {fileID: 0}
+  jumpPlayer: {fileID: 8300000, guid: 1acebf80f28d0b749b9a24707624e909, type: 3}
+  collectedItem: {fileID: 8300000, guid: b07b3c66e2b6ba9448e58caa2287623a, type: 3}
+  chestOpen: {fileID: 8300000, guid: e65c36db102c28548a5dcfbe637d095e, type: 3}
 --- !u!82 &1792929968
 AudioSource:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
@@ -11,7 +12,9 @@ namespace Assets.Scripts
 
         private const string AnimOpenBool = "open";
         private bool nearby = false;
-        public IngameSoundEvents SoundEvents { get; set; }
+        private bool dropped = false;
+
+        public event Action<Chest> OnChestOpened;
 
         private void Awake()
         {
@@ -20,11 +23,14 @@ namespace Assets.Scripts
 
         private void OnTriggerStay(Collider other)
         {
-            if (animator == null || !other.CheckColliderMask(openMask))
+            if (!other.CheckColliderMask(openMask))
                 return;
 
-            if (!nearby)
+            if (!nearby && !dropped)
+            {
                 StartCoroutine(CheckNearby());
+                StartCoroutine(SpawnCollectables());
+            }
 
             nearby = true;
         }
@@ -32,7 +38,6 @@ namespace Assets.Scripts
         private IEnumerator CheckNearby()
         {
             nearby = true;
-            
             animator.SetBool(AnimOpenBool, nearby);
 
             while (nearby)
@@ -43,6 +48,24 @@ namespace Assets.Scripts
 
             animator.SetBool(AnimOpenBool, nearby);
         }
+
+        private IEnumerator SpawnCollectables()
+        {
+            yield return new WaitForSeconds(.3f);
+
+            OnChestOpened?.Invoke(this);
+
+            dropped = true;
+
+            while (nearby)
+                yield return new WaitForSeconds(1.0f);
+
+            yield return new WaitForSeconds(5.0f);
+            
+            dropped = false;
+            nearby = false;
+        }
+
 
         private void OnDisable()
         {

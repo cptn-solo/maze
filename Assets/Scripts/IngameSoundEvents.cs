@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     public class IngameSoundEvents : MonoBehaviour, IIngameSoundEvents
-    {
+    {   
         public event EventHandler OnPlayerAttack;
         public event EventHandler OnPlayerDamaged;
         public event EventHandler OnPlayerDamagedCritical;
@@ -15,6 +15,11 @@ namespace Assets.Scripts
         public event EventHandler OnZombieDamagedCritical;
         public event EventHandler OnZombieKilled;
 
+        public event EventHandler OnCollectedItem;
+        public event EventHandler OnChestOpen;
+
+        public void CollectedItem() => OnCollectedItem?.Invoke(this, null);
+        public void ChestOpen() => OnChestOpen?.Invoke(this, null);
         public void PlayerAttack() => OnPlayerAttack?.Invoke(this, null);
         public void PlayerDamaged() => OnPlayerDamaged?.Invoke(this, null);
         public void PlayerDamagedCritical() => OnPlayerDamagedCritical?.Invoke(this, null);

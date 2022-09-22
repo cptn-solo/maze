@@ -18,6 +18,8 @@ namespace Assets.Scripts
         public event Action<int> OnCriticalDamage;
         public event Action OnZeroHealthReached;
         public event Action OnDestroyedOrDisabled;
+        public event Action<int> OnAddHP;
+        public event Action<int> OnAddShield;
 
         public void ResetHP()
         {
@@ -53,5 +55,13 @@ namespace Assets.Scripts
             OnDestroyedOrDisabled?.Invoke();
         }
 
+        internal void AddHP(int v)
+        {
+            if (currentHP + v <= maxHP * SizeScale)
+            {
+                currentHP += v;
+                OnAddHP?.Invoke(currentHP);
+            }
+        }
     }
 }

@@ -29,13 +29,16 @@ namespace Assets.Scripts
         [SerializeField] private HUDLeaderBoardView score;
 
         private float camDistanceFactor = 1.0f;
-
+        private GameObject enemies;
+        private GameObject collectables;
         private Building building;
         private Player player;
         private bool listenForScreenOrientation;
         private bool listeningForScreenOrientation;
 
         private Zombie[] zombies = new Zombie[10];
+        private Chest[] chests = new Chest[10];
+        private Collectable[] drops = new Collectable[20];
 
         private readonly string playerId = "Player";
         private readonly string zombiesId = "Zombies";
@@ -55,12 +58,19 @@ namespace Assets.Scripts
 
         void Start()
         {
+            enemies = new GameObject("Enemies");
+            collectables = new GameObject("Collectables");
+
             building = Instantiate(buildingPrefabs[0]).GetComponent<Building>();
             player = Instantiate(playerPrefab).GetComponent<Player>();
 
             player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
             player.OnUnitKilled += Player_OnUnitKilled;
             player.SoundEvents = soundEvents;
+
+            chests = building.GetComponentsInChildren<Chest>();
+            foreach (var chest in chests)
+                chest.OnChestOpened += Chest_OnChestOpened;
 
             score.AddPlayer(playerId);
             score.UpdatePlayer(playerId, playerScoreInfo, true);
@@ -74,6 +84,23 @@ namespace Assets.Scripts
             }
 
             StartCoroutine(PositionPlayer(player, building));
+        }
+
+        private void Chest_OnChestOpened(Chest obj)
+        {
+            soundEvents.ChestOpen();
+            var prefab = collectablePrefabs[Random.Range(0, collectablePrefabs.Length)];
+            Instantiate(prefab, obj.transform.position + Vector3.up * .07f - obj.transform.forward * .07f, Quaternion.identity);
+        }
+
+        private void SpawnCollectables(MovableUnit obj)
+        {
+            var cnt = Mathf.FloorToInt(obj.SizeScale * 5);
+            for (int i = 0; i < cnt; i++)
+            {
+                var prefab = collectablePrefabs[Random.Range(0, collectablePrefabs.Length)];
+                Instantiate(prefab, obj.transform.position + Vector3.up * .05f + .01f * i * obj.transform.forward, Quaternion.identity, collectables.transform);
+            }
         }
 
         private void Player_OnUnitBeforeKilled(MovableUnit obj)
@@ -97,6 +124,7 @@ namespace Assets.Scripts
             for (int i = 0; i < MaxZombieCount; i++)
             {
                 var zombie = Instantiate(prefab).GetComponent<Zombie>();
+                zombie.transform.SetParent(enemies.transform);
                 zombie.OnUnitBeforeKilled += Zombie_OnUnitBeforeKilled;
                 zombie.OnUnitKilled += Zombie_OnUnitKilled;
                 zombie.SoundEvents = soundEvents;
@@ -122,6 +150,7 @@ namespace Assets.Scripts
         {
             soundEvents.ZombieKilled();
 
+            SpawnCollectables(obj);
             playerScoreInfo.Score++;
             score.UpdatePlayer(playerId, playerScoreInfo, true);
         }

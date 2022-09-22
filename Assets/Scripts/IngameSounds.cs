@@ -10,11 +10,14 @@ namespace Assets.Scripts
         event EventHandler OnPlayerDamagedCritical;
         event EventHandler OnPlayerWalk;
         event EventHandler OnPlayerJump;
+        event EventHandler OnCollectedItem;
 
         event EventHandler OnZombieAttack;
         event EventHandler OnZombieDamaged;
         event EventHandler OnZombieDamagedCritical;
         event EventHandler OnZombieKilled;
+
+        event EventHandler OnChestOpen;
     }
 
     public class IngameSounds : MonoBehaviour
@@ -29,6 +32,10 @@ namespace Assets.Scripts
         [SerializeField] private AudioClip killedZombie;
         [SerializeField] private AudioClip walkPlayer;
         [SerializeField] private AudioClip jumpPlayer;
+        
+        [SerializeField] private AudioClip collectedItem;
+
+        [SerializeField] private AudioClip chestOpen;
 
         private AudioSource audioSource;
 
@@ -44,12 +51,30 @@ namespace Assets.Scripts
                 soundEvents.OnPlayerAttack += PlayerEvents_OnPlayerAttack;
                 soundEvents.OnPlayerDamaged += PlayerEvents_OnPlayerDamaged;
                 soundEvents.OnPlayerDamagedCritical += PlayerEvents_OnPlayerDamagedCritical;
+                soundEvents.OnPlayerJump += SoundEvents_OnPlayerJump;
+                soundEvents.OnCollectedItem += SoundEvents_OnCollectedItem;
 
                 soundEvents.OnZombieAttack += ZombieEvents_OnZombieAttack;
                 soundEvents.OnZombieDamaged += ZombieEvents_OnZombieDamaged;
                 soundEvents.OnZombieDamagedCritical += ZombieEvents_OnZombieDamagedCritical;
                 soundEvents.OnZombieKilled += SoundEvents_OnZombieKilled;
+                soundEvents.OnChestOpen += SoundEvents_OnChestOpen;
             }
+        }
+
+        private void SoundEvents_OnPlayerJump(object sender, EventArgs e)
+        {
+            audioSource.PlayOneShot(jumpPlayer);
+        }
+
+        private void SoundEvents_OnChestOpen(object sender, EventArgs e)
+        {
+            audioSource.PlayOneShot(chestOpen);
+        }
+
+        private void SoundEvents_OnCollectedItem(object sender, EventArgs e)
+        {
+            audioSource.PlayOneShot(collectedItem);
         }
 
         private void SoundEvents_OnZombieKilled(object sender, EventArgs e)
@@ -95,11 +120,15 @@ namespace Assets.Scripts
                 soundEvents.OnPlayerAttack -= PlayerEvents_OnPlayerAttack;
                 soundEvents.OnPlayerDamaged -= PlayerEvents_OnPlayerDamaged;
                 soundEvents.OnPlayerDamagedCritical -= PlayerEvents_OnPlayerDamagedCritical;
+                soundEvents.OnCollectedItem -= SoundEvents_OnCollectedItem;
 
                 soundEvents.OnZombieAttack -= ZombieEvents_OnZombieAttack;
                 soundEvents.OnZombieDamaged -= ZombieEvents_OnZombieDamaged;
                 soundEvents.OnZombieDamagedCritical -= ZombieEvents_OnZombieDamagedCritical;
                 soundEvents.OnZombieKilled -= SoundEvents_OnZombieKilled;
+
+                soundEvents.OnChestOpen -= SoundEvents_OnChestOpen;
+
             }
 
         }

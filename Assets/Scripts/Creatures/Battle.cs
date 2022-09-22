@@ -6,6 +6,7 @@ namespace Assets.Scripts
     public struct BattleInfo
     {
         public int CurrentHP;
+        public int CurrentShield;
         public bool CriticalHP;
     }
     public class Battle : MonoBehaviour
@@ -30,6 +31,8 @@ namespace Assets.Scripts
         {
             if (hitbox != null)
             {
+                hitbox.OnAddShield += Hitbox_OnAddShield;
+                hitbox.OnAddHP += Hitbox_OnAddHP;
                 hitbox.OnDamage += Hitbox_OnDamage;
                 hitbox.OnZeroHealthReached += Hitbox_OnZeroHealthReached;
                 hitbox.OnCriticalDamage += Hitbox_OnCriticalDamage;
@@ -40,6 +43,8 @@ namespace Assets.Scripts
         {
             if (hitbox != null)
             {
+                hitbox.OnAddShield -= Hitbox_OnAddShield;
+                hitbox.OnAddHP -= Hitbox_OnAddHP;
                 hitbox.OnDamage -= Hitbox_OnDamage;
                 hitbox.OnZeroHealthReached -= Hitbox_OnZeroHealthReached;
                 hitbox.OnCriticalDamage -= Hitbox_OnCriticalDamage;
@@ -56,6 +61,17 @@ namespace Assets.Scripts
 
                 OnBattleInfoChange?.Invoke(battleInfo);
             }
+        }
+        private void Hitbox_OnAddHP(int currentHP)
+        {
+            battleInfo.CurrentHP = currentHP;
+            OnBattleInfoChange?.Invoke(battleInfo);
+        }
+
+        private void Hitbox_OnAddShield(int currentShield)
+        {
+            battleInfo.CurrentHP = currentShield;
+            OnBattleInfoChange?.Invoke(battleInfo);
         }
 
         private void Hitbox_OnDamage(int currentHP)

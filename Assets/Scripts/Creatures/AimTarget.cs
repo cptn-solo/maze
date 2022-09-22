@@ -43,12 +43,9 @@ namespace Assets.Scripts
                 if (!Physics.SphereCast(transform.position, .2f, c.transform.position - transform.position, out var hit, attackDistance, combinedMask))
                     continue;
 
-                // NB: won't work untill level is built from separate objects as the player is actually "inside" the building's mesh collider
+                // NB: probably won't work untill level is built from separate objects as the player is actually "inside" the building's mesh collider
                 if (!hit.collider.CheckColliderMask(targetMask))
-                {
-                    Debug.Log($"Target obscured: {c.gameObject}");
                     continue;
-                }
 
                 if (attackTarget == null ||
                     Vector3.SqrMagnitude(c.transform.position - transform.position) <
