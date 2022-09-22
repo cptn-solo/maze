@@ -24,10 +24,13 @@ namespace Assets.Scripts
         public event Action OnZeroHealthReached;
         public event Action OnDestroyedOrDisabled;
 
+        private float shieldCellStrength = 1.0f;
         public BattleInfo ResetHP()
         {
             CurrentHP = Mathf.FloorToInt(maxHP * SizeScale);
-            CurrentShield = Mathf.FloorToInt(maxShield * SizeScale);
+            CurrentShield = CurrentHP;
+            // just for alignment purposes, to set the initial widths same value
+            shieldCellStrength = maxHP != 0 ? maxShield / maxHP : 1.0f;
 
             BattleInfo battleInfo = default;
             battleInfo.CurrentHP = CurrentHP;
@@ -40,9 +43,11 @@ namespace Assets.Scripts
 
         public void DealDamage(int damage)
         {
-            if (CurrentShield >= damage)
+            var shield = Mathf.FloorToInt(CurrentShield * shieldCellStrength);
+            if (shield >= damage)
             {
-                CurrentShield -= damage;
+                shield -= damage;
+                CurrentShield = Mathf.FloorToInt(shield / shieldCellStrength);
                 OnShieldDamage?.Invoke(CurrentShield);
                 damage = 0;
             }
@@ -50,7 +55,7 @@ namespace Assets.Scripts
             {
                 CurrentShield = 0;
                 OnShieldDamage?.Invoke(CurrentShield);
-                damage -= CurrentShield;
+                damage -= shield;
             }
 
             if (CurrentHP <= damage)

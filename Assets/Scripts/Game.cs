@@ -177,7 +177,7 @@ namespace Assets.Scripts
             listeningForScreenOrientation = true;
             while (listenForScreenOrientation)
             {
-                camDistanceFactor = ((float) Screen.height) / Screen.width;
+                camDistanceFactor = ((float) Screen.height) * .7f / Screen.width;
                 yield return new WaitForSecondsRealtime(1.0f);
             }
         }
@@ -195,10 +195,10 @@ namespace Assets.Scripts
             
             var camCurrent = sceneCamera.transform.position;
 
-            var camPosition = player.transform.position + cameraRay.direction * cameraDistance * camDistanceFactor;
+            var camPosition = player.transform.position + camDistanceFactor * cameraDistance * cameraRay.direction;
             var camDirection = player.transform.position - camPosition;
 
-            var camStep = (camPosition - camCurrent) * camSpeed * Time.deltaTime;
+            var camStep = camSpeed * Time.deltaTime * (camPosition - camCurrent);
 
             sceneCamera.transform.SetPositionAndRotation(
                 camCurrent + camStep, Quaternion.LookRotation(camDirection));

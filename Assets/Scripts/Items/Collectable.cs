@@ -64,7 +64,7 @@ namespace Assets.Scripts
             Collected = true;
 
             if (collector != null)
-                collector.Collect(collectableType);
+                collector.Collect(collectableType, CountPerItem(collectableType, collector));
 
             animator.SetBool(AnimDropBool, false);
             animator.SetBool(AnimCollectBool, true);
@@ -72,6 +72,17 @@ namespace Assets.Scripts
             yield return new WaitForSeconds(2.0f);
 
             Release(this);
+        }
+
+        private int CountPerItem(CollectableType collectableType, Collector collector)
+        {
+            switch (collectableType)
+            {
+                case CollectableType.HP:
+                    return 5;
+                default:
+                    return 1;
+            }
         }
 
         private void OnEnable()
