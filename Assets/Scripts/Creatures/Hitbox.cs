@@ -86,14 +86,28 @@ namespace Assets.Scripts
 
         internal void AddShield(int cnt)
         {
-            if (CurrentHP < maxHP * SizeScale)
+            var shield = Mathf.FloorToInt(CurrentShield * shieldCellStrength);
+
+            var hpDelta = Mathf.FloorToInt(maxHP * SizeScale - CurrentHP);
+
+            if (hpDelta > 0)
             {
-                CurrentHP += cnt;
+                CurrentHP += Mathf.Min(cnt, hpDelta);
                 OnAddHP?.Invoke(CurrentHP);
             }
-            else if (CurrentShield + cnt <= maxShield * SizeScale)
+
+            if (hpDelta < cnt)
+                cnt -= hpDelta;
+
+            if (shield + cnt <= maxShield * SizeScale)
             {
-                CurrentShield += cnt;
+                shield += cnt;
+                CurrentShield = Mathf.FloorToInt(shield / shieldCellStrength);
+                OnAddShield?.Invoke(CurrentShield);
+            }
+            else if (shield + cnt > maxShield * SizeScale)
+            {
+                CurrentShield = Mathf.FloorToInt(maxHP * SizeScale); // hp used as a basis
                 OnAddShield?.Invoke(CurrentShield);
             }
         }

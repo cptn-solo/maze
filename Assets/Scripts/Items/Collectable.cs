@@ -81,7 +81,7 @@ namespace Assets.Scripts
                 case CollectableType.HP:
                     return 5;
                 default:
-                    return 1;
+                    return 10;
             }
         }
 
