@@ -90,7 +90,8 @@ namespace Assets.Scripts
         {
             soundEvents.ChestOpen();
             var prefab = collectablePrefabs[Random.Range(0, collectablePrefabs.Length)];
-            Instantiate(prefab, obj.transform.position + Vector3.up * .07f - obj.transform.forward * .07f, Quaternion.identity);
+            Instantiate(prefab, obj.transform.position + Vector3.up * .07f - obj.transform.forward * .07f, Quaternion.identity,
+                collectables.transform);
         }
 
         private void SpawnCollectables(MovableUnit obj)

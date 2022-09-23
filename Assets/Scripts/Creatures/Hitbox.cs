@@ -25,90 +25,84 @@ namespace Assets.Scripts
         public event Action OnDestroyedOrDisabled;
 
         private float shieldCellStrength = 1.0f;
+        private int maxHPScaled;
+        private int maxShieldScaled;
+
         public BattleInfo ResetHP()
         {
-            CurrentHP = Mathf.FloorToInt(maxHP * SizeScale);
-            CurrentShield = CurrentHP;
-            // just for alignment purposes, to set the initial widths same value
-            shieldCellStrength = maxHP != 0 ? maxShield / maxHP : 1.0f;
+            maxHPScaled = Mathf.FloorToInt(maxHP * SizeScale);
+            maxShieldScaled = maxShield > 0 ?  maxHPScaled : 0;
+
+            CurrentHP = maxHPScaled;
+            // just for alignment purposes, to set the initial widths same value for both HP and shields (if any):
+            shieldCellStrength = maxHPScaled != 0 ? maxShieldScaled / maxHPScaled : 0f;
+            CurrentShield = shieldCellStrength > 0 ? CurrentHP : 0;
 
             BattleInfo battleInfo = default;
             battleInfo.CurrentHP = CurrentHP;
             battleInfo.CurrentShield = CurrentShield;
-            battleInfo.MaxHP = CurrentHP;
-            battleInfo.MaxShield = CurrentShield;
+            battleInfo.MaxHP = maxHPScaled;
+            battleInfo.MaxShield = maxShieldScaled;
             
             return battleInfo;
         }
 
         public void DealDamage(int damage)
         {
-            var shield = Mathf.FloorToInt(CurrentShield * shieldCellStrength);
-            if (shield >= damage)
+            if (CurrentShield > 0)
+                damage = Mathf.FloorToInt(damage / shieldCellStrength);
+
+            var combined = CurrentHP + CurrentShield;
+
+            combined -= damage;
+
+            if (combined >= CurrentHP)
             {
-                shield -= damage;
-                CurrentShield = Mathf.FloorToInt(shield / shieldCellStrength);
+                CurrentShield = combined - CurrentHP;
                 OnShieldDamage?.Invoke(CurrentShield);
-                damage = 0;
+            }
+            else if (combined > 0)
+            {
+                CurrentShield = 0;
+                CurrentHP = combined;
+                
+                (CurrentHP <= criticalHP ? OnCriticalDamage : OnDamage).Invoke(CurrentHP);
             }
             else
             {
                 CurrentShield = 0;
-                OnShieldDamage?.Invoke(CurrentShield);
-                damage -= shield;
-            }
-
-            if (CurrentHP <= damage)
-            {
                 CurrentHP = 0;
                 OnZeroHealthReached?.Invoke();
-            }
-            else if (CurrentHP - damage <= criticalHP)
-            {
-                CurrentHP -= damage;
-                OnCriticalDamage?.Invoke(CurrentHP);
-            }
-            else if (CurrentHP > damage)
-            {
-                CurrentHP -= damage;
-                OnDamage?.Invoke(CurrentHP);
             }
         }
 
         internal void AddHP(int cnt)
         {
-            if (CurrentHP + cnt <= maxHP * SizeScale)
-            {
-                CurrentHP += cnt;
-                OnAddHP?.Invoke(CurrentHP);
-            }
+            CurrentHP = Mathf.Min(CurrentHP + cnt, maxHPScaled);
+            OnAddHP?.Invoke(CurrentHP);
         }
 
         internal void AddShield(int cnt)
         {
-            var shield = Mathf.FloorToInt(CurrentShield * shieldCellStrength);
+            var combined = CurrentHP + CurrentShield + Mathf.FloorToInt(cnt / shieldCellStrength);
 
-            var hpDelta = Mathf.FloorToInt(maxHP * SizeScale - CurrentHP);
-
-            if (hpDelta > 0)
+            if (combined >= maxHPScaled + maxShieldScaled)
             {
-                CurrentHP += Mathf.Min(cnt, hpDelta);
+                CurrentHP = maxHPScaled;
+                CurrentShield = maxShieldScaled;
+                OnAddShield?.Invoke(CurrentShield);
+            }
+            else if (combined >= maxHPScaled)
+            {
+                CurrentHP = maxHPScaled;
+                CurrentShield = combined - maxHPScaled;
+                OnAddShield?.Invoke(CurrentShield);
+            }
+            else
+            {
+                CurrentHP = combined;
+                CurrentShield = 0;
                 OnAddHP?.Invoke(CurrentHP);
-            }
-
-            if (hpDelta < cnt)
-                cnt -= hpDelta;
-
-            if (shield + cnt <= maxShield * SizeScale)
-            {
-                shield += cnt;
-                CurrentShield = Mathf.FloorToInt(shield / shieldCellStrength);
-                OnAddShield?.Invoke(CurrentShield);
-            }
-            else if (shield + cnt > maxShield * SizeScale)
-            {
-                CurrentShield = Mathf.FloorToInt(maxHP * SizeScale); // hp used as a basis
-                OnAddShield?.Invoke(CurrentShield);
             }
         }
         private void OnDestroy() => OnDestroyedOrDisabled?.Invoke();
