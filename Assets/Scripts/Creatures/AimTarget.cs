@@ -5,7 +5,6 @@ namespace Assets.Scripts
 {
     public class AimTarget : MonoBehaviour
     {
-        [SerializeField] private LayerMask combinedMask;
         [SerializeField] private LayerMask targetMask;
         [SerializeField] private float attackDistance = .5f;
 
@@ -19,7 +18,7 @@ namespace Assets.Scripts
 
         public bool AttackTargetLost =>
             attackTarget == null ||
-            transform.position.y != Mathf.Clamp(transform.position.y, attackTarget.position.y - .1f, attackTarget.position.y + .1f) ||
+            transform.position.y != Mathf.Clamp(transform.position.y, attackTarget.position.y - .2f, attackTarget.position.y + .2f) ||
             Vector3.Distance(attackTarget.position, transform.position) > attackDistance;
 
         public Transform TryGetAttackTarget(bool recheck = false)
@@ -34,18 +33,13 @@ namespace Assets.Scripts
             {
                 var c = hitColliders[i];
 
-                if (c.transform.position.y != Mathf.Clamp(c.transform.position.y, transform.position.y - .1f, transform.position.y + .1f))
+                if (c.transform.position.y != Mathf.Clamp(c.transform.position.y, transform.position.y - .2f, transform.position.y + .2f))
                     continue;
 
                 if (c.TryGetComponent<Hitbox>(out var hitbox) && hitbox.CurrentHP <= 0)
                     continue;
 
-                if (!Physics.SphereCast(transform.position, .2f, c.transform.position - transform.position, out var hit, attackDistance, combinedMask))
-                    continue;
-
-                // NB: probably won't work untill level is built from separate objects as the player is actually "inside" the building's mesh collider
-                if (!hit.collider.CheckColliderMask(targetMask))
-                    continue;
+                // check for walls removed to improve gameplay and QoL for the player ;)
 
                 if (attackTarget == null ||
                     Vector3.SqrMagnitude(c.transform.position - transform.position) <

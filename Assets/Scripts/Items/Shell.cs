@@ -9,6 +9,8 @@ namespace Assets.Scripts
 
         public LayerMask DamageTo => damage != null ? damage.DamageTo : default;
 
+        public Vector3 TargetDir { get; internal set; }
+
         private void Awake()
         {
             damage = GetComponent<Damage>();
@@ -25,7 +27,7 @@ namespace Assets.Scripts
 
         private void Update()
         {
-            transform.position += transform.forward * speed * Time.deltaTime;
+            transform.position += speed * Time.deltaTime * TargetDir;
         }
 
     }

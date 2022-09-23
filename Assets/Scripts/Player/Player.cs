@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -20,6 +21,7 @@ namespace Assets.Scripts
         private AimTarget aim;
         private Collector collector;
         private Hitbox hitbox;
+        private bool attackRunning;
 
         protected override void OnAwake()
         {
@@ -114,17 +116,10 @@ namespace Assets.Scripts
 
         private void OnAttack(bool toggle)
         {
-            if (toggle && !inAttackState)
-            {
-                aim.Engage(true);
-                StartCoroutine(AttackCoroutine());
-            }
-
+            Debug.Log($"OnAttack {toggle}");
             inAttackState = toggle;
-
-            if (!inAttackState)
-                aim.Engage(false);
-
+            if (inAttackState && !attackRunning)
+                StartCoroutine(AttackCoroutine());                
         }
 
 
@@ -157,7 +152,8 @@ namespace Assets.Scripts
 
         private IEnumerator AttackCoroutine()
         {
-            inAttackState = true;
+            attackRunning = true;
+            aim.Engage(true);
 
             while (inAttackState && !fadingOut)
             {
@@ -165,6 +161,9 @@ namespace Assets.Scripts
                 aim.TryGetAttackTarget(true);
 
                 shell.transform.SetParent(null, true);
+                shell.TargetDir = aim.AttackTarget != null ?
+                    (aim.AttackTarget.transform.position - transform.position).normalized :
+                    transform.forward;
                 shell.gameObject.SetActive(true);
 
                 SoundEvents.PlayerAttack();
@@ -178,6 +177,9 @@ namespace Assets.Scripts
                 
                 yield return new WaitForSeconds(.1f);
             }
+
+            aim.Engage(false);
+            attackRunning = false;
         }
 
         private IEnumerator JumpCoroutine()
