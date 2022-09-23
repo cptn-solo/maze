@@ -27,6 +27,7 @@ namespace Assets.Scripts
 
         [SerializeField] private HUDMarkersView markers;
         [SerializeField] private HUDLeaderBoardView score;
+        [SerializeField] private HUDBalance balance;
 
         private float camDistanceFactor = 1.0f;
         private GameObject enemies;
@@ -66,6 +67,7 @@ namespace Assets.Scripts
 
             player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
             player.OnUnitKilled += Player_OnUnitKilled;
+            player.OnCollected += Player_OnCollected;
             player.SoundEvents = soundEvents;
 
             chests = building.GetComponentsInChildren<Chest>();
@@ -116,6 +118,12 @@ namespace Assets.Scripts
         {
             StartCoroutine(PositionPlayer((Player)obj, building));
         }
+        private void Player_OnCollected(CollectableType arg1, int arg2)
+        {
+            if (arg1 == CollectableType.Coin)
+                balance.CurrentBalance += arg2;
+        }
+
 
         private IEnumerator StartSpawnEnemy(int enemyPrefabIdx)
         {

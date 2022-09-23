@@ -176,6 +176,7 @@ MonoBehaviour:
   HUDScreen: {fileID: 1342398244}
   Markers: {fileID: 1572404561}
   Leaderboard: {fileID: 2137331532}
+  Balance: {fileID: 119681363}
 --- !u!1001 &119681362
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -185,16 +186,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 72654366071587359, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
         type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 72654366071587359, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
-        type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 72654366071587359, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
-        type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
@@ -202,11 +193,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 72654366071587359, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 2828380664000034294, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
         type: 3}
@@ -320,6 +306,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e36b1aa56e6fda349b1d43816bbd9f6a, type: 3}
+--- !u!114 &119681363 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2995498800817734115, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
+    type: 3}
+  m_PrefabInstance: {fileID: 119681362}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf31806bf5362c44b2ee8c8b95e2745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1510,6 +1508,7 @@ MonoBehaviour:
   camSpeed: 10
   markers: {fileID: 1572404561}
   score: {fileID: 2137331532}
+  balance: {fileID: 119681363}
 --- !u!4 &998581038
 Transform:
   m_ObjectHideFlags: 0

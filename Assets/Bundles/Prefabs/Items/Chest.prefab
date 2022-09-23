@@ -62,9 +62,6 @@ MonoBehaviour:
   openMask:
     serializedVersion: 2
     m_Bits: 64
-  collectablePrefabs:
-  - {fileID: 1930925136135088810, guid: d01b558f8e1d81b45a3dc8bae8f51fae, type: 3}
-  - {fileID: 8099999383400644917, guid: d7a12035a7ed65b4586c29f655d22762, type: 3}
 --- !u!1 &2203950043119510309
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,6 +176,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4405232956183304743, guid: 8e609090fdddfac4bad1c0892add3193,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 5198dd829819fd54abe130905b8522bd,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e609090fdddfac4bad1c0892add3193, type: 3}
 --- !u!4 &8360378857913670214 stripped

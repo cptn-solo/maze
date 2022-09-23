@@ -9,6 +9,7 @@ namespace Assets.Scripts
         [SerializeField] private HUDScreen HUDScreen;
         [SerializeField] private HUDMarkersView Markers;
         [SerializeField] private HUDLeaderBoardView Leaderboard;
+        [SerializeField] private HUDBalance Balance;
 
         private void OnEnable()
         {

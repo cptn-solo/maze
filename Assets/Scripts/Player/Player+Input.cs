@@ -25,11 +25,14 @@ namespace Assets.Scripts
             actions.Default.Move.performed += Move_performed;
             actions.Default.Jump.performed += Jump_performed;
             actions.Default.Attack.performed += Attack_performed;
+            actions.Default.Minigun.performed += Minigun_performed;
+
 
             actions.Mobile.LeftStick.performed += LeftStick_performed;
             actions.Mobile.LeftStick.canceled += LeftStick_canceled;
             actions.Mobile.Jump.performed += Jump_performed;
             actions.Mobile.Attack.performed += Attack_performed;
+            actions.Mobile.Minigun.performed += Minigun_performed;
         }
 
         private void LeftStick_performed(InputAction.CallbackContext obj)
@@ -61,6 +64,12 @@ namespace Assets.Scripts
         {
             OnAttack(obj.ReadValueAsButton());
         }
+
+        private void Minigun_performed(InputAction.CallbackContext obj)
+        {
+            OnMinigun();
+        }
+
 
     }
 }

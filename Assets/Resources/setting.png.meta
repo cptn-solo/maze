@@ -1,9 +1,9 @@
 fileFormatVersion: 2
-guid: ec05bacad7b9f1c40a61db6343980e4f
+guid: 5bd8ba509b7839441a3ac6243b31be73
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -55,14 +55,15 @@ TextureImporter:
   spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
-  singleChannelComponent: 1
+  singleChannelComponent: 0
   flipbookRows: 1
   flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
-  ignorePngGamma: 1
+  ignorePngGamma: 0
   applyGammaDecoding: 0
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -118,8 +119,8 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 40ef79d87681a2f489c0bd3d3d850303
-    internalID: 750209072
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
     vertices: []
     indices: 
     edges: []

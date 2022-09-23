@@ -24,6 +24,7 @@ namespace Assets.Scripts
 
 
         public const string ScoreKey = "Score"; // temporary, to keep score between games
+        public const string BalanceKey = "Balance"; // temporary, to keep score between games
 
         private void Awake()
         {
@@ -56,6 +57,9 @@ namespace Assets.Scripts
             if (!PlayerPrefs.HasKey(ScoreKey))
                 PlayerPrefs.SetInt(ScoreKey, 0);
 
+            if (!PlayerPrefs.HasKey(BalanceKey))
+                PlayerPrefs.SetInt(BalanceKey, 0);
+
             // PERFORMANCE
             if (!PlayerPrefs.HasKey(FpsLimitKey))
                 PlayerPrefs.SetInt(FpsLimitKey, 1);
@@ -63,6 +67,8 @@ namespace Assets.Scripts
             if (!PlayerPrefs.HasKey(FpsLowTestKey))
                 PlayerPrefs.SetInt(FpsLowTestKey, 0); // 0 - important
 
+            if (!PlayerPrefs.HasKey(Antialiasing2xKey))
+                PlayerPrefs.SetInt(Antialiasing2xKey, 0); // 0 - important
         }
 
     }

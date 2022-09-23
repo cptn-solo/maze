@@ -80,8 +80,10 @@ namespace Assets.Scripts
             {
                 case CollectableType.HP:
                     return 5;
-                default:
+                case CollectableType.Shield:
                     return 10;
+                default:
+                    return 1;
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -14,14 +13,21 @@ namespace Assets.Scripts
         private const string AnimDamageBool = "damage";
         private const string AnimSpeedFloat = "speed";
 
+        private const string AnimMinigunBool = "minigun";
+
         [SerializeField] private Transform launcher;
         [SerializeField] private Shell shell;
-        
+        [SerializeField] private Minigun minigun;
+
+        public event Action<CollectableType, int> OnCollected;
+
         private bool inAttackState;
         private AimTarget aim;
         private Collector collector;
         private Hitbox hitbox;
         private bool attackRunning;
+        private bool minigunToggleRunning;
+        private bool minigunEquipped;
 
         protected override void OnAwake()
         {
@@ -45,9 +51,14 @@ namespace Assets.Scripts
                         hitbox.AddShield(cnt);
                         break;
                     }
-                default:
+                case CollectableType.HP:
                     {
                         hitbox.AddHP(cnt);
+                        break;
+                    }
+                default:
+                    {
+                        OnCollected?.Invoke(collectableType, cnt);
                         break;
                     }
             }
@@ -114,6 +125,25 @@ namespace Assets.Scripts
                 StartCoroutine(JumpCoroutine());
         }
 
+        private void OnMinigun()
+        {
+            if (!minigunToggleRunning)
+                StartCoroutine(ToggleMinigun());
+        }
+
+        private IEnumerator ToggleMinigun()
+        {
+            minigunToggleRunning = true;
+
+            minigunEquipped = !minigunEquipped;
+            minigun.gameObject.SetActive(minigunEquipped);
+            animator.SetBool(AnimMinigunBool, minigunEquipped);
+
+            yield return new WaitForSeconds(.3f);
+
+            minigunToggleRunning = false;
+        }
+
         private void OnAttack(bool toggle)
         {
             Debug.Log($"OnAttack {toggle}");
@@ -160,6 +190,9 @@ namespace Assets.Scripts
                 
                 aim.TryGetAttackTarget(true);
 
+                if (minigunEquipped)
+                    minigun.Attack(true);
+
                 shell.transform.SetParent(null, true);
                 shell.TargetDir = aim.AttackTarget != null ?
                     (aim.AttackTarget.transform.position - transform.position).normalized :
@@ -180,6 +213,9 @@ namespace Assets.Scripts
 
             aim.Engage(false);
             attackRunning = false;
+            if (minigunEquipped)
+                minigun.Attack(false);
+
         }
 
         private IEnumerator JumpCoroutine()
