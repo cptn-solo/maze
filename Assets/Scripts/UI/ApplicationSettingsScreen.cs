@@ -16,6 +16,7 @@ namespace Assets.Scripts.UI
 
         [SerializeField] private Toggle fpsLimitToggle;
         [SerializeField] private Toggle fpsLowTestToggle;
+        [SerializeField] private Toggle antialiasingToggle;
 
 
         [SerializeField] private AudioPlaybackService audioPlaybackService;
@@ -32,6 +33,7 @@ namespace Assets.Scripts.UI
 
             fpsLimitToggle.isOn = FpsLimitToggle;
             fpsLowTestToggle.isOn = FpsLowTestToggle;
+            antialiasingToggle.isOn = Antialiasing2xToggle;
         }
 
         public void Close() => OnCloseButtonPressed?.Invoke();
@@ -47,6 +49,8 @@ namespace Assets.Scripts.UI
             sfxToggle.onValueChanged.AddListener(OnSfxToggleChange);
             sfxSlider.onValueChanged.AddListener(OnSfxSliderChange);
 
+            antialiasingToggle.onValueChanged.AddListener(OnAntialiasing2xToggleChange);
+
             closeButton.onClick.AddListener(Close);
         }
 
@@ -61,6 +65,8 @@ namespace Assets.Scripts.UI
             sfxToggle.onValueChanged.RemoveListener(OnSfxToggleChange);
             sfxSlider.onValueChanged.RemoveListener(OnSfxSliderChange);
 
+            antialiasingToggle.onValueChanged.RemoveListener(OnAntialiasing2xToggleChange);
+
             closeButton.onClick.RemoveListener(Close);
         }
         
@@ -73,6 +79,11 @@ namespace Assets.Scripts.UI
         {
             get => PlayerPrefs.GetInt(PlayerPreferencesService.FpsLowTestKey) != 0;
             set => PlayerPrefs.SetInt(PlayerPreferencesService.FpsLowTestKey, value ? 1 : 0);
+        }
+        public bool Antialiasing2xToggle
+        {
+            get => PlayerPrefs.GetInt(PlayerPreferencesService.Antialiasing2xKey) != 0;
+            set => PlayerPrefs.SetInt(PlayerPreferencesService.Antialiasing2xKey, value ? 1 : 0);
         }
 
         public void OnFpsLimitToggleChange(bool value)
@@ -115,5 +126,14 @@ namespace Assets.Scripts.UI
 
             audioPlaybackService.SfxToggle = sfxToggle.isOn;
         }
+
+        public void OnAntialiasing2xToggleChange(bool value)
+        {
+            QualitySettings.antiAliasing = value ? 2 : 0;
+
+            Antialiasing2xToggle = antialiasingToggle.isOn;
+
+        }
+
     }
 }

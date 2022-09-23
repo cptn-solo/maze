@@ -27,12 +27,12 @@ namespace Assets.Scripts
             if (Application.isMobilePlatform)
                 preset = FrameRatePreset.Mobile();
 
-            var prefLimit = PlayerPrefs.GetInt(SettingsScreen.FpsLimitKey) != 0;
+            var prefLimit = PlayerPrefs.GetInt(PlayerPreferencesService.FpsLimitKey) != 0;
 
             if (prefLimit)
                 preset = FrameRatePreset.Mobile();
 
-            var prefLowTest = PlayerPrefs.GetInt(SettingsScreen.FpsLowTestKey) != 0;
+            var prefLowTest = PlayerPrefs.GetInt(PlayerPreferencesService.FpsLowTestKey) != 0;
 
             if (prefLowTest)
                 preset = FrameRatePreset.Low();
@@ -44,6 +44,9 @@ namespace Assets.Scripts
 
             Time.fixedDeltaTime = preset.FixedDeltaTime;
             QualitySettings.vSyncCount = preset.vSyncCount;
+
+            var prefAntialiasing = PlayerPrefs.GetInt(PlayerPreferencesService.Antialiasing2xKey) != 0;
+            QualitySettings.antiAliasing = prefAntialiasing ? 2 : 0;
 
             Application.targetFrameRate = preset.TargetFrameRate;
             

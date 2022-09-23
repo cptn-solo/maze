@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Services.App
+namespace Assets.Scripts
 {
     public class PlayerPreferencesService : MonoBehaviour
     {
@@ -20,6 +20,7 @@ namespace Assets.Scripts.Services.App
 
         public const string FpsLimitKey = "FpsLimitKey";
         public const string FpsLowTestKey = "FpsLowTestKey";
+        public const string Antialiasing2xKey = "Antialiasing2xKey";
 
 
         public const string ScoreKey = "Score"; // temporary, to keep score between games

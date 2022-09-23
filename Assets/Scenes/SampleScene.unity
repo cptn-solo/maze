@@ -902,6 +902,16 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3893810713313185226, guid: a6f140b3d262fa94199b23e4afaca094,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3893810713313185226, guid: a6f140b3d262fa94199b23e4afaca094,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 3938719972789053633, guid: a6f140b3d262fa94199b23e4afaca094,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1489,6 +1499,7 @@ MonoBehaviour:
   buildingPrefabs:
   - {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72, type: 3}
   collectablePrefabs:
+  - {fileID: 2541319415720170856, guid: 4f1cbbd871e4c864e89317700680072f, type: 3}
   - {fileID: 8099999383400644917, guid: d7a12035a7ed65b4586c29f655d22762, type: 3}
   - {fileID: 1930925136135088810, guid: d01b558f8e1d81b45a3dc8bae8f51fae, type: 3}
   MaxZombieCount: 50
