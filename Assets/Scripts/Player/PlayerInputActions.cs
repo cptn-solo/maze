@@ -55,9 +55,27 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Minigun"",
+                    ""name"": ""Weapon"",
                     ""type"": ""Button"",
                     ""id"": ""d247cf25-185f-4b6e-b499-524e7a74525a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Item1"",
+                    ""type"": ""Button"",
+                    ""id"": ""4244bbaf-72a3-43f2-867d-4e04f74a7779"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Item2"",
+                    ""type"": ""Button"",
+                    ""id"": ""e7c5e091-cc2b-48a6-9cd5-7d7e03517f6f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -149,7 +167,29 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Minigun"",
+                    ""action"": ""Weapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""64f70729-4dbd-4553-b067-354d9ca9d634"",
+                    ""path"": ""<Keyboard>/#(2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Item1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3699cde6-0585-46fc-b44f-61ed3080f71b"",
+                    ""path"": ""<Keyboard>/#(3)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Item2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -187,9 +227,27 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Minigun"",
+                    ""name"": ""Weapon"",
                     ""type"": ""Button"",
                     ""id"": ""16cba9d7-dcc1-421c-974a-ac3392817f4f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Item1"",
+                    ""type"": ""Button"",
+                    ""id"": ""bdd29929-1a94-4c98-892b-52ba745044eb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Item2"",
+                    ""type"": ""Button"",
+                    ""id"": ""8a6fd51c-d59b-450e-9e46-f487e3b4ed39"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -237,7 +295,29 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Minigun"",
+                    ""action"": ""Weapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""448c61f6-7fd0-4579-b215-7f3bafe649af"",
+                    ""path"": ""<Keyboard>/#(2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Item1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ed9a6f28-d463-4329-abeb-fa6a1129eff2"",
+                    ""path"": ""<Keyboard>/#(3)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Item2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -251,13 +331,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Default_Move = m_Default.FindAction("Move", throwIfNotFound: true);
         m_Default_Jump = m_Default.FindAction("Jump", throwIfNotFound: true);
         m_Default_Attack = m_Default.FindAction("Attack", throwIfNotFound: true);
-        m_Default_Minigun = m_Default.FindAction("Minigun", throwIfNotFound: true);
+        m_Default_Weapon = m_Default.FindAction("Weapon", throwIfNotFound: true);
+        m_Default_Item1 = m_Default.FindAction("Item1", throwIfNotFound: true);
+        m_Default_Item2 = m_Default.FindAction("Item2", throwIfNotFound: true);
         // Mobile
         m_Mobile = asset.FindActionMap("Mobile", throwIfNotFound: true);
         m_Mobile_LeftStick = m_Mobile.FindAction("LeftStick", throwIfNotFound: true);
         m_Mobile_Jump = m_Mobile.FindAction("Jump", throwIfNotFound: true);
         m_Mobile_Attack = m_Mobile.FindAction("Attack", throwIfNotFound: true);
-        m_Mobile_Minigun = m_Mobile.FindAction("Minigun", throwIfNotFound: true);
+        m_Mobile_Weapon = m_Mobile.FindAction("Weapon", throwIfNotFound: true);
+        m_Mobile_Item1 = m_Mobile.FindAction("Item1", throwIfNotFound: true);
+        m_Mobile_Item2 = m_Mobile.FindAction("Item2", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -320,7 +404,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Default_Move;
     private readonly InputAction m_Default_Jump;
     private readonly InputAction m_Default_Attack;
-    private readonly InputAction m_Default_Minigun;
+    private readonly InputAction m_Default_Weapon;
+    private readonly InputAction m_Default_Item1;
+    private readonly InputAction m_Default_Item2;
     public struct DefaultActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -328,7 +414,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Default_Move;
         public InputAction @Jump => m_Wrapper.m_Default_Jump;
         public InputAction @Attack => m_Wrapper.m_Default_Attack;
-        public InputAction @Minigun => m_Wrapper.m_Default_Minigun;
+        public InputAction @Weapon => m_Wrapper.m_Default_Weapon;
+        public InputAction @Item1 => m_Wrapper.m_Default_Item1;
+        public InputAction @Item2 => m_Wrapper.m_Default_Item2;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -347,9 +435,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Attack.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
-                @Minigun.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMinigun;
-                @Minigun.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMinigun;
-                @Minigun.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMinigun;
+                @Weapon.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnWeapon;
+                @Weapon.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnWeapon;
+                @Weapon.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnWeapon;
+                @Item1.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnItem1;
+                @Item1.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnItem1;
+                @Item1.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnItem1;
+                @Item2.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnItem2;
+                @Item2.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnItem2;
+                @Item2.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnItem2;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
@@ -363,9 +457,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
-                @Minigun.started += instance.OnMinigun;
-                @Minigun.performed += instance.OnMinigun;
-                @Minigun.canceled += instance.OnMinigun;
+                @Weapon.started += instance.OnWeapon;
+                @Weapon.performed += instance.OnWeapon;
+                @Weapon.canceled += instance.OnWeapon;
+                @Item1.started += instance.OnItem1;
+                @Item1.performed += instance.OnItem1;
+                @Item1.canceled += instance.OnItem1;
+                @Item2.started += instance.OnItem2;
+                @Item2.performed += instance.OnItem2;
+                @Item2.canceled += instance.OnItem2;
             }
         }
     }
@@ -377,7 +477,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Mobile_LeftStick;
     private readonly InputAction m_Mobile_Jump;
     private readonly InputAction m_Mobile_Attack;
-    private readonly InputAction m_Mobile_Minigun;
+    private readonly InputAction m_Mobile_Weapon;
+    private readonly InputAction m_Mobile_Item1;
+    private readonly InputAction m_Mobile_Item2;
     public struct MobileActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -385,7 +487,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @LeftStick => m_Wrapper.m_Mobile_LeftStick;
         public InputAction @Jump => m_Wrapper.m_Mobile_Jump;
         public InputAction @Attack => m_Wrapper.m_Mobile_Attack;
-        public InputAction @Minigun => m_Wrapper.m_Mobile_Minigun;
+        public InputAction @Weapon => m_Wrapper.m_Mobile_Weapon;
+        public InputAction @Item1 => m_Wrapper.m_Mobile_Item1;
+        public InputAction @Item2 => m_Wrapper.m_Mobile_Item2;
         public InputActionMap Get() { return m_Wrapper.m_Mobile; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -404,9 +508,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Attack.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnAttack;
-                @Minigun.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnMinigun;
-                @Minigun.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnMinigun;
-                @Minigun.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnMinigun;
+                @Weapon.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnWeapon;
+                @Weapon.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnWeapon;
+                @Weapon.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnWeapon;
+                @Item1.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnItem1;
+                @Item1.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnItem1;
+                @Item1.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnItem1;
+                @Item2.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnItem2;
+                @Item2.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnItem2;
+                @Item2.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnItem2;
             }
             m_Wrapper.m_MobileActionsCallbackInterface = instance;
             if (instance != null)
@@ -420,9 +530,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
-                @Minigun.started += instance.OnMinigun;
-                @Minigun.performed += instance.OnMinigun;
-                @Minigun.canceled += instance.OnMinigun;
+                @Weapon.started += instance.OnWeapon;
+                @Weapon.performed += instance.OnWeapon;
+                @Weapon.canceled += instance.OnWeapon;
+                @Item1.started += instance.OnItem1;
+                @Item1.performed += instance.OnItem1;
+                @Item1.canceled += instance.OnItem1;
+                @Item2.started += instance.OnItem2;
+                @Item2.performed += instance.OnItem2;
+                @Item2.canceled += instance.OnItem2;
             }
         }
     }
@@ -432,13 +548,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
-        void OnMinigun(InputAction.CallbackContext context);
+        void OnWeapon(InputAction.CallbackContext context);
+        void OnItem1(InputAction.CallbackContext context);
+        void OnItem2(InputAction.CallbackContext context);
     }
     public interface IMobileActions
     {
         void OnLeftStick(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
-        void OnMinigun(InputAction.CallbackContext context);
+        void OnWeapon(InputAction.CallbackContext context);
+        void OnItem1(InputAction.CallbackContext context);
+        void OnItem2(InputAction.CallbackContext context);
     }
 }

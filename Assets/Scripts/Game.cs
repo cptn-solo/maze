@@ -51,10 +51,12 @@ namespace Assets.Scripts
         public event EventHandler OnPlayerKilled;
 
         private IngameSoundEvents soundEvents;
+        private PlayerBalanceService balances;
 
         private void Awake()
         {
             soundEvents = GetComponent<IngameSoundEvents>();
+            balances = GetComponent<PlayerBalanceService>();
         }
 
         void Start()
@@ -68,6 +70,7 @@ namespace Assets.Scripts
             player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
             player.OnUnitKilled += Player_OnUnitKilled;
             player.OnCollected += Player_OnCollected;
+            player.OnWeaponSelected += Player_OnWeaponSelected;
             player.SoundEvents = soundEvents;
 
             chests = building.GetComponentsInChildren<Chest>();
@@ -86,6 +89,13 @@ namespace Assets.Scripts
             }
 
             StartCoroutine(PositionPlayer(player, building));
+
+            balance.SetBalance(balances.CurrentBalance(CollectableType.Coin));
+            balance.CurrentWeapon = WeaponType.Shuriken;
+            balance.SetStowedAmmo(balances.CurrentBalance(CollectableType.Minigun));
+            balance.SetItemAmmo(CollectableType.Bomb, balances.CurrentBalance(CollectableType.Bomb));
+            balance.SetItemAmmo(CollectableType.Landmine, balances.CurrentBalance(CollectableType.Landmine));
+
         }
 
         private void Chest_OnChestOpened(Chest obj)
@@ -118,12 +128,38 @@ namespace Assets.Scripts
         {
             StartCoroutine(PositionPlayer((Player)obj, building));
         }
+
         private void Player_OnCollected(CollectableType arg1, int arg2)
         {
-            if (arg1 == CollectableType.Coin)
-                balance.CurrentBalance += arg2;
+            if (arg1 >= CollectableType.Coin)
+                balances.AddBalance(arg1, arg2);
         }
 
+        private void Balances_OnBalanceChanged(CollectableType arg1, int arg2)
+        {
+            if (arg1 == CollectableType.Coin)
+                balance.SetBalance(arg2);
+            else if (PlayerBalanceService.CollectableForWeapon(balance.CurrentWeapon) == arg1)
+                balance.SetAmmo(arg2);
+            else
+                balance.SetItemAmmo(arg1, arg2);
+        }
+
+        private void Player_OnWeaponSelected(WeaponType obj)
+        {
+            var stowedWeapon = balance.CurrentWeapon;
+            balance.CurrentWeapon = obj;
+            var ammoCollectable = PlayerBalanceService.CollectableForWeapon(balance.CurrentWeapon);
+            if (ammoCollectable != CollectableType.NA)
+                balance.SetAmmo(balances.CurrentBalance(ammoCollectable));
+
+            var stowedAmmoCollectable = PlayerBalanceService.CollectableForWeapon(stowedWeapon);
+            var stowedCount = stowedAmmoCollectable != CollectableType.NA ?
+                balances.CurrentBalance(stowedAmmoCollectable) :
+                -1;
+            balance.SetStowedAmmo(stowedCount);
+
+        }
 
         private IEnumerator StartSpawnEnemy(int enemyPrefabIdx)
         {
@@ -174,11 +210,14 @@ namespace Assets.Scripts
             listenForScreenOrientation = true;
             if (!listeningForScreenOrientation)
                 StartCoroutine(ScreenOrientationMonitor());
+
+            balances.OnBalanceChanged += Balances_OnBalanceChanged;
         }
 
         private void OnDisable()
         {
             listenForScreenOrientation = false;
+            balances.OnBalanceChanged -= Balances_OnBalanceChanged;
         }
 
         private IEnumerator ScreenOrientationMonitor()

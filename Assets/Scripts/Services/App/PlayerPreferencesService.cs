@@ -24,7 +24,7 @@ namespace Assets.Scripts
 
 
         public const string ScoreKey = "Score"; // temporary, to keep score between games
-        public const string BalanceKey = "Balance"; // temporary, to keep score between games
+        public const string BalanceKey = "Balance"; // temporary, to keep score between games        
 
         private void Awake()
         {
@@ -57,8 +57,18 @@ namespace Assets.Scripts
             if (!PlayerPrefs.HasKey(ScoreKey))
                 PlayerPrefs.SetInt(ScoreKey, 0);
 
-            if (!PlayerPrefs.HasKey(BalanceKey))
-                PlayerPrefs.SetInt(BalanceKey, 0);
+            foreach (var collectable in new[] {
+                CollectableType.Coin,
+                CollectableType.Minigun,
+                CollectableType.Bomb,
+                CollectableType.Landmine})
+            {
+                var key = PlayerBalanceService.BalanceKey(collectable);
+                var hasKey = PlayerPrefs.HasKey(key);
+                if (!hasKey)
+                    PlayerPrefs.SetInt(key, 0);
+            }
+
 
             // PERFORMANCE
             if (!PlayerPrefs.HasKey(FpsLimitKey))

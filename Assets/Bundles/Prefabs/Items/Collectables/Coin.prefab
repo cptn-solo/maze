@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1012955552, guid: d01b558f8e1d81b45a3dc8bae8f51fae, type: 3}
       propertyPath: collectableType
-      value: 0
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1930925136135088810, guid: d01b558f8e1d81b45a3dc8bae8f51fae,
         type: 3}

@@ -33,9 +33,27 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Minigun",
+                    "name": "Weapon",
                     "type": "Button",
                     "id": "d247cf25-185f-4b6e-b499-524e7a74525a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Item1",
+                    "type": "Button",
+                    "id": "4244bbaf-72a3-43f2-867d-4e04f74a7779",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Item2",
+                    "type": "Button",
+                    "id": "e7c5e091-cc2b-48a6-9cd5-7d7e03517f6f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -127,7 +145,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Minigun",
+                    "action": "Weapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64f70729-4dbd-4553-b067-354d9ca9d634",
+                    "path": "<Keyboard>/#(2)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Item1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3699cde6-0585-46fc-b44f-61ed3080f71b",
+                    "path": "<Keyboard>/#(3)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Item2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -165,9 +205,27 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Minigun",
+                    "name": "Weapon",
                     "type": "Button",
                     "id": "16cba9d7-dcc1-421c-974a-ac3392817f4f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Item1",
+                    "type": "Button",
+                    "id": "bdd29929-1a94-4c98-892b-52ba745044eb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Item2",
+                    "type": "Button",
+                    "id": "8a6fd51c-d59b-450e-9e46-f487e3b4ed39",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -215,7 +273,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Minigun",
+                    "action": "Weapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "448c61f6-7fd0-4579-b215-7f3bafe649af",
+                    "path": "<Keyboard>/#(2)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Item1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ed9a6f28-d463-4329-abeb-fa6a1129eff2",
+                    "path": "<Keyboard>/#(3)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Item2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

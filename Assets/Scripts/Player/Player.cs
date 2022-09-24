@@ -20,14 +20,17 @@ namespace Assets.Scripts
         [SerializeField] private Minigun minigun;
 
         public event Action<CollectableType, int> OnCollected;
+        public event Action<WeaponType> OnWeaponSelected;
 
         private bool inAttackState;
         private AimTarget aim;
         private Collector collector;
         private Hitbox hitbox;
         private bool attackRunning;
-        private bool minigunToggleRunning;
+        private bool weaponSelectRunning;
         private bool minigunEquipped;
+        private bool item1SelectRunning;
+        private bool item2SelectRunning;
 
         protected override void OnAwake()
         {
@@ -125,23 +128,52 @@ namespace Assets.Scripts
                 StartCoroutine(JumpCoroutine());
         }
 
-        private void OnMinigun()
+        private void OnWeaponSelect()
         {
-            if (!minigunToggleRunning)
+            if (!weaponSelectRunning)
                 StartCoroutine(ToggleMinigun());
+        }
+
+        private void OnItem1Select()
+        {
+            if (!item1SelectRunning)
+                StartCoroutine(UseItem1());
+        }
+
+        private void OnItem2Select()
+        {
+            if (!item2SelectRunning)
+                StartCoroutine(UseItem2());
+        }
+        
+        private IEnumerator UseItem1()
+        {
+            item1SelectRunning = true;
+            yield return new WaitForSeconds(.3f);
+            item1SelectRunning = true;
+        }
+        
+        private IEnumerator UseItem2()
+        {
+            item2SelectRunning = true;
+            yield return new WaitForSeconds(.3f);
+            item2SelectRunning = true;
         }
 
         private IEnumerator ToggleMinigun()
         {
-            minigunToggleRunning = true;
+            weaponSelectRunning = true;
 
             minigunEquipped = !minigunEquipped;
+            
+            OnWeaponSelected?.Invoke(minigunEquipped ? WeaponType.Minigun : WeaponType.Shuriken);
+            
             minigun.gameObject.SetActive(minigunEquipped);
             animator.SetBool(AnimMinigunBool, minigunEquipped);
 
             yield return new WaitForSeconds(.3f);
 
-            minigunToggleRunning = false;
+            weaponSelectRunning = false;
         }
 
         private void OnAttack(bool toggle)
