@@ -17,5 +17,6 @@ namespace Assets.Scripts
         event EventHandler OnZombieKilled;
 
         event EventHandler OnChestOpen;
+        event EventHandler OnMinigunShot;
     }
 }

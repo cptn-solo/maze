@@ -6,6 +6,9 @@ namespace Assets.Scripts
     {
         private const string AnimAttackBool = "attack";
 
+        [SerializeField] private LayerMask targetMask;
+        [SerializeField] private int damagePerShot = 1;
+
         private Animator animator;
         private void Awake()
         {
@@ -15,6 +18,17 @@ namespace Assets.Scripts
         public void Attack(bool toggle)
         {
             animator.SetBool(AnimAttackBool, toggle);
+
+            if (!Physics.Raycast(transform.position, transform.forward, out var hitInfo, 1.0f, targetMask))
+                return;
+
+            if (!hitInfo.collider.TryGetComponent<Hitbox>(out var hitbox))
+                return;
+
+            if (hitbox.CurrentHP <= 0)
+                return;
+
+            hitbox.DealDamage(damagePerShot);
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Assets.Scripts
         [SerializeField] private AudioClip collectedItem;
 
         [SerializeField] private AudioClip chestOpen;
+        [SerializeField] private AudioClip minigunShot;
 
         private AudioSource audioSource;
 
@@ -42,7 +43,14 @@ namespace Assets.Scripts
                 soundEvents.OnZombieDamagedCritical += ZombieEvents_OnZombieDamagedCritical;
                 soundEvents.OnZombieKilled += SoundEvents_OnZombieKilled;
                 soundEvents.OnChestOpen += SoundEvents_OnChestOpen;
+
+                soundEvents.OnMinigunShot += SoundEvents_OnMinigunShot;
             }
+        }
+
+        private void SoundEvents_OnMinigunShot(object sender, EventArgs e)
+        {
+            audioSource.PlayOneShot(minigunShot);
         }
 
         private void SoundEvents_OnPlayerJump(object sender, EventArgs e)
@@ -112,6 +120,7 @@ namespace Assets.Scripts
 
                 soundEvents.OnChestOpen -= SoundEvents_OnChestOpen;
 
+                soundEvents.OnMinigunShot -= SoundEvents_OnMinigunShot;
             }
 
         }

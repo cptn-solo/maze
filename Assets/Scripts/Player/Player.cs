@@ -191,23 +191,29 @@ namespace Assets.Scripts
                 aim.TryGetAttackTarget(true);
 
                 if (minigunEquipped)
+                {
                     minigun.Attack(true);
+                    SoundEvents.MinigunShot();
+                }
+                else
+                {
+                    shell.transform.SetParent(null, true);
+                    shell.TargetDir = aim.AttackTarget != null ?
+                        (aim.AttackTarget.transform.position - transform.position).normalized :
+                        transform.forward;
+                    shell.gameObject.SetActive(true);
 
-                shell.transform.SetParent(null, true);
-                shell.TargetDir = aim.AttackTarget != null ?
-                    (aim.AttackTarget.transform.position - transform.position).normalized :
-                    transform.forward;
-                shell.gameObject.SetActive(true);
+                    SoundEvents.PlayerAttack();
 
-                SoundEvents.PlayerAttack();
+                    yield return new WaitForSeconds(.3f);
 
-                yield return new WaitForSeconds(.3f);
+                    shell.gameObject.SetActive(false);
+                    shell.transform.SetParent(launcher, false);
+                    shell.transform.localPosition = Vector3.zero;
+                    shell.transform.localRotation = Quaternion.identity;
+                }
 
-                shell.gameObject.SetActive(false);
-                shell.transform.SetParent(launcher, false);
-                shell.transform.localPosition = Vector3.zero;
-                shell.transform.localRotation = Quaternion.identity;
-                
+
                 yield return new WaitForSeconds(.1f);
             }
 

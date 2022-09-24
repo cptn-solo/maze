@@ -1797,6 +1797,7 @@ MonoBehaviour:
   jumpPlayer: {fileID: 8300000, guid: 1acebf80f28d0b749b9a24707624e909, type: 3}
   collectedItem: {fileID: 8300000, guid: b07b3c66e2b6ba9448e58caa2287623a, type: 3}
   chestOpen: {fileID: 8300000, guid: e65c36db102c28548a5dcfbe637d095e, type: 3}
+  minigunShot: {fileID: 8300000, guid: 20eff85ba0f20fc4faf44c57aed54e88, type: 3}
 --- !u!82 &1792929968
 AudioSource:
   m_ObjectHideFlags: 0
