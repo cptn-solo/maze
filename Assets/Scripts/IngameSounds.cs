@@ -20,6 +20,7 @@ namespace Assets.Scripts
 
         [SerializeField] private AudioClip chestOpen;
         [SerializeField] private AudioClip minigunShot;
+        [SerializeField] private AudioClip outOfAmmo;
 
         private AudioSource audioSource;
 
@@ -45,7 +46,34 @@ namespace Assets.Scripts
                 soundEvents.OnChestOpen += SoundEvents_OnChestOpen;
 
                 soundEvents.OnMinigunShot += SoundEvents_OnMinigunShot;
+                soundEvents.OnOutOfAmmo += SoundEvents_OnOutOfAmmo;
             }
+        }
+        private void OnDisable()
+        {
+            if (soundEvents != null)
+            {
+                soundEvents.OnPlayerAttack -= PlayerEvents_OnPlayerAttack;
+                soundEvents.OnPlayerDamaged -= PlayerEvents_OnPlayerDamaged;
+                soundEvents.OnPlayerDamagedCritical -= PlayerEvents_OnPlayerDamagedCritical;
+                soundEvents.OnCollectedItem -= SoundEvents_OnCollectedItem;
+
+                soundEvents.OnZombieAttack -= ZombieEvents_OnZombieAttack;
+                soundEvents.OnZombieDamaged -= ZombieEvents_OnZombieDamaged;
+                soundEvents.OnZombieDamagedCritical -= ZombieEvents_OnZombieDamagedCritical;
+                soundEvents.OnZombieKilled -= SoundEvents_OnZombieKilled;
+
+                soundEvents.OnChestOpen -= SoundEvents_OnChestOpen;
+
+                soundEvents.OnMinigunShot -= SoundEvents_OnMinigunShot;
+                soundEvents.OnOutOfAmmo -= SoundEvents_OnOutOfAmmo;
+            }
+
+        }
+
+        private void SoundEvents_OnOutOfAmmo(object sender, EventArgs e)
+        {
+            audioSource.PlayOneShot(outOfAmmo);
         }
 
         private void SoundEvents_OnMinigunShot(object sender, EventArgs e)
@@ -102,27 +130,6 @@ namespace Assets.Scripts
         private void PlayerEvents_OnPlayerAttack(object sender, EventArgs e)
         {
             audioSource.PlayOneShot(attackPlayer);
-        }
-
-        private void OnDisable()
-        {
-            if (soundEvents != null)
-            {
-                soundEvents.OnPlayerAttack -= PlayerEvents_OnPlayerAttack;
-                soundEvents.OnPlayerDamaged -= PlayerEvents_OnPlayerDamaged;
-                soundEvents.OnPlayerDamagedCritical -= PlayerEvents_OnPlayerDamagedCritical;
-                soundEvents.OnCollectedItem -= SoundEvents_OnCollectedItem;
-
-                soundEvents.OnZombieAttack -= ZombieEvents_OnZombieAttack;
-                soundEvents.OnZombieDamaged -= ZombieEvents_OnZombieDamaged;
-                soundEvents.OnZombieDamagedCritical -= ZombieEvents_OnZombieDamagedCritical;
-                soundEvents.OnZombieKilled -= SoundEvents_OnZombieKilled;
-
-                soundEvents.OnChestOpen -= SoundEvents_OnChestOpen;
-
-                soundEvents.OnMinigunShot -= SoundEvents_OnMinigunShot;
-            }
-
         }
     }
 }

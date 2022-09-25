@@ -69,9 +69,11 @@ namespace Assets.Scripts
 
             player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
             player.OnUnitKilled += Player_OnUnitKilled;
-            player.OnCollected += Player_OnCollected;
             player.OnWeaponSelected += Player_OnWeaponSelected;
+            player.OnActiveWeaponAttack += Player_OnActiveWeaponAttack;
+            
             player.SoundEvents = soundEvents;
+            player.Balances = balances;
 
             chests = building.GetComponentsInChildren<Chest>();
             foreach (var chest in chests)
@@ -129,10 +131,9 @@ namespace Assets.Scripts
             StartCoroutine(PositionPlayer((Player)obj, building));
         }
 
-        private void Player_OnCollected(CollectableType arg1, int arg2)
+        private void Player_OnActiveWeaponAttack(WeaponType arg1, int arg2)
         {
-            if (arg1 >= CollectableType.Coin)
-                balances.AddBalance(arg1, arg2);
+            balance.SetAmmo(arg2);
         }
 
         private void Balances_OnBalanceChanged(CollectableType arg1, int arg2)
@@ -141,6 +142,8 @@ namespace Assets.Scripts
                 balance.SetBalance(arg2);
             else if (PlayerBalanceService.CollectableForWeapon(balance.CurrentWeapon) == arg1)
                 balance.SetAmmo(arg2);
+            else if (PlayerBalanceService.CollectableForWeapon(balance.StowedWeapon) == arg1)
+                balance.SetStowedAmmo(arg2);
             else
                 balance.SetItemAmmo(arg1, arg2);
         }

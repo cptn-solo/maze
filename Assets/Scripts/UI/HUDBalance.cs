@@ -37,6 +37,8 @@ namespace Assets.Scripts
 
         public CollectableType CurrentItem1 { get; set; } = CollectableType.Bomb;
         public CollectableType CurrentItem2 { get; set; } = CollectableType.Landmine;
+
+        public WeaponType StowedWeapon => stowedWeapon;
         public WeaponType CurrentWeapon
         {
             get => currentWeapon;

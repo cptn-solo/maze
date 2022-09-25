@@ -18,5 +18,6 @@ namespace Assets.Scripts
 
         event EventHandler OnChestOpen;
         event EventHandler OnMinigunShot;
+        event EventHandler OnOutOfAmmo;
     }
 }

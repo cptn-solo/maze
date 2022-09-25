@@ -18,6 +18,7 @@ namespace Assets.Scripts
         public event EventHandler OnCollectedItem;
         public event EventHandler OnChestOpen;
         public event EventHandler OnMinigunShot;
+        public event EventHandler OnOutOfAmmo;
 
         public void CollectedItem() => OnCollectedItem?.Invoke(this, null);
         public void ChestOpen() => OnChestOpen?.Invoke(this, null);
@@ -31,6 +32,6 @@ namespace Assets.Scripts
         public void ZombieDamagedCritical() => OnZombieDamagedCritical?.Invoke(this, null);
         public void ZombieKilled() => OnZombieKilled?.Invoke(this, null);
         public void MinigunShot() => OnMinigunShot?.Invoke(this, null);
-
+        internal void OutOfAmmo() => OnOutOfAmmo?.Invoke(this, null);
     }
 }

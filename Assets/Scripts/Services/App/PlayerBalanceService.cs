@@ -29,6 +29,11 @@ namespace Assets.Scripts
         public void AddBalance(CollectableType collectableType, int count)
         {
             var balance = CurrentBalance(collectableType) + count;
+            SetBalance(collectableType, balance);
+        }
+
+        public void SetBalance(CollectableType collectableType, int balance)
+        {
             PlayerPrefs.SetInt(BalanceKey(collectableType), balance);
             OnBalanceChanged?.Invoke(collectableType, balance);
         }

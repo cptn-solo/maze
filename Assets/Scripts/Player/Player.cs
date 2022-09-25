@@ -21,16 +21,14 @@ namespace Assets.Scripts
 
         public event Action<CollectableType, int> OnCollected;
         public event Action<WeaponType> OnWeaponSelected;
+        public event Action<WeaponType, int> OnActiveWeaponAttack;
+
+        public PlayerBalanceService Balances { get; set; }
 
         private bool inAttackState;
         private AimTarget aim;
         private Collector collector;
         private Hitbox hitbox;
-        private bool attackRunning;
-        private bool weaponSelectRunning;
-        private bool minigunEquipped;
-        private bool item1SelectRunning;
-        private bool item2SelectRunning;
 
         protected override void OnAwake()
         {
@@ -61,6 +59,9 @@ namespace Assets.Scripts
                     }
                 default:
                     {
+                        if (collectableType >= CollectableType.Coin)
+                            Balances.AddBalance(collectableType, cnt);
+
                         OnCollected?.Invoke(collectableType, cnt);
                         break;
                     }
@@ -128,63 +129,6 @@ namespace Assets.Scripts
                 StartCoroutine(JumpCoroutine());
         }
 
-        private void OnWeaponSelect()
-        {
-            if (!weaponSelectRunning)
-                StartCoroutine(ToggleMinigun());
-        }
-
-        private void OnItem1Select()
-        {
-            if (!item1SelectRunning)
-                StartCoroutine(UseItem1());
-        }
-
-        private void OnItem2Select()
-        {
-            if (!item2SelectRunning)
-                StartCoroutine(UseItem2());
-        }
-        
-        private IEnumerator UseItem1()
-        {
-            item1SelectRunning = true;
-            yield return new WaitForSeconds(.3f);
-            item1SelectRunning = true;
-        }
-        
-        private IEnumerator UseItem2()
-        {
-            item2SelectRunning = true;
-            yield return new WaitForSeconds(.3f);
-            item2SelectRunning = true;
-        }
-
-        private IEnumerator ToggleMinigun()
-        {
-            weaponSelectRunning = true;
-
-            minigunEquipped = !minigunEquipped;
-            
-            OnWeaponSelected?.Invoke(minigunEquipped ? WeaponType.Minigun : WeaponType.Shuriken);
-            
-            minigun.gameObject.SetActive(minigunEquipped);
-            animator.SetBool(AnimMinigunBool, minigunEquipped);
-
-            yield return new WaitForSeconds(.3f);
-
-            weaponSelectRunning = false;
-        }
-
-        private void OnAttack(bool toggle)
-        {
-            Debug.Log($"OnAttack {toggle}");
-            inAttackState = toggle;
-            if (inAttackState && !attackRunning)
-                StartCoroutine(AttackCoroutine());                
-        }
-
-
         protected override Vector3 CurrentRotationDir(Vector3 translatedDir)
         {
             if (!inAttackState || aim.AttackTarget == null)
@@ -208,52 +152,6 @@ namespace Assets.Scripts
                 return baseRotationSpeed * 3.0f;
 
             return baseRotationSpeed;
-        }
-
-
-
-        private IEnumerator AttackCoroutine()
-        {
-            attackRunning = true;
-            aim.Engage(true);
-
-            while (inAttackState && !fadingOut)
-            {
-                
-                aim.TryGetAttackTarget(true);
-
-                if (minigunEquipped)
-                {
-                    minigun.Attack(true);
-                    SoundEvents.MinigunShot();
-                }
-                else
-                {
-                    shell.transform.SetParent(null, true);
-                    shell.TargetDir = aim.AttackTarget != null ?
-                        (aim.AttackTarget.transform.position - transform.position).normalized :
-                        transform.forward;
-                    shell.gameObject.SetActive(true);
-
-                    SoundEvents.PlayerAttack();
-
-                    yield return new WaitForSeconds(.3f);
-
-                    shell.gameObject.SetActive(false);
-                    shell.transform.SetParent(launcher, false);
-                    shell.transform.localPosition = Vector3.zero;
-                    shell.transform.localRotation = Quaternion.identity;
-                }
-
-
-                yield return new WaitForSeconds(.1f);
-            }
-
-            aim.Engage(false);
-            attackRunning = false;
-            if (minigunEquipped)
-                minigun.Attack(false);
-
         }
 
         private IEnumerator JumpCoroutine()

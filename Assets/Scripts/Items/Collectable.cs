@@ -82,6 +82,8 @@ namespace Assets.Scripts
                     return 5;
                 case CollectableType.Shield:
                     return 10;
+                case CollectableType.Minigun:
+                    return 30;
                 default:
                     return 1;
             }
