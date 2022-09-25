@@ -144,6 +144,10 @@ MonoBehaviour:
   rotationSpeed: 360
   fadeSpeed: 3
   jumpImpulse: 2
+  bombPrefab: {fileID: 5815325690482891423, guid: baa56d58c8cb2d54e92adb7336406ccb,
+    type: 3}
+  landminePrefab: {fileID: 5815325690482891423, guid: 6168098ca70b2b6489a25f203cfe9596,
+    type: 3}
   launcher: {fileID: 830329322317110662}
   shell: {fileID: 5015269791501513913}
   minigun: {fileID: 5843191975422090975}

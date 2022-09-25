@@ -1,7 +1,6 @@
 ﻿
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Assets.Scripts
 {
@@ -14,6 +13,9 @@ namespace Assets.Scripts
 
         private WeaponType currentWeapon = WeaponType.Shuriken;
         private WeaponType stowedWeapon = WeaponType.Minigun;
+        
+        [SerializeField] private GameObject bombPrefab;
+        [SerializeField] private GameObject landminePrefab;
 
         private void OnWeaponSelect()
         {
@@ -36,15 +38,49 @@ namespace Assets.Scripts
         private IEnumerator UseItem1()
         {
             item1SelectRunning = true;
+
+            if (Balances.CurrentBalance(CollectableType.Bomb) is int ammo &&
+                ammo > 0)
+            {
+                ammo--;
+                Balances.SetBalance(CollectableType.Bomb, ammo);
+                var bomb = Instantiate(bombPrefab,
+                    transform.position + transform.forward * .02f + transform.up * .05f,
+                    Quaternion.LookRotation(transform.forward, transform.up)).GetComponent<Bomb>();
+
+                bomb.SoundEvents = SoundEvents;
+            }
+            else
+            {
+                SoundEvents.OutOfAmmo();
+            }
+
             yield return new WaitForSeconds(.3f);
-            item1SelectRunning = true;
+            item1SelectRunning = false;
         }
 
         private IEnumerator UseItem2()
         {
             item2SelectRunning = true;
+            if (Balances.CurrentBalance(CollectableType.Landmine) is int ammo &&
+                ammo > 0)
+            {
+                ammo--;
+                Balances.SetBalance(CollectableType.Landmine, ammo);
+                var landmine = Instantiate(landminePrefab,
+                    transform.position + transform.forward * .05f + transform.up * .05f,
+                    Quaternion.LookRotation(transform.forward, transform.up)).GetComponent<Landmine>();
+
+                landmine.SoundEvents = SoundEvents;
+
+            }
+            else
+            {
+                SoundEvents.OutOfAmmo();
+            }
+
             yield return new WaitForSeconds(.3f);
-            item2SelectRunning = true;
+            item2SelectRunning = false;
         }
 
         private IEnumerator ToggleWeapon()

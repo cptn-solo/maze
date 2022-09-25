@@ -21,6 +21,7 @@ namespace Assets.Scripts
         [SerializeField] private AudioClip chestOpen;
         [SerializeField] private AudioClip minigunShot;
         [SerializeField] private AudioClip outOfAmmo;
+        [SerializeField] private AudioClip bombExplode;
 
         private AudioSource audioSource;
 
@@ -47,8 +48,10 @@ namespace Assets.Scripts
 
                 soundEvents.OnMinigunShot += SoundEvents_OnMinigunShot;
                 soundEvents.OnOutOfAmmo += SoundEvents_OnOutOfAmmo;
+                soundEvents.OnBombExplode += SoundEvents_OnBombExplode;
             }
         }
+        
         private void OnDisable()
         {
             if (soundEvents != null)
@@ -67,8 +70,12 @@ namespace Assets.Scripts
 
                 soundEvents.OnMinigunShot -= SoundEvents_OnMinigunShot;
                 soundEvents.OnOutOfAmmo -= SoundEvents_OnOutOfAmmo;
+                soundEvents.OnBombExplode -= SoundEvents_OnBombExplode;
             }
-
+        }
+        private void SoundEvents_OnBombExplode(object sender, EventArgs e)
+        {
+            audioSource.PlayOneShot(bombExplode);
         }
 
         private void SoundEvents_OnOutOfAmmo(object sender, EventArgs e)

@@ -1815,6 +1815,7 @@ MonoBehaviour:
   chestOpen: {fileID: 8300000, guid: e65c36db102c28548a5dcfbe637d095e, type: 3}
   minigunShot: {fileID: 8300000, guid: 20eff85ba0f20fc4faf44c57aed54e88, type: 3}
   outOfAmmo: {fileID: 8300000, guid: 86e172b5d0a40f84eb1fb0d0deaf36a7, type: 3}
+  bombExplode: {fileID: 8300000, guid: 989e1271f9fd7aa498e6cf695cde701d, type: 3}
 --- !u!82 &1792929968
 AudioSource:
   m_ObjectHideFlags: 0
