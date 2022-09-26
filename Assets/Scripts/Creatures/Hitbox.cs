@@ -10,6 +10,7 @@ namespace Assets.Scripts
         [SerializeField] private int maxShield;
         [SerializeField] private int criticalHP;
 
+        public string PlayerId;
         public int CurrentHP { get; private set; }
         public int CurrentShield { get; private set; }
 

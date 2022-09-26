@@ -45,7 +45,7 @@ namespace Assets.Scripts
                 ammo--;
                 Balances.SetBalance(CollectableType.Bomb, ammo);
                 var bomb = Instantiate(bombPrefab,
-                    transform.position + transform.forward * .02f + transform.up * .05f,
+                    transform.position + transform.up * .05f,
                     Quaternion.LookRotation(transform.forward, transform.up)).GetComponent<Bomb>();
 
                 bomb.SoundEvents = SoundEvents;
@@ -68,9 +68,10 @@ namespace Assets.Scripts
                 ammo--;
                 Balances.SetBalance(CollectableType.Landmine, ammo);
                 var landmine = Instantiate(landminePrefab,
-                    transform.position + transform.forward * .05f + transform.up * .05f,
+                    transform.position + transform.up * .05f,
                     Quaternion.LookRotation(transform.forward, transform.up)).GetComponent<Landmine>();
 
+                landmine.OwnerPlayerId = hitbox.PlayerId;
                 landmine.SoundEvents = SoundEvents;
 
             }

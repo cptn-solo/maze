@@ -39,6 +39,8 @@ namespace Assets.Scripts
             hitbox = GetComponentInChildren<Hitbox>();
             collector = GetComponentInChildren<Collector>();
             collector.OnCollected += Collector_OnCollected;
+
+            hitbox.PlayerId = gameObject.ToString(); // to be replaced with network id
         }
 
         private void Collector_OnCollected(CollectableType collectableType, int cnt)

@@ -28,7 +28,7 @@ namespace Assets.Scripts
         {
             modelVisual.SetActive(true);
             flash.gameObject.SetActive(false);
-            rb.AddForce(transform.forward * .2f + transform.up * .2f, ForceMode.VelocityChange);
+            rb.AddForce(transform.forward * .3f + transform.up * .3f, ForceMode.VelocityChange);
             StartCoroutine(WaitForEngage());
         }
 

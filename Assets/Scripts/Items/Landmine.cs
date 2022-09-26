@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -9,14 +10,24 @@ namespace Assets.Scripts
     {
         [SerializeField] private float armedTime = 10.0f;
         [SerializeField] private float triggerDistance;
-        [SerializeField] private GameObject beam;
+        [SerializeField] private GameObject redBeam;
+        [SerializeField] private GameObject greenBeam;
+        [SerializeField] private LayerMask playerMask;
 
+        public string OwnerPlayerId; // to check if a player is the one installed the landmine
 
-        private readonly List<Hitbox> targets = new();
+        private readonly List<Hitbox> targets = new();        
 
         protected override IEnumerator WaitForEngage()
         {
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(.2f);
+
+            greenBeam.SetActive(true);
+
+            while (PlayerInRange())
+                yield return new WaitForSeconds(.3f);
+
+            greenBeam.SetActive(false);
 
             var elapsedTime = 0.0f;
             while (elapsedTime <= armedTime && targets.Count == 0)
@@ -24,15 +35,17 @@ namespace Assets.Scripts
                 TryGetAttackTarget();
 
                 elapsedTime += Time.deltaTime;
-                
-                beam.SetActive(true);
 
-                yield return null;
+                redBeam.SetActive(true);
+
+                yield return new WaitForSeconds(.2f);
                 
-                beam.SetActive(false);
+                redBeam.SetActive(false);
+                
+                yield return new WaitForSeconds(.2f);
             }
 
-            beam.SetActive(false);
+            redBeam.SetActive(false);
             yield return new WaitForSeconds(.1f);
             modelVisual.SetActive(false);
             flash.gameObject.SetActive(true);
@@ -52,6 +65,18 @@ namespace Assets.Scripts
             yield return new WaitForSeconds(2.0f);
 
             Destroy(this.gameObject);
+        }
+
+        private bool PlayerInRange()
+        {
+            Array.Clear(hitColliders, 0, maxColliders - 1);
+
+            var playerCnt = Physics.OverlapSphereNonAlloc(transform.position, triggerDistance, hitColliders, playerMask);
+            return playerCnt > 0 && hitColliders
+                .Where(x => x != null)
+                .Select(x => x.GetComponent<Hitbox>())
+                .Where(x => x.PlayerId == OwnerPlayerId)
+                .Count() > 0;
         }
 
         private void TryGetAttackTarget()
