@@ -2,24 +2,27 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUDScreen : MonoBehaviour
+namespace Assets.Scripts.UI
 {
-    internal Action OnSettingsButtonPressed;
-
-    [SerializeField] private Button settingsButton;
-
-    private void OnEnable()
+    public class HUDScreen : MonoBehaviour
     {
-        settingsButton.onClick.AddListener(SettingsButtonPressed);
-    }
+        internal Action OnSettingsButtonPressed;
 
-    private void OnDisable()
-    {
-        settingsButton.onClick.RemoveListener(SettingsButtonPressed);
-    }
+        [SerializeField] private Button settingsButton;
 
-    private void SettingsButtonPressed()
-    {
-        OnSettingsButtonPressed?.Invoke();
+        private void OnEnable()
+        {
+            settingsButton.onClick.AddListener(SettingsButtonPressed);
+        }
+
+        private void OnDisable()
+        {
+            settingsButton.onClick.RemoveListener(SettingsButtonPressed);
+        }
+
+        private void SettingsButtonPressed()
+        {
+            OnSettingsButtonPressed?.Invoke();
+        }
     }
 }
