@@ -15,7 +15,14 @@ namespace Assets.Scripts
         {
             var money = balances.CurrentBalance(CollectableType.Coin);
             var currentPerk = perks.CurrentPerk(arg1);
-            var perkInfo = Perks.PerkForWallmartItem(arg1, currentPerk);
+            var perkInfo = arg1 switch
+            {
+                WallmartItem.Minigun => MinigunPerks.PerkForWallmartItem(arg1, currentPerk),
+                WallmartItem.Shield => ShieldPerks.PerkForWallmartItem(arg1, currentPerk),
+                WallmartItem.Shuriken => ShurikenPerks.PerkForWallmartItem(arg1, currentPerk),
+                _ => default
+            };
+                ;
             if (!perkInfo.Equals(default))
                 OnWallmartApproached?.Invoke(perkInfo, arg2, money);
         }

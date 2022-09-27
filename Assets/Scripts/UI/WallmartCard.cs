@@ -1,10 +1,7 @@
 using Assets.Scripts;
 using Assets.Scripts.UI;
-using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.U2D;
 using UnityEngine.UI;
 
 public class WallmartCard : MonoBehaviour
@@ -41,22 +38,39 @@ public class WallmartCard : MonoBehaviour
             Color.red;
         priceLabel.text = $"{perkInfo.Price}";
 
-        for (int i = 0; i < perkInfo.WeaponPerks.Length; i++)
-        {
-            var perk = perkInfo.WeaponPerks[i];
-            var icon = Resources.Load<Sprite>(SpriteNameForWeaponPerk(perk.Key));
-            var caption = CaptionForWeaponPerk(perk.Key);
-            var row = cardRows[i];
+        if (perkInfo.WeaponPerks != null)
+            for (int i = 0; i < perkInfo.WeaponPerks.Length; i++)
+            {
+                var perk = perkInfo.WeaponPerks[i];
+                var icon = Resources.Load<Sprite>(SpriteNameForWeaponPerk(perk.Key));
+                var caption = CaptionForWeaponPerk(perk.Key);
+                var row = cardRows[i];
 
-            row.gameObject.SetActive(true);
+                SetRowValues(perk.Value, icon, caption, row);
+            }
+        
+        if (perkInfo.PlayerPerks != null)
+            for (int i = 0; i < perkInfo.PlayerPerks.Length; i++)
+            {
+                var perk = perkInfo.PlayerPerks[i];
+                var icon = Resources.Load<Sprite>(SpriteNameForPlayerPerk(perk.Key));
+                var caption = CaptionForPlayerPerk(perk.Key);
+                var row = cardRows[i];
 
-            row.Icon.sprite = icon;
-            row.NameLabel.text = caption;
-            row.ValueLabel.text = $"{perk.Value}";
-        }
+                SetRowValues(perk.Value, icon, caption, row);
+            }
 
         buyButton.gameObject.SetActive(enabled);
         cancelButton.gameObject.SetActive(!enabled);
+    }
+
+    private static void SetRowValues(int value, Sprite icon, string caption, CardRow row)
+    {
+        row.gameObject.SetActive(true);
+
+        row.Icon.sprite = icon;
+        row.NameLabel.text = caption;
+        row.ValueLabel.text = $"{value}";
     }
 
     private string CaptionForWeaponPerk(WeaponPerk key) =>
@@ -79,21 +93,32 @@ public class WallmartCard : MonoBehaviour
             _ => null
         };
 
-    private void OnBuyButtonClick()
-    {
+    private string CaptionForPlayerPerk(PlayerPerk key) =>
+        key switch
+        {
+            PlayerPerk.Shield => CaptionShield,
+            PlayerPerk.HP => CaptionHP,
+            PlayerPerk.Power => CaptionPower,
+            _ => null
+        };
+
+    private string SpriteNameForPlayerPerk(PlayerPerk key) =>
+        key switch
+        {
+            PlayerPerk.Shield => SpriteShield,
+            PlayerPerk.HP => SpriteHP,
+            PlayerPerk.Power => SpritePower,
+            _ => null
+        };
+
+    private void OnBuyButtonClick() =>
         wallmart.OnBuyPressed?.Invoke(itemType, playerId, perkInfo);
-    }
 
-    private void OnCancelButtonClick()
-    {
+    private void OnCancelButtonClick() =>
         wallmart.OnCancelPressed?.Invoke();
-    }
 
-    private void Awake()
-    {
+    private void Awake() =>
         wallmart = GetComponentInParent<WallmartScreen>();        
-
-    }
 
     private void OnEnable()
     {

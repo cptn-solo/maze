@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Assets.Scripts
 {
-    public static class Perks
+    public static class MinigunPerks
     {
         public static PerkInfo MinigunPerk1Info
             => new()
