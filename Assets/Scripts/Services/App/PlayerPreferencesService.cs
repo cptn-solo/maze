@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace Assets.Scripts
 {
@@ -25,10 +26,15 @@ namespace Assets.Scripts
 
         public const string ScoreKey = "Score"; // temporary, to keep score between games
         public const string BalanceKey = "Balance"; // temporary, to keep score between games        
+        public const string WeaponKey = "Weapon"; // temporary, to keep score between games        
+        public const string PerkKey = "Perk"; // temporary, to keep score between games        
 
         private void Awake()
         {
-            InitPlayerPreferences();            
+            InitPlayerPreferences();
+#if UNITY_EDITOR
+            InitDeveloperPreferences();
+#endif
         }
 
         public void InitPlayerPreferences()
@@ -61,7 +67,8 @@ namespace Assets.Scripts
                 CollectableType.Coin,
                 CollectableType.Minigun,
                 CollectableType.Bomb,
-                CollectableType.Landmine})
+                CollectableType.Landmine,
+            })
             {
                 var key = PlayerBalanceService.BalanceKey(collectable);
                 var hasKey = PlayerPrefs.HasKey(key);
@@ -69,6 +76,30 @@ namespace Assets.Scripts
                     PlayerPrefs.SetInt(key, 0);
             }
 
+            // Most perks initialized as locked:
+            foreach (var perk in new[] {
+                PerkType.NA,
+                PerkType.Power,
+                PerkType.Minigun,
+            })
+            {
+                var key = PlayerPerkService.PerkKey(perk);
+                var hasKey = PlayerPrefs.HasKey(key);
+                if (!hasKey)
+                    PlayerPrefs.SetInt(key, 0);
+            }
+
+            // Some perks are initially unlocked:
+            foreach (var perk in new[] {
+                PerkType.Shield,
+                PerkType.Shuriken,
+            })
+            {
+                var key = PlayerPerkService.PerkKey(perk);
+                var hasKey = PlayerPrefs.HasKey(key);
+                if (!hasKey)
+                    PlayerPrefs.SetInt(key, 1);
+            }
 
             // PERFORMANCE
             if (!PlayerPrefs.HasKey(FpsLimitKey))
@@ -81,5 +112,40 @@ namespace Assets.Scripts
                 PlayerPrefs.SetInt(Antialiasing2xKey, 0); // 0 - important
         }
 
+        public void InitDeveloperPreferences()
+        {
+            foreach (var collectable in new[] {
+                CollectableType.Coin,
+                CollectableType.Minigun,
+                CollectableType.Bomb,
+                CollectableType.Landmine,
+            })
+            {
+                var key = PlayerBalanceService.BalanceKey(collectable);
+                PlayerPrefs.SetInt(key, 101);
+            }
+
+            // Most perks initialized as locked:
+            foreach (var perk in new[] {
+                PerkType.NA,
+                PerkType.Power,
+                PerkType.Minigun,
+            })
+            {
+                var key = PlayerPerkService.PerkKey(perk);
+                PlayerPrefs.SetInt(key, 0);
+            }
+
+            // Some perks are initially unlocked:
+            foreach (var perk in new[] {
+                PerkType.Shield,
+                PerkType.Shuriken,
+            })
+            {
+                var key = PlayerPerkService.PerkKey(perk);
+                PlayerPrefs.SetInt(key, 1);
+            }
+
+        }
     }
 }

@@ -26,10 +26,11 @@ namespace Assets.Scripts
         public int CurrentBalance(CollectableType collectableType) =>
             PlayerPrefs.GetInt(BalanceKey(collectableType));
         
-        public void AddBalance(CollectableType collectableType, int count)
+        public int AddBalance(CollectableType collectableType, int count)
         {
             var balance = CurrentBalance(collectableType) + count;
             SetBalance(collectableType, balance);
+            return balance;
         }
 
         public void SetBalance(CollectableType collectableType, int balance)

@@ -389,6 +389,7 @@ MonoBehaviour:
   maxHP: 50
   maxShield: 80
   criticalHP: 10
+  PlayerId: 
 --- !u!114 &2155997363376368433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -576,7 +577,7 @@ PrefabInstance:
     - target: {fileID: 883018994089800279, guid: ee89f9e37f9d3604ba35e211344ba2b3,
         type: 3}
       propertyPath: damagePerShot
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1784782820445778431, guid: ee89f9e37f9d3604ba35e211344ba2b3,
         type: 3}

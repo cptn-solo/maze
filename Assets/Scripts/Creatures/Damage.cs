@@ -14,6 +14,8 @@ namespace Assets.Scripts
 
         public LayerMask DamageTo => damageTo;
 
+        public int PerkAddedDamage { get; set; } = 0;
+
         public bool Active { get; set; }
         public float SizeScale { get; set; } = 1.0f;
 
@@ -41,7 +43,7 @@ namespace Assets.Scripts
         private void DealDamage(Hitbox hitbox)
         {
             OnDealingDamage?.Invoke(hitbox);
-            hitbox.DealDamage(Mathf.FloorToInt(damagePerHit * SizeScale));
+            hitbox.DealDamage(Mathf.FloorToInt(damagePerHit * SizeScale) + PerkAddedDamage);
         }
 
         private void Hitbox_OnZeroHealthReached()

@@ -1,20 +1,19 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
-    public class HUDWeapon : MonoBehaviour
+    public class HUDWeapon : HUDItem
     {
-        [SerializeField] private TextMeshProUGUI balance;
-
-        private int balanceValue;
-        public int Balance { 
-            get => balanceValue;
-            set
-            {
-                balanceValue = value;
-                balance.text = $"{value}";
-            }
+        [SerializeField] private Image shuriken;
+        [SerializeField] private Image minigun;
+        [SerializeField] private Image shotgun;
+        public void SetActiveWeapon(WeaponType weaponType)
+        {
+            shuriken.gameObject.SetActive(weaponType == WeaponType.Shuriken);
+            minigun.gameObject.SetActive(weaponType == WeaponType.Minigun);
+            shotgun.gameObject.SetActive(weaponType == WeaponType.Shotgun);
         }
+
     }
 }

@@ -52,11 +52,13 @@ namespace Assets.Scripts
 
         private IngameSoundEvents soundEvents;
         private PlayerBalanceService balances;
+        private PlayerPerkService perks;
 
         private void Awake()
         {
             soundEvents = GetComponent<IngameSoundEvents>();
             balances = GetComponent<PlayerBalanceService>();
+            perks = GetComponent<PlayerPerkService>();
         }
 
         void Start()
@@ -76,6 +78,7 @@ namespace Assets.Scripts
             
             player.SoundEvents = soundEvents;
             player.Balances = balances;
+            player.Perks = perks;
 
             chests = building.GetComponentsInChildren<Chest>();
             foreach (var chest in chests)
@@ -94,11 +97,9 @@ namespace Assets.Scripts
 
             StartCoroutine(PositionPlayer(player, building));
 
-            balance.SetBalance(balances.CurrentBalance(CollectableType.Coin));
-            balance.CurrentWeapon = WeaponType.Shuriken;
-            balance.SetStowedAmmo(balances.CurrentBalance(CollectableType.Minigun));
-            balance.SetItemAmmo(CollectableType.Bomb, balances.CurrentBalance(CollectableType.Bomb));
-            balance.SetItemAmmo(CollectableType.Landmine, balances.CurrentBalance(CollectableType.Landmine));
+            InitHUD();
+
+            player.InitPerkedItems();
 
         }
 
@@ -108,16 +109,6 @@ namespace Assets.Scripts
             var prefab = collectablePrefabs[Random.Range(0, collectablePrefabs.Length)];
             Instantiate(prefab, obj.transform.position + Vector3.up * .07f - obj.transform.forward * .07f, Quaternion.identity,
                 collectables.transform);
-        }
-
-        private void SpawnCollectables(MovableUnit obj)
-        {
-            var cnt = Mathf.FloorToInt(obj.SizeScale * 5);
-            for (int i = 0; i < cnt; i++)
-            {
-                var prefab = collectablePrefabs[Random.Range(0, collectablePrefabs.Length)];
-                Instantiate(prefab, obj.transform.position + Vector3.up * .05f + .01f * i * obj.transform.forward, Quaternion.identity, collectables.transform);
-            }
         }
 
         private void Player_OnUnitBeforeKilled(MovableUnit obj)
@@ -137,33 +128,36 @@ namespace Assets.Scripts
         {
             balance.SetAmmo(arg2);
         }
+        private void Player_OnWeaponSelected(WeaponType obj)
+        {
+            SwitchHUDWeapon(obj);
+        }
+
+        private void Zombie_OnUnitBeforeKilled(MovableUnit obj)
+        {
+            soundEvents.ZombieKilled();
+
+            SpawnCollectables(obj);
+            playerScoreInfo.Score++;
+            score.UpdatePlayer(playerId, playerScoreInfo, true);
+        }
+
+        private void Zombie_OnUnitKilled(MovableUnit obj)
+        {
+            StartCoroutine(PositionZombie((Zombie)obj, building));
+        }
 
         private void Balances_OnBalanceChanged(CollectableType arg1, int arg2)
         {
-            if (arg1 == CollectableType.Coin)
-                balance.SetBalance(arg2);
-            else if (PlayerBalanceService.CollectableForWeapon(balance.CurrentWeapon) == arg1)
-                balance.SetAmmo(arg2);
-            else if (PlayerBalanceService.CollectableForWeapon(balance.StowedWeapon) == arg1)
-                balance.SetStowedAmmo(arg2);
-            else
-                balance.SetItemAmmo(arg1, arg2);
+            UpdateHUDBalances(arg1, arg2);
         }
 
-        private void Player_OnWeaponSelected(WeaponType obj)
+        private void Perks_OnPerkChanged(PerkType arg1, int arg2)
         {
-            var stowedWeapon = balance.CurrentWeapon;
-            balance.CurrentWeapon = obj;
-            var ammoCollectable = PlayerBalanceService.CollectableForWeapon(balance.CurrentWeapon);
-            if (ammoCollectable != CollectableType.NA)
-                balance.SetAmmo(balances.CurrentBalance(ammoCollectable));
-
-            var stowedAmmoCollectable = PlayerBalanceService.CollectableForWeapon(stowedWeapon);
-            var stowedCount = stowedAmmoCollectable != CollectableType.NA ?
-                balances.CurrentBalance(stowedAmmoCollectable) :
-                -1;
-            balance.SetStowedAmmo(stowedCount);
-
+            // update HUD button (weapon icon)
+            // update markers maybe (larger shield, shield color, etc.)
+            player.UpdatePerk(arg1);
+            UpdateHUDPerk(arg1);
         }
 
         private IEnumerator StartSpawnEnemy(int enemyPrefabIdx)
@@ -196,18 +190,14 @@ namespace Assets.Scripts
             }
         }
 
-        private void Zombie_OnUnitBeforeKilled(MovableUnit obj)
+        private void SpawnCollectables(MovableUnit obj)
         {
-            soundEvents.ZombieKilled();
-
-            SpawnCollectables(obj);
-            playerScoreInfo.Score++;
-            score.UpdatePlayer(playerId, playerScoreInfo, true);
-        }
-
-        private void Zombie_OnUnitKilled(MovableUnit obj)
-        {
-            StartCoroutine(PositionZombie((Zombie)obj, building));
+            var cnt = Mathf.FloorToInt(obj.SizeScale * 5);
+            for (int i = 0; i < cnt; i++)
+            {
+                var prefab = collectablePrefabs[Random.Range(0, collectablePrefabs.Length)];
+                Instantiate(prefab, obj.transform.position + Vector3.up * .05f + .01f * i * obj.transform.forward, Quaternion.identity, collectables.transform);
+            }
         }
 
         private void OnEnable()
@@ -217,12 +207,14 @@ namespace Assets.Scripts
                 StartCoroutine(ScreenOrientationMonitor());
 
             balances.OnBalanceChanged += Balances_OnBalanceChanged;
+            perks.OnPerkChanged += Perks_OnPerkChanged;
         }
 
         private void OnDisable()
         {
             listenForScreenOrientation = false;
             balances.OnBalanceChanged -= Balances_OnBalanceChanged;
+            perks.OnPerkChanged -= Perks_OnPerkChanged;
         }
 
         private IEnumerator ScreenOrientationMonitor()

@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 1976905607244371535}
   - component: {fileID: 3710502837138583351}
   - component: {fileID: 383305705016495752}
-  - component: {fileID: 8796055081474467885}
+  - component: {fileID: 1687758487427680413}
   m_Layer: 5
-  m_Name: HUDWeapon
+  m_Name: HUDItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +34,6 @@ RectTransform:
   m_Children:
   - {fileID: 2281094647410031822}
   - {fileID: 2034290967424995212}
-  - {fileID: 8288326288206876438}
   - {fileID: 4675209638191397680}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -95,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ControlPath: <Keyboard>/#(1)
---- !u!114 &8796055081474467885
+--- !u!114 &1687758487427680413
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -104,92 +103,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4398308893323112416}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e36cd3b032322864eabef5ad22cf03d5, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c8818840ebba7d46916041064df8861, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bomb: {fileID: 0}
-  landmine: {fileID: 0}
+  bomb: {fileID: 1495023992699834898}
+  landmine: {fileID: 8781110673476180122}
   balance: {fileID: 3705666452152347238}
   showBalance: 1
-  shuriken: {fileID: 1495023992699834898}
-  minigun: {fileID: 8781110673476180122}
-  shotgun: {fileID: 5423436539898916429}
---- !u!1 &6316327627910565179
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8288326288206876438}
-  - component: {fileID: 7561893917417818052}
-  - component: {fileID: 5423436539898916429}
-  m_Layer: 5
-  m_Name: shotgun
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &8288326288206876438
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6316327627910565179}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6612934516141927534}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 180, y: 90}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &7561893917417818052
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6316327627910565179}
-  m_CullTransparentMesh: 1
---- !u!114 &5423436539898916429
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6316327627910565179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.7137255}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 165f20a6b0940614bbee09fae6c78feb, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &7530658825464941755
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +127,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4675209638191397680
 RectTransform:
   m_ObjectHideFlags: 0
@@ -221,7 +141,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6612934516141927534}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -337,7 +257,7 @@ GameObject:
   - component: {fileID: 6242349082632051565}
   - component: {fileID: 1495023992699834898}
   m_Layer: 5
-  m_Name: shuriken
+  m_Name: bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -391,7 +311,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f7ae3260b68c00c4281f14fec2262808, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 38bce07665c047c458fb5ab2fa1632e1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -413,12 +333,12 @@ GameObject:
   - component: {fileID: 2398060007663780811}
   - component: {fileID: 8781110673476180122}
   m_Layer: 5
-  m_Name: minigun
+  m_Name: landmine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2281094647410031822
 RectTransform:
   m_ObjectHideFlags: 0
@@ -437,7 +357,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 180, y: 90}
+  m_SizeDelta: {x: 90, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2398060007663780811
 CanvasRenderer:
@@ -467,7 +387,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e92b076520401414ca6ef8854bbece4e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 679cb9396a4daef4db15d84e2e1ef635, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

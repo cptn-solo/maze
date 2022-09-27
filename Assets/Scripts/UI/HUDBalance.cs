@@ -13,46 +13,42 @@ namespace Assets.Scripts
         [SerializeField] private Image ammoIcon;
 
         // usable items and stowed weapon balances:
-        [SerializeField] private TextMeshProUGUI item1ammo;
-        [SerializeField] private TextMeshProUGUI item2ammo;
-        [SerializeField] private TextMeshProUGUI stowedWeaponAmmo;
-        [SerializeField] private GameObject weapon1image;
-        [SerializeField] private GameObject weapon2image;
+        [SerializeField] private HUDWeapon stowedWeapon;
+        [SerializeField] private HUDWeapon currentWeapon;
+        [SerializeField] private HUDItem bombItem;
+        [SerializeField] private HUDItem landmineItem;
 
-        private WeaponType currentWeapon = WeaponType.Shuriken;
-        private WeaponType stowedWeapon = WeaponType.Minigun;
+        private WeaponType currentWeaponType = WeaponType.Shuriken;
+        private WeaponType stowedWeaponType = WeaponType.NA;
 
         private bool ShowAmmo => 
-            PlayerBalanceService.CollectableForWeapon(currentWeapon) != CollectableType.NA;
+            PlayerBalanceService.CollectableForWeapon(currentWeaponType) != CollectableType.NA;
 
-        private GameObject WeaponImageObject(WeaponType weaponType)
+        public WeaponType StowedWeapon
         {
-            return weaponType switch
+            get => stowedWeaponType;
+            set
             {
-                WeaponType.Shuriken => weapon2image,
-                _ => weapon1image,
-            };
-        }
-
-
-        public CollectableType CurrentItem1 { get; set; } = CollectableType.Bomb;
-        public CollectableType CurrentItem2 { get; set; } = CollectableType.Landmine;
-
-        public WeaponType StowedWeapon => stowedWeapon;
+                stowedWeaponType = value;
+                stowedWeapon.SetActiveWeapon(stowedWeaponType);
+                stowedWeapon.gameObject.SetActive(stowedWeaponType != WeaponType.NA);                    
+            }
+        } 
         public WeaponType CurrentWeapon
         {
-            get => currentWeapon;
+            get => currentWeaponType;
             set 
             {
-                stowedWeapon = currentWeapon;
-                currentWeapon = value;
-                
+                if (currentWeaponType != value)
+                {
+                    StowedWeapon = currentWeaponType;
+                    currentWeaponType = value;
+                }
+
                 ammoIcon.gameObject.SetActive(ShowAmmo);
                 ammo.gameObject.SetActive(ShowAmmo);
 
-                WeaponImageObject(stowedWeapon).SetActive(true);
-                WeaponImageObject(currentWeapon).SetActive(false);
-
+                currentWeapon.SetActiveWeapon(currentWeaponType);
             }
         }
 
@@ -64,15 +60,15 @@ namespace Assets.Scripts
 
         internal void SetItemAmmo(CollectableType arg1, int arg2)
         {
-            if (arg1 == CurrentItem1)
-                item1ammo.text = $"{arg2}";
-            else if (arg1 == CurrentItem2)
-                item2ammo.text = $"{arg2}";
+            if (arg1 == CollectableType.Bomb)
+                bombItem.Balance = arg2;
+            else if (arg1 == CollectableType.Landmine)
+                landmineItem.Balance = arg2;
         }
 
         internal void SetStowedAmmo(int stowedCount)
         {
-            stowedWeaponAmmo.text = stowedCount >= 0 ? $"{stowedCount}" : "";
+            stowedWeapon.Balance = stowedCount;
         }
     }
 }

@@ -2,7 +2,9 @@
 {
     public enum WeaponType
     {
+        NA,
         Shuriken,
         Minigun,
+        Shotgun,
     }
 }

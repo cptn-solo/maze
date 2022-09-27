@@ -1,11 +1,11 @@
 ﻿namespace Assets.Scripts
 {
-    public enum WallmartItem
+    public enum PerkType
     {
         NA,
-        Shuriken,
-        Minigun,
         Shield,
         Power,
+        Shuriken,
+        Minigun,
     }
 }

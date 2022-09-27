@@ -9,11 +9,15 @@ namespace Assets.Scripts
         [SerializeField] private LayerMask targetMask;
         [SerializeField] private int damagePerShot = 1;
 
+        public int PerkAddedDamage { get; set; } = 0;
+
         private Animator animator;
+
         private void Awake()
         {
             animator = GetComponent<Animator>();
         }
+
 
         public void Attack(bool toggle)
         {
@@ -28,7 +32,7 @@ namespace Assets.Scripts
             if (hitbox.CurrentHP <= 0)
                 return;
 
-            hitbox.DealDamage(damagePerShot);
+            hitbox.DealDamage(damagePerShot + PerkAddedDamage);
         }
     }
 }

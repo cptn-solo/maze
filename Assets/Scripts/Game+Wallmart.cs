@@ -19,7 +19,16 @@ namespace Assets.Scripts
 
         internal bool BuyItem(WallmartItem item, string playerId, int price)
         {
-            return true;
+            if (balances.CurrentBalance(CollectableType.Coin) is int coins && 
+                coins >= price)
+            {
+                perks.AddPerk(item, 1);
+                balances.AddBalance(CollectableType.Coin, -price);
+                UpdateHUDPerk(PlayerPerkService.PerkForWallmart(item));
+                return true;
+            }
+
+            return false;
         }
     }
 }

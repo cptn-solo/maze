@@ -1,5 +1,6 @@
 ﻿
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -17,6 +18,11 @@ namespace Assets.Scripts
         [SerializeField] private GameObject bombPrefab;
         [SerializeField] private GameObject landminePrefab;
 
+        public void SelectWeapon(WeaponType weapon)
+        {
+            if (weapon != currentWeapon)
+                OnWeaponSelect();
+        }
         private void OnWeaponSelect()
         {
             if (!weaponSelectRunning)
@@ -93,6 +99,7 @@ namespace Assets.Scripts
             OnWeaponSelected?.Invoke(currentWeapon);
 
             minigun.gameObject.SetActive(currentWeapon == WeaponType.Minigun);
+
             animator.SetBool(AnimMinigunBool, currentWeapon == WeaponType.Minigun);
 
             yield return new WaitForSeconds(.3f);
