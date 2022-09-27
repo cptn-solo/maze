@@ -17,6 +17,7 @@ namespace Assets.Scripts.UI
             HUDScreen.OnSettingsButtonPressed += ShowSettingsScreen;
             SettingsScreen.OnCloseButtonPressed += CloseSettingsScreen;
             WallmartScreen.OnBuyPressed += BuyWallmartItem;
+            WallmartScreen.OnCancelPressed += Game_OnWallmartLeft;
 
             game.OnPlayerKilled += Game_OnPlayerKilled;
             game.OnPlayerSpawned += Game_OnPlayerSpawned;
@@ -24,10 +25,10 @@ namespace Assets.Scripts.UI
             game.OnWallmartApproached += Game_OnWallmartApproached;
         }
 
-        private void Game_OnWallmartApproached(WallmartItem e, string playerId)
+        private void Game_OnWallmartApproached(WallmartItem e, string playerId, int playerBalance)
         {
             WallmartScreen.gameObject.SetActive(true);
-            WallmartScreen.ShowItemCard(e, playerId);
+            WallmartScreen.ShowItemCard(e, playerId, playerBalance);
         }
 
         private void Game_OnWallmartLeft() =>
@@ -44,6 +45,8 @@ namespace Assets.Scripts.UI
             HUDScreen.OnSettingsButtonPressed -= ShowSettingsScreen;
             SettingsScreen.OnCloseButtonPressed -= CloseSettingsScreen;
             WallmartScreen.OnBuyPressed -= BuyWallmartItem;
+            WallmartScreen.OnCancelPressed -= Game_OnWallmartLeft;
+
 
             game.OnPlayerKilled -= Game_OnPlayerKilled;
             game.OnPlayerSpawned -= Game_OnPlayerSpawned;
@@ -51,9 +54,9 @@ namespace Assets.Scripts.UI
             game.OnWallmartApproached -= Game_OnWallmartApproached;
         }
 
-        private void BuyWallmartItem(WallmartItem item, string playerId)
+        private void BuyWallmartItem(WallmartItem item, string playerId, int price)
         {
-            var success = game.BuyItem(item, playerId);
+            var success = game.BuyItem(item, playerId, price);
             WallmartScreen.CompletePurchase(success);
         }
 

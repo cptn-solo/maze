@@ -253,6 +253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items:
   - {fileID: 5510104452666019625}
+  itemsPrices: 64000000
   itemIndexes: 000000000100000002000000
   successView: {fileID: 7833619828406744692}
   failureView: {fileID: 5414931693805449270}
@@ -501,7 +502,7 @@ PrefabInstance:
     - target: {fileID: 2213856754468243800, guid: b40d9f0b42a7d554899561c6c27ef6fe,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 536.5531
+      value: 450
       objectReference: {fileID: 0}
     - target: {fileID: 2213856754468243800, guid: b40d9f0b42a7d554899561c6c27ef6fe,
         type: 3}

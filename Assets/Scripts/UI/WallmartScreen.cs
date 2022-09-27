@@ -6,19 +6,25 @@ namespace Assets.Scripts.UI
 {
     public class WallmartScreen : MonoBehaviour
     {
-        internal Action<WallmartItem, string> OnBuyPressed;
-
+        internal Action<WallmartItem, string, int> OnBuyPressed;
+        internal Action OnCancelPressed;
+        
         [SerializeField] private GameObject[] items;
+        [SerializeField] private int[] itemsPrices;
         [SerializeField] private WallmartItem[] itemIndexes;
 
         [SerializeField] private GameObject successView;
         [SerializeField] private GameObject failureView;
 
-        public void ShowItemCard(WallmartItem card, string playerId)
+        public void ShowItemCard(WallmartItem cardType, string playerId, int playerBalance)
         {
-            var item = items[Array.IndexOf(itemIndexes, card)];
+            var itemIndex = Array.IndexOf(itemIndexes, cardType);
+            var item = items[itemIndex];
+            var price = itemsPrices[itemIndex];
+
             item.SetActive(true);
-            item.GetComponent<WallmartCard>().PlayerId = playerId;
+            var card = item.GetComponent<WallmartCard>();
+            card.SetPurchaseEnabled(playerId, price, price <= playerBalance);
         }
 
         public void HideActiveCard()

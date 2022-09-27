@@ -23,10 +23,6 @@ namespace Assets.Scripts
         public event Action<WeaponType> OnWeaponSelected;
         public event Action<WeaponType, int> OnActiveWeaponAttack;
 
-        public event Action<WallmartItem, string> OnWallmartApproached;
-        public event Action OnWallmartLeft;
-
-
         public PlayerBalanceService Balances { get; set; }
 
         private bool inAttackState;
@@ -174,16 +170,6 @@ namespace Assets.Scripts
             
             if (!fadingOut)
                 rb.AddForce(Vector3.up * jumpImpulse, ForceMode.Impulse);
-        }
-
-        internal void ShowWallmart(WallmartItem itemType)
-        {
-            OnWallmartApproached.Invoke(itemType, hitbox.PlayerId);
-        }
-
-        internal void HideWallmart()
-        {
-            OnWallmartLeft();
         }
     }
 }

@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
-    public class Game : MonoBehaviour, IIngameMusicEvents
+    public partial class Game : MonoBehaviour, IIngameMusicEvents
     {
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private EnemyType[] enemyKeys;
@@ -49,10 +49,6 @@ namespace Assets.Scripts
 
         public event EventHandler OnPlayerSpawned;
         public event EventHandler OnPlayerKilled;
-
-        public event Action<WallmartItem, string> OnWallmartApproached;
-        public event Action<WallmartItem, string> OnWallmartBuyButton;
-        public event Action OnWallmartLeft;
 
         private IngameSoundEvents soundEvents;
         private PlayerBalanceService balances;
@@ -104,16 +100,6 @@ namespace Assets.Scripts
             balance.SetItemAmmo(CollectableType.Bomb, balances.CurrentBalance(CollectableType.Bomb));
             balance.SetItemAmmo(CollectableType.Landmine, balances.CurrentBalance(CollectableType.Landmine));
 
-        }
-
-        private void Player_OnWallmartLeft()
-        {
-            OnWallmartLeft?.Invoke();
-        }
-
-        private void Player_OnWallmartApproached(WallmartItem arg1, string arg2)
-        {
-            OnWallmartApproached?.Invoke(arg1, arg2);
         }
 
         private void Chest_OnChestOpened(Chest obj)
@@ -321,10 +307,6 @@ namespace Assets.Scripts
             if ((player.transform.position - Vector3.zero).sqrMagnitude > 100.0f)
                 StartCoroutine(PositionPlayer(player, building));
         }
-
-        internal bool BuyItem(WallmartItem item, string playerId)
-        {
-            return true;
-        }
+        
     }
 }
