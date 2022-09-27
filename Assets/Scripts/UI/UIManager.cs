@@ -25,7 +25,7 @@ namespace Assets.Scripts.UI
             game.OnWallmartApproached += Game_OnWallmartApproached;
         }
 
-        private void Game_OnWallmartApproached(WallmartItem e, string playerId, int playerBalance)
+        private void Game_OnWallmartApproached(PerkInfo e, string playerId, int playerBalance)
         {
             WallmartScreen.gameObject.SetActive(true);
             WallmartScreen.ShowItemCard(e, playerId, playerBalance);
@@ -54,9 +54,9 @@ namespace Assets.Scripts.UI
             game.OnWallmartApproached -= Game_OnWallmartApproached;
         }
 
-        private void BuyWallmartItem(WallmartItem item, string playerId, int price)
+        private void BuyWallmartItem(WallmartItem item, string playerId, PerkInfo info)
         {
-            var success = game.BuyItem(item, playerId, price);
+            var success = game.BuyItem(item, playerId, info);
             WallmartScreen.CompletePurchase(success);
         }
 

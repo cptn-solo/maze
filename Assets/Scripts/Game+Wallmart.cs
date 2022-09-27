@@ -4,7 +4,7 @@ namespace Assets.Scripts
 {
     public partial class Game
     {
-        public event Action<WallmartItem, string, int> OnWallmartApproached;
+        public event Action<PerkInfo, string, int> OnWallmartApproached;
         public event Action OnWallmartLeft;
         private void Player_OnWallmartLeft()
         {
@@ -14,16 +14,19 @@ namespace Assets.Scripts
         private void Player_OnWallmartApproached(WallmartItem arg1, string arg2)
         {
             var money = balances.CurrentBalance(CollectableType.Coin);
-            OnWallmartApproached?.Invoke(arg1, arg2, money);
+            var currentPerk = perks.CurrentPerk(arg1);
+            var perkInfo = Perks.PerkForWallmartItem(arg1, currentPerk);
+            if (!perkInfo.Equals(default))
+                OnWallmartApproached?.Invoke(perkInfo, arg2, money);
         }
 
-        internal bool BuyItem(WallmartItem item, string playerId, int price)
+        internal bool BuyItem(WallmartItem item, string playerId, PerkInfo info)
         {
             if (balances.CurrentBalance(CollectableType.Coin) is int coins && 
-                coins >= price)
+                coins >= info.Price)
             {
                 perks.AddPerk(item, 1);
-                balances.AddBalance(CollectableType.Coin, -price);
+                balances.AddBalance(CollectableType.Coin, -info.Price);
                 UpdateHUDPerk(PlayerPerkService.PerkForWallmart(item));
                 return true;
             }

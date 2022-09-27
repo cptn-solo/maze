@@ -9,7 +9,7 @@ namespace Assets.Scripts
 
         internal void ShowWallmart(WallmartItem itemType)
         {
-            OnWallmartApproached.Invoke(itemType, hitbox.PlayerId);
+            OnWallmartApproached?.Invoke(itemType, hitbox.PlayerId);
         }
 
         internal void HideWallmart()

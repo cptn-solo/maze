@@ -33,6 +33,9 @@ namespace Assets.Scripts
 
         public int CurrentPerk(PerkType perkType) =>
             PlayerPrefs.GetInt(PerkKey(perkType));
+        
+        public int CurrentPerk(WallmartItem arg1) =>
+            PlayerPrefs.GetInt(PerkKey(PerkForWallmart(arg1)));
 
         public void SetPerk(PerkType perkType, int value)
         {
@@ -60,5 +63,6 @@ namespace Assets.Scripts
 
         public int ShieldLevel => CurrentPerk(PerkType.Shield);
         public bool ShieldUnlocked => ShieldLevel > 0;
+
     }
 }
