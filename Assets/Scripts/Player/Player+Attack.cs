@@ -1,6 +1,5 @@
 ﻿
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -17,6 +16,8 @@ namespace Assets.Scripts
         
         [SerializeField] private GameObject bombPrefab;
         [SerializeField] private GameObject landminePrefab;
+
+        public int PerkRateOfFire { get; private set; } = 1;
 
         public void SelectWeapon(WeaponType weapon)
         {
@@ -98,6 +99,9 @@ namespace Assets.Scripts
 
             OnWeaponSelected?.Invoke(currentWeapon);
 
+            var perkLevel = Perks.CurrentPerk(currentWeapon);
+            PerkRateOfFire = PerkROF(currentWeapon, perkLevel);
+
             minigun.gameObject.SetActive(currentWeapon == WeaponType.Minigun);
 
             animator.SetBool(AnimMinigunBool, currentWeapon == WeaponType.Minigun);
@@ -161,6 +165,8 @@ namespace Assets.Scripts
                             SoundEvents.MinigunShot();
                             ammo--;
                             OnActiveWeaponAttack?.Invoke(currentWeapon, ammo);
+                            
+                            yield return new WaitForSeconds(1 / PerkRateOfFire);
 
                             break;
                         }
@@ -184,12 +190,13 @@ namespace Assets.Scripts
                             shell.transform.SetParent(launcher, false);
                             shell.transform.localPosition = Vector3.zero;
                             shell.transform.localRotation = Quaternion.identity;
+                            
+                            yield return new WaitForSeconds(1 / PerkRateOfFire);
 
                             break;
                         }
                 }
 
-                yield return new WaitForSeconds(.1f);
             }
 
             aim.Engage(false);

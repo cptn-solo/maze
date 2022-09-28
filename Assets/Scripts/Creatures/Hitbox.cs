@@ -29,14 +29,17 @@ namespace Assets.Scripts
         private int maxHPScaled;
         private int maxShieldScaled;
 
+        public int PerkMaxHP { get => maxHP; set => maxHP = value; }
+        public int PerkMaxShield { get => maxShield; set => maxShield = value; }
+
         public BattleInfo ResetHP()
         {
-            maxHPScaled = Mathf.FloorToInt(maxHP * SizeScale);
-            maxShieldScaled = maxShield > 0 ?  maxHPScaled : 0;
+            maxHPScaled = Mathf.FloorToInt(PerkMaxHP * SizeScale);
+            maxShieldScaled = PerkMaxShield > 0 ?  maxHPScaled : 0;
 
             CurrentHP = maxHPScaled;
             // just for alignment purposes, to set the initial widths same value for both HP and shields (if any):
-            shieldCellStrength = maxHPScaled != 0 ? maxShieldScaled / maxHPScaled : 0f;
+            shieldCellStrength = maxShieldScaled != 0 ? PerkMaxShield / maxShieldScaled : 0f;
             CurrentShield = shieldCellStrength > 0 ? CurrentHP : 0;
 
             BattleInfo battleInfo = default;

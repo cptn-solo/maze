@@ -106,7 +106,7 @@ namespace Assets.Scripts
         protected override void OnResurrected()
         {
             base.OnResurrected();
-
+            
             ToggleInput(true);
 
             animator.SetBool(AnimDieBool, false);

@@ -12,9 +12,9 @@ namespace Assets.Scripts
                 WeaponType = WeaponType.Minigun,
                 WeaponPerks = new[]
                 {
-                            KeyValuePair.Create(WeaponPerk.ShieldDamage, 1),
-                            KeyValuePair.Create(WeaponPerk.HPDamage, 4),
-                            KeyValuePair.Create(WeaponPerk.FireRate, 10),
+                    KeyValuePair.Create(WeaponPerk.ShieldDamage, 1),
+                    KeyValuePair.Create(WeaponPerk.HPDamage, 4),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 10),
                 },
             };
         public static PerkInfo MinigunPerk2Info
@@ -25,9 +25,9 @@ namespace Assets.Scripts
                 WeaponType = WeaponType.Minigun,
                 WeaponPerks = new[]
                 {
-                            KeyValuePair.Create(WeaponPerk.ShieldDamage, 2),
-                            KeyValuePair.Create(WeaponPerk.HPDamage, 6),
-                            KeyValuePair.Create(WeaponPerk.FireRate, 7),
+                    KeyValuePair.Create(WeaponPerk.ShieldDamage, 2),
+                    KeyValuePair.Create(WeaponPerk.HPDamage, 6),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 7),
                 },
             };
         public static PerkInfo MinigunPerk3Info
@@ -38,23 +38,25 @@ namespace Assets.Scripts
                 WeaponType = WeaponType.Minigun,
                 WeaponPerks = new[]
                 {
-                            KeyValuePair.Create(WeaponPerk.ShieldDamage, 3),
-                            KeyValuePair.Create(WeaponPerk.HPDamage, 8),
-                            KeyValuePair.Create(WeaponPerk.FireRate, 3),
+                    KeyValuePair.Create(WeaponPerk.ShieldDamage, 3),
+                    KeyValuePair.Create(WeaponPerk.HPDamage, 8),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 3),
                 },
             };
+        public static PerkInfo PerkForLevel(int currentPerk) => currentPerk switch
+        {
+            1 => MinigunPerk1Info,
+            2 => MinigunPerk2Info,
+            3 => MinigunPerk3Info,
+            _ => default
+        };
 
-        public static PerkInfo PerkForWallmartItem(WallmartItem arg1, int currentPerk)
-            => arg1 switch
-            {
-                WallmartItem.Minigun => currentPerk switch
-                {
-                    0 => MinigunPerk1Info,
-                    1 => MinigunPerk2Info,
-                    2 => MinigunPerk3Info,
-                    _ => default
-                },
-                _ => default
-            };
+        public static PerkInfo PerkForWallmartItem(int currentPerk) => currentPerk switch
+        {
+            0 => MinigunPerk1Info,
+            1 => MinigunPerk2Info,
+            2 => MinigunPerk3Info,
+            _ => default
+        };
     }
 }

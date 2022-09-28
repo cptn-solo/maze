@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts
+﻿using System.Linq;
+
+namespace Assets.Scripts
 {
     public partial class Player
     {
@@ -15,39 +17,57 @@
         }
         public void UpdatePerk(PerkType arg1)
         {
-            if (arg1 == PerkType.Minigun && Perks.MinigunUnlocked && minigun != null)
-                minigun.PerkAddedDamage = PerkAddedDamage(WeaponType.Minigun, Perks.MinigunLevel);
+            if (arg1 == PerkType.Minigun && Perks.MinigunLevel is int mgLevel && mgLevel > 0 && minigun != null)
+            {
+                minigun.PerkDamage = PerkDamage(WeaponType.Minigun, mgLevel);
+                if (currentWeapon == WeaponType.Minigun)
+                    PerkRateOfFire = PerkROF(currentWeapon, mgLevel);
+            }
 
-            if (arg1 == PerkType.Shuriken && Perks.ShurikenUnlocked && shell != null)
-                shell.PerkAddedDamage = PerkAddedDamage(WeaponType.Shuriken, Perks.ShurikenLevel);
+            if (arg1 == PerkType.Shuriken && Perks.ShurikenLevel is int shLevel && shLevel > 0 && shell != null)
+            {
+                shell.PerkDamage = PerkDamage(WeaponType.Shuriken, shLevel);
+                if (currentWeapon == WeaponType.Shuriken)
+                    PerkRateOfFire = PerkROF(currentWeapon, shLevel);
+            }
+
+            if (arg1 == PerkType.Shield && Perks.ShieldLevel is int sldLevel && sldLevel > 0 && hitbox != null)
+            {
+                hitbox.PerkMaxHP = PerkShield(PlayerPerk.HP, sldLevel);
+                hitbox.PerkMaxShield = PerkShield(PlayerPerk.Shield, sldLevel);
+                hitbox.ResetHP();
+            }
         }
+        private int PerkShield(PlayerPerk perk, int level) =>
+            ShieldPerks.PerkForLevel(level)
+                .PlayerPerks.Where(x => x.Key == perk)
+                .Select(x => x.Value).FirstOrDefault();
 
-        private int PerkAddedDamage(WeaponType weapon, int level)
-        {
-            return weapon switch
+        private int PerkDamage(WeaponType weapon, int level) => weapon switch
             {
                 WeaponType.Shuriken =>
-                level switch
-                {
-                    1 => 1,
-                    2 => 2,
-                    3 => 4,
-                    4 => 5,
-                    5 => 7,
-                    6 => 8,
-                    _ => 0
-                },
+                    ShurikenPerks.PerkForLevel(level)
+                    .WeaponPerks.Where(x=>x.Key == WeaponPerk.HPDamage)
+                    .Select(x => x.Value).FirstOrDefault(),
                 WeaponType.Minigun =>
-                level switch
-                {
-                    1 => 3,
-                    2 => 4,
-                    3 => 6,
-                    _ => 0
-                },
+                    MinigunPerks.PerkForLevel(level)
+                    .WeaponPerks.Where(x => x.Key == WeaponPerk.HPDamage)
+                    .Select(x => x.Value).FirstOrDefault(),
                 _ => 0
             };
-        }
+
+        private int PerkROF(WeaponType weapon, int level) => weapon switch
+            {
+                WeaponType.Shuriken =>
+                    ShurikenPerks.PerkForLevel(level)
+                    .WeaponPerks.Where(x => x.Key == WeaponPerk.FireRate)
+                    .Select(x => x.Value).FirstOrDefault(),
+                WeaponType.Minigun =>
+                    MinigunPerks.PerkForLevel(level)
+                    .WeaponPerks.Where(x => x.Key == WeaponPerk.FireRate)
+                    .Select(x => x.Value).FirstOrDefault(),
+                _ => 0
+            };
 
     }
 }

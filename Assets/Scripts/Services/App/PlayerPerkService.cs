@@ -36,6 +36,8 @@ namespace Assets.Scripts
         
         public int CurrentPerk(WallmartItem arg1) =>
             PlayerPrefs.GetInt(PerkKey(PerkForWallmart(arg1)));
+        public int CurrentPerk(WeaponType arg1) =>
+            PlayerPrefs.GetInt(PerkKey(PerkForWeapon(arg1)));
 
         public void SetPerk(PerkType perkType, int value)
         {

@@ -14,8 +14,6 @@ namespace Assets.Scripts.UI
         [SerializeField] private Image shieldImage;
         [SerializeField] private Image hpImage;
 
-        [SerializeField] private float baseBarWidth = 150.0f;
-
         public event Action<HUDMarkerView, Transform> OnMarkerBeingDestroyed;
 
         private RectTransform rectTransform;

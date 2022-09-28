@@ -17,9 +17,9 @@ namespace Assets.Scripts
             var currentPerk = perks.CurrentPerk(arg1);
             var perkInfo = arg1 switch
             {
-                WallmartItem.Minigun => MinigunPerks.PerkForWallmartItem(arg1, currentPerk),
-                WallmartItem.Shield => ShieldPerks.PerkForWallmartItem(arg1, currentPerk),
-                WallmartItem.Shuriken => ShurikenPerks.PerkForWallmartItem(arg1, currentPerk),
+                WallmartItem.Minigun => MinigunPerks.PerkForWallmartItem(currentPerk),
+                WallmartItem.Shield => ShieldPerks.PerkForWallmartItem(currentPerk),
+                WallmartItem.Shuriken => ShurikenPerks.PerkForWallmartItem(currentPerk),
                 _ => default
             };
                 ;

@@ -14,7 +14,8 @@ namespace Assets.Scripts
 
         public LayerMask DamageTo => damageTo;
 
-        public int PerkAddedDamage { get; set; } = 0;
+        public int DamagePerHit { get => damagePerHit; set => damagePerHit = value; }
+        public float DamageInterval { get => damageInterval; set => damageInterval = value; }
 
         public bool Active { get; set; }
         public float SizeScale { get; set; } = 1.0f;
@@ -43,7 +44,7 @@ namespace Assets.Scripts
         private void DealDamage(Hitbox hitbox)
         {
             OnDealingDamage?.Invoke(hitbox);
-            hitbox.DealDamage(Mathf.FloorToInt(damagePerHit * SizeScale) + PerkAddedDamage);
+            hitbox.DealDamage(Mathf.FloorToInt(DamagePerHit * SizeScale));
         }
 
         private void Hitbox_OnZeroHealthReached()
@@ -69,7 +70,7 @@ namespace Assets.Scripts
         {
             while (Active && hitbox != null)
             {
-                yield return new WaitForSeconds(damageInterval);
+                yield return new WaitForSeconds(DamageInterval);
                 if (Active && hitbox != null && hitbox.CurrentHP > 0)
                     DealDamage(hitbox);
             }

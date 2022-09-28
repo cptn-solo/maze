@@ -91,16 +91,13 @@ namespace Assets.Scripts
             score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
 
             for (int i = 0; i < enemyPrefabs.Length; i++)
-            {
                 StartCoroutine(StartSpawnEnemy(i));
-            }
 
+            player.InitPerkedItems(); 
+            
             StartCoroutine(PositionPlayer(player, building));
 
-            InitHUD();
-
-            player.InitPerkedItems();
-
+            InitHUD();            
         }
 
         private void Chest_OnChestOpened(Chest obj)

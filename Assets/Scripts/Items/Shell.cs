@@ -10,7 +10,7 @@ namespace Assets.Scripts
         public LayerMask DamageTo => damage != null ? damage.DamageTo : default;
 
         public Vector3 TargetDir { get; internal set; }
-        public int PerkAddedDamage { get; set; } = 0;
+        public int PerkDamage { get; set; } = 0;
 
         private void Awake()
         {
@@ -20,7 +20,7 @@ namespace Assets.Scripts
         private void OnEnable()
         {
             damage.Active = true;
-            damage.PerkAddedDamage = PerkAddedDamage;
+            damage.DamagePerHit = PerkDamage;
 
         }
         private void OnDisable()
