@@ -153,8 +153,8 @@ namespace Assets.Scripts
         {
             // update HUD button (weapon icon)
             // update markers maybe (larger shield, shield color, etc.)
-            player.UpdatePerk(arg1);
-            UpdateHUDPerk(arg1);
+            player.UpdatePerk(arg1, arg2);
+            UpdateHUDPerk(arg1, arg2);
         }
 
         private IEnumerator StartSpawnEnemy(int enemyPrefabIdx)

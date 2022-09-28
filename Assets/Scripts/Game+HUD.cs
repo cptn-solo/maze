@@ -1,23 +1,27 @@
-﻿namespace Assets.Scripts
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Assets.Scripts
 {
     public partial class Game
     {
         private void InitHUD()
         {
-            balance.SetBalance(balances.CurrentBalance(CollectableType.Coin));
-            balance.CurrentWeapon = WeaponType.Shuriken;
-            if (perks.MinigunUnlocked)
-            {
-                balance.StowedWeapon = WeaponType.Minigun;
-                balance.SetStowedAmmo(balances.CurrentBalance(CollectableType.Minigun));
-            }
-            else
-            {
-                balance.StowedWeapon = WeaponType.NA;
-                balance.SetStowedAmmo(-1);
-            }
             balance.SetItemAmmo(CollectableType.Bomb, balances.CurrentBalance(CollectableType.Bomb));
             balance.SetItemAmmo(CollectableType.Landmine, balances.CurrentBalance(CollectableType.Landmine));
+
+            var levels = new Dictionary<PerkType, int>() 
+            {
+                { PerkType.Shield, perks.ShieldLevel },
+            };
+            var info = new Dictionary<PerkType, PerkInfo>
+            {
+                { PerkType.Shield, ShieldPerks.PerkForLevel(levels[PerkType.Shield]) },
+            };
+
+            balance.SetPlayerInfo(info[PerkType.Shield], balances.CurrentBalance(CollectableType.Coin));
+
+            SwitchHUDWeapon(WeaponType.Shuriken);
         }
 
         private void UpdateHUDBalances(CollectableType arg1, int arg2)
@@ -34,32 +38,53 @@
 
         private void SwitchHUDWeapon(WeaponType obj)
         {
-            var stowedWeapon = balance.CurrentWeapon;
-            balance.CurrentWeapon = obj;
-            var ammoCollectable = PlayerBalanceService.CollectableForWeapon(balance.CurrentWeapon);
-            if (ammoCollectable != CollectableType.NA)
-                balance.SetAmmo(balances.CurrentBalance(ammoCollectable));
+            var prevWeapon = balance.CurrentWeapon;
+            var prevStowedWeapon = balance.StowedWeapon;
 
-            var stowedAmmoCollectable = PlayerBalanceService.CollectableForWeapon(stowedWeapon);
-            var stowedCount = stowedAmmoCollectable != CollectableType.NA ?
-                balances.CurrentBalance(stowedAmmoCollectable) :
-                -1;
-            balance.SetStowedAmmo(stowedCount);
+            var levels = new Dictionary<WeaponType, int>() {
+                { WeaponType.Shuriken, perks.ShurikenLevel },
+                { WeaponType.Minigun, perks.MinigunLevel },
+            };
+            var info = new Dictionary<WeaponType, PerkInfo>
+            {
+                { WeaponType.Shuriken, ShurikenPerks.PerkForLevel(levels[WeaponType.Shuriken]) },
+                { WeaponType.Minigun, MinigunPerks.PerkForLevel(levels[WeaponType.Minigun]) },
+            };
+
+            balance.SetCurrentWeaponInfo(info[obj], balances.CurrentBalance(obj));
+
+            var stowedWeapon = (prevWeapon == WeaponType.NA && 
+                levels.First(x => x.Value > 0 && x.Key != obj)
+                    is KeyValuePair<WeaponType, int> option) ? option.Key : prevWeapon;
+
+            balance.StowedWeapon = stowedWeapon;
+            balance.SetStowedAmmo(balances.CurrentBalance(stowedWeapon));
         }
 
-        private void UpdateHUDPerk(PerkType perk)
+        private void UpdateHUDPerk(PerkType perk, int level)
         {
             switch (perk)
             {
                 case PerkType.Shuriken:
+                    if (WeaponType.Shuriken != balance.CurrentWeapon)
+                        player.SelectWeapon(WeaponType.Shuriken);
+                    else
+                        balance.SetCurrentWeaponInfo(
+                            ShurikenPerks.PerkForLevel(level),
+                            balances.CurrentBalance(WeaponType.Shuriken));
                     break;
                 case PerkType.Shield:
+                    balance.SetPlayerInfo(
+                        ShieldPerks.PerkForLevel(level),
+                        balances.CurrentBalance(CollectableType.Coin));
                     break;
                 case PerkType.Minigun:
-                    {
-                        if (perks.MinigunUnlocked)
-                            player.SelectWeapon(WeaponType.Minigun);
-                    }
+                    if (WeaponType.Minigun != balance.CurrentWeapon)
+                        player.SelectWeapon(WeaponType.Minigun);
+                    else
+                        balance.SetCurrentWeaponInfo(
+                            ShurikenPerks.PerkForLevel(level),
+                            balances.CurrentBalance(WeaponType.Minigun));
                     break;
                 default:
                     break;

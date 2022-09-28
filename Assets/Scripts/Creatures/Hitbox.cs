@@ -25,7 +25,6 @@ namespace Assets.Scripts
         public event Action OnZeroHealthReached;
         public event Action OnDestroyedOrDisabled;
 
-        private float shieldCellStrength = 1.0f;
         private int maxHPScaled;
         private int maxShieldScaled;
 
@@ -35,12 +34,10 @@ namespace Assets.Scripts
         public BattleInfo ResetHP()
         {
             maxHPScaled = Mathf.FloorToInt(PerkMaxHP * SizeScale);
-            maxShieldScaled = PerkMaxShield > 0 ?  maxHPScaled : 0;
+            maxShieldScaled = PerkMaxShield > 0 ? Mathf.FloorToInt(PerkMaxShield * SizeScale) : 0;
 
             CurrentHP = maxHPScaled;
-            // just for alignment purposes, to set the initial widths same value for both HP and shields (if any):
-            shieldCellStrength = maxShieldScaled != 0 ? PerkMaxShield / maxShieldScaled : 0f;
-            CurrentShield = shieldCellStrength > 0 ? CurrentHP : 0;
+            CurrentShield = maxShieldScaled;
 
             BattleInfo battleInfo = default;
             battleInfo.CurrentHP = CurrentHP;
@@ -53,31 +50,17 @@ namespace Assets.Scripts
 
         public void DealDamage(int damage)
         {
-            if (CurrentShield > 0)
-                damage = Mathf.FloorToInt(damage / shieldCellStrength);
+            CurrentShield = Mathf.Max(0, CurrentShield - damage);
+            
+            if (maxShieldScaled > 0 && CurrentShield > 0)
+                damage = Mathf.FloorToInt(damage * (1 - CurrentShield/maxShieldScaled));
 
-            var combined = CurrentHP + CurrentShield;
+            CurrentHP = Mathf.Max(0, CurrentHP - damage);
 
-            combined -= damage;
-
-            if (combined >= CurrentHP)
-            {
-                CurrentShield = combined - CurrentHP;
-                OnShieldDamage?.Invoke(CurrentShield);
-            }
-            else if (combined > 0)
-            {
-                CurrentShield = 0;
-                CurrentHP = combined;
-                
-                (CurrentHP <= criticalHP ? OnCriticalDamage : OnDamage).Invoke(CurrentHP);
-            }
-            else
-            {
-                CurrentShield = 0;
-                CurrentHP = 0;
+            if (CurrentHP <= 0)
                 OnZeroHealthReached?.Invoke();
-            }
+            else
+                (CurrentHP <= criticalHP ? OnCriticalDamage : OnDamage).Invoke(CurrentHP);
         }
 
         internal void AddHP(int cnt)
@@ -88,26 +71,8 @@ namespace Assets.Scripts
 
         internal void AddShield(int cnt)
         {
-            var combined = CurrentHP + CurrentShield + Mathf.FloorToInt(cnt / shieldCellStrength);
-
-            if (combined >= maxHPScaled + maxShieldScaled)
-            {
-                CurrentHP = maxHPScaled;
-                CurrentShield = maxShieldScaled;
-                OnAddShield?.Invoke(CurrentShield);
-            }
-            else if (combined >= maxHPScaled)
-            {
-                CurrentHP = maxHPScaled;
-                CurrentShield = combined - maxHPScaled;
-                OnAddShield?.Invoke(CurrentShield);
-            }
-            else
-            {
-                CurrentHP = combined;
-                CurrentShield = 0;
-                OnAddHP?.Invoke(CurrentHP);
-            }
+            CurrentShield = Mathf.Min(CurrentShield + cnt, maxShieldScaled);
+            OnAddShield?.Invoke(CurrentShield);
         }
         private void OnDestroy() => OnDestroyedOrDisabled?.Invoke();
         private void OnDisable() => OnDestroyedOrDisabled?.Invoke();

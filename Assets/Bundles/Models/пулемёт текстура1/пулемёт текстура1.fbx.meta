@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bccc7710e9f04a249bce4fd7b016286e
+guid: ae065cb20a1d0de428c4ca5ac0536478
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -7,25 +7,15 @@ ModelImporter:
       74: 1412700493452933939
     second: "\u043A\u043E\u0440\u043F\u0443\u0441|\u043A\u043E\u0440\u043F\u0443\u0441Action"
   - first:
-      74: -3117935388786245363
-    second: "\u043A\u043E\u0440\u043F\u0443\u0441|\u0441\u0442\u0432\u043E\u043BAction"
+      74: 1781417622379667935
+    second: "\u043A\u043E\u0440\u043F\u0443\u0441|\u043A\u043E\u0440\u043F\u0443\u0441Action.001"
   - first:
       74: -4993556851065862439
     second: "\u0441\u0442\u0432\u043E\u043B|\u043A\u043E\u0440\u043F\u0443\u0441Action"
   - first:
-      74: 1362880562938509405
-    second: "\u0441\u0442\u0432\u043E\u043B|\u0441\u0442\u0432\u043E\u043BAction"
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: "\u043A\u0440\u0430\u0441\u043D\u044B\u0439"
-    second: {fileID: 2100000, guid: cf0b75df33b8049459a82103d37fdebf, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: "\u0447\u0451\u0440\u043D\u044B\u0439"
-    second: {fileID: 2100000, guid: ce0ba7f15ddcd094ba4fb52580f7db79, type: 2}
+      74: 4616788453867049407
+    second: "\u0441\u0442\u0432\u043E\u043B|\u043A\u043E\u0440\u043F\u0443\u0441Action.001"
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -57,15 +47,15 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.3
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
@@ -110,7 +100,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.3
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

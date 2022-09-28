@@ -1,31 +1,9 @@
 fileFormatVersion: 2
-guid: bccc7710e9f04a249bce4fd7b016286e
+guid: 9be8b057a760a904fa1d403f5d8a909d
 ModelImporter:
   serializedVersion: 21300
-  internalIDToNameTable:
-  - first:
-      74: 1412700493452933939
-    second: "\u043A\u043E\u0440\u043F\u0443\u0441|\u043A\u043E\u0440\u043F\u0443\u0441Action"
-  - first:
-      74: -3117935388786245363
-    second: "\u043A\u043E\u0440\u043F\u0443\u0441|\u0441\u0442\u0432\u043E\u043BAction"
-  - first:
-      74: -4993556851065862439
-    second: "\u0441\u0442\u0432\u043E\u043B|\u043A\u043E\u0440\u043F\u0443\u0441Action"
-  - first:
-      74: 1362880562938509405
-    second: "\u0441\u0442\u0432\u043E\u043B|\u0441\u0442\u0432\u043E\u043BAction"
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: "\u043A\u0440\u0430\u0441\u043D\u044B\u0439"
-    second: {fileID: 2100000, guid: cf0b75df33b8049459a82103d37fdebf, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: "\u0447\u0451\u0440\u043D\u044B\u0439"
-    second: {fileID: 2100000, guid: ce0ba7f15ddcd094ba4fb52580f7db79, type: 2}
+  internalIDToNameTable: []
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -57,7 +35,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.3
+    globalScale: 0.6
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -110,7 +88,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.3
+    globalScale: 0.006
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

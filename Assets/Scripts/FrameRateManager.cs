@@ -93,7 +93,7 @@ namespace Assets.Scripts
 
         private void OnGUI()
         {
-            GUI.Label(new Rect(55, 55, 100, 25), display_Text, textStyle);
+            GUI.Label(new Rect(42, 250, 100, 25), display_Text, textStyle);
         }
     }
 }

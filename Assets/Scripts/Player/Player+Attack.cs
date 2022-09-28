@@ -157,7 +157,9 @@ namespace Assets.Scripts
                             {
                                 minigun.Attack(false);
                                 SoundEvents.OutOfAmmo();
-
+                                
+                                yield return new WaitForSeconds(1 / PerkRateOfFire);
+                                
                                 break;
                             }
 

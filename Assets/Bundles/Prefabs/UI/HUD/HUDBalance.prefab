@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4804135031232606283}
   - component: {fileID: 7545304383747918129}
+  - component: {fileID: 6198762575697356428}
   m_Layer: 5
   m_Name: HUDBalance
   m_TagString: Untagged
@@ -47,6 +48,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3266845845247002646}
   m_CullTransparentMesh: 1
+--- !u!114 &6198762575697356428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3266845845247002646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd9fea9a9d87cb240adfda3b095e2883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 5050467966994155777}
+  valueLabel: {fileID: 4816988296521339513}
 --- !u!1 &6591952166197877688
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,12 +231,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 26.3
+  m_fontSize: 26.85
   m_fontSizeBase: 26.3
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 26.85
   m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512

@@ -32,9 +32,9 @@ namespace Assets.Scripts
             if (balances.CurrentBalance(CollectableType.Coin) is int coins && 
                 coins >= info.Price)
             {
-                perks.AddPerk(item, 1);
+                var level = perks.AddPerk(item, 1);
                 balances.AddBalance(CollectableType.Coin, -info.Price);
-                UpdateHUDPerk(PlayerPerkService.PerkForWallmart(item));
+                UpdateHUDPerk(PlayerPerkService.PerkForWallmart(item), level);
                 return true;
             }
 

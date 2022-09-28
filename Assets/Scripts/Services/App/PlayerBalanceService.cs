@@ -19,13 +19,17 @@ namespace Assets.Scripts
         public static string BalanceKey(CollectableType collectable) =>
             $"{PlayerPreferencesService.BalanceKey}_{collectable}";
 
-        public static string BalanceKey(WeaponType weapon) =>
-            $"{PlayerPreferencesService.BalanceKey}_{CollectableForWeapon(weapon)}";
 
+        public int CurrentBalance(CollectableType collectableType) => 
+            collectableType != CollectableType.NA ?
+                PlayerPrefs.GetInt(BalanceKey(collectableType)) : 
+                -1;
 
-        public int CurrentBalance(CollectableType collectableType) =>
-            PlayerPrefs.GetInt(BalanceKey(collectableType));
-        
+        public int CurrentBalance(WeaponType weaponType) =>
+            weaponType != WeaponType.NA ?
+                CurrentBalance(CollectableForWeapon(weaponType)) :
+                -1;
+
         public int AddBalance(CollectableType collectableType, int count)
         {
             var balance = CurrentBalance(collectableType) + count;

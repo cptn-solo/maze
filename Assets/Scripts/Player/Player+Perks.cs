@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Scripts
 {
@@ -8,33 +9,36 @@ namespace Assets.Scripts
 
         public void InitPerkedItems()
         {
-            foreach (var perk in new[] {
-                PerkType.Minigun,
-                PerkType.Shield,
-                PerkType.Shuriken,
-            })
-                UpdatePerk(perk);
+
+            var levels = new Dictionary<PerkType, int>()
+            {
+                { PerkType.Shield, Perks.ShieldLevel },
+                { PerkType.Shuriken, Perks.ShurikenLevel},
+                { PerkType.Minigun, Perks.MinigunLevel },
+            };
+            foreach (var perk in levels)
+                UpdatePerk(perk.Key, perk.Value);
         }
-        public void UpdatePerk(PerkType arg1)
+        public void UpdatePerk(PerkType arg1, int level)
         {
-            if (arg1 == PerkType.Minigun && Perks.MinigunLevel is int mgLevel && mgLevel > 0 && minigun != null)
+            if (arg1 == PerkType.Minigun && level > 0 && minigun != null)
             {
-                minigun.PerkDamage = PerkDamage(WeaponType.Minigun, mgLevel);
+                minigun.PerkDamage = PerkDamage(WeaponType.Minigun, level);
                 if (currentWeapon == WeaponType.Minigun)
-                    PerkRateOfFire = PerkROF(currentWeapon, mgLevel);
+                    PerkRateOfFire = PerkROF(currentWeapon, level);
             }
 
-            if (arg1 == PerkType.Shuriken && Perks.ShurikenLevel is int shLevel && shLevel > 0 && shell != null)
+            if (arg1 == PerkType.Shuriken && level > 0 && shell != null)
             {
-                shell.PerkDamage = PerkDamage(WeaponType.Shuriken, shLevel);
+                shell.PerkDamage = PerkDamage(WeaponType.Shuriken, level);
                 if (currentWeapon == WeaponType.Shuriken)
-                    PerkRateOfFire = PerkROF(currentWeapon, shLevel);
+                    PerkRateOfFire = PerkROF(currentWeapon, level);
             }
 
-            if (arg1 == PerkType.Shield && Perks.ShieldLevel is int sldLevel && sldLevel > 0 && hitbox != null)
+            if (arg1 == PerkType.Shield && level > 0 && hitbox != null)
             {
-                hitbox.PerkMaxHP = PerkShield(PlayerPerk.HP, sldLevel);
-                hitbox.PerkMaxShield = PerkShield(PlayerPerk.Shield, sldLevel);
+                hitbox.PerkMaxHP = PerkShield(PlayerPerk.HP, level);
+                hitbox.PerkMaxShield = PerkShield(PlayerPerk.Shield, level);
                 hitbox.ResetHP();
             }
         }

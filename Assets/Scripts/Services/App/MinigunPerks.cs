@@ -14,7 +14,7 @@ namespace Assets.Scripts
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 1),
                     KeyValuePair.Create(WeaponPerk.HPDamage, 4),
-                    KeyValuePair.Create(WeaponPerk.FireRate, 10),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 5),
                 },
             };
         public static PerkInfo MinigunPerk2Info
@@ -27,7 +27,7 @@ namespace Assets.Scripts
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 2),
                     KeyValuePair.Create(WeaponPerk.HPDamage, 6),
-                    KeyValuePair.Create(WeaponPerk.FireRate, 7),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 5),
                 },
             };
         public static PerkInfo MinigunPerk3Info

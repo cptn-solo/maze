@@ -133,7 +133,7 @@ namespace Assets.Scripts
             })
             {
                 var key = PlayerPerkService.PerkKey(perk);
-                PlayerPrefs.SetInt(key, 0);
+                PlayerPrefs.SetInt(key, 1);
             }
 
             // Some perks are initially unlocked:
