@@ -24,18 +24,6 @@ namespace Assets.Scripts
             SwitchHUDWeapon(WeaponType.Shuriken);
         }
 
-        private void UpdateHUDBalances(CollectableType arg1, int arg2)
-        {
-            if (arg1 == CollectableType.Coin)
-                balance.SetBalance(arg2);
-            else if (PlayerBalanceService.CollectableForWeapon(balance.CurrentWeapon) == arg1)
-                balance.SetAmmo(arg2);
-            else if (PlayerBalanceService.CollectableForWeapon(balance.StowedWeapon) == arg1)
-                balance.SetStowedAmmo(arg2);
-            else
-                balance.SetItemAmmo(arg1, arg2);
-        }
-
         private void SwitchHUDWeapon(WeaponType obj)
         {
             var prevWeapon = balance.CurrentWeapon;
@@ -54,7 +42,7 @@ namespace Assets.Scripts
             balance.SetCurrentWeaponInfo(info[obj], balances.CurrentBalance(obj));
 
             var stowedWeapon = (prevWeapon == WeaponType.NA && 
-                levels.First(x => x.Value > 0 && x.Key != obj)
+                levels.FirstOrDefault(x => x.Value > 0 && x.Key != obj)
                     is KeyValuePair<WeaponType, int> option) ? option.Key : prevWeapon;
 
             balance.StowedWeapon = stowedWeapon;
@@ -83,7 +71,7 @@ namespace Assets.Scripts
                         player.SelectWeapon(WeaponType.Minigun);
                     else
                         balance.SetCurrentWeaponInfo(
-                            ShurikenPerks.PerkForLevel(level),
+                            MinigunPerks.PerkForLevel(level),
                             balances.CurrentBalance(WeaponType.Minigun));
                     break;
                 default:
@@ -92,7 +80,16 @@ namespace Assets.Scripts
             };
         }
 
-
-
+        private void UpdateHUDBalances(CollectableType arg1, int arg2)
+        {
+            if (arg1 == CollectableType.Coin)
+                balance.SetBalance(arg2);
+            else if (PlayerBalanceService.CollectableForWeapon(balance.CurrentWeapon) == arg1)
+                balance.SetAmmo(arg2);
+            else if (PlayerBalanceService.CollectableForWeapon(balance.StowedWeapon) == arg1)
+                balance.SetStowedAmmo(arg2);
+            else
+                balance.SetItemAmmo(arg1, arg2);
+        }
     }
 }

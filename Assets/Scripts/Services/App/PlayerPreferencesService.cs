@@ -122,7 +122,7 @@ namespace Assets.Scripts
             })
             {
                 var key = PlayerBalanceService.BalanceKey(collectable);
-                PlayerPrefs.SetInt(key, 101);
+                PlayerPrefs.SetInt(key, 1001);
             }
 
             // Most perks initialized as locked:
@@ -133,7 +133,7 @@ namespace Assets.Scripts
             })
             {
                 var key = PlayerPerkService.PerkKey(perk);
-                PlayerPrefs.SetInt(key, 1);
+                PlayerPrefs.SetInt(key, 0);
             }
 
             // Some perks are initially unlocked:

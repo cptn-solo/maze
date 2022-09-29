@@ -295,7 +295,7 @@ namespace Assets.Scripts
         {
             PositionCamera(player, building);
 
-            if ((player.transform.position - Vector3.zero).sqrMagnitude > 10.0f)
+            if (player.transform.position.y < -10.0f)
                 StartCoroutine(PositionPlayer(player, building));
         }
         
