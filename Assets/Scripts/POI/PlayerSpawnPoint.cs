@@ -1,11 +1,13 @@
-using Assets.Scripts;
 using UnityEngine;
 
 namespace Assets.Scripts.POI
 {
     public class PlayerSpawnPoint : SpawnPoint
     {
-        private Building building;
+        [SerializeField] private bool startingPoint;
+        public bool StartingPoint => startingPoint;
+
+        private Building building;        
 
 #if UNITY_EDITOR
 

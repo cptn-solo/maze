@@ -95,7 +95,7 @@ namespace Assets.Scripts
 
             player.InitPerkedItems(); 
             
-            StartCoroutine(PositionPlayer(player, building));
+            StartCoroutine(PositionPlayer(player, building, true));
 
             InitHUD();            
         }
@@ -220,6 +220,7 @@ namespace Assets.Scripts
             while (listenForScreenOrientation)
             {
                 camDistanceFactor = ((float) Screen.height) * .7f / Screen.width;
+
                 yield return new WaitForSecondsRealtime(1.0f);
             }
         }
@@ -246,12 +247,13 @@ namespace Assets.Scripts
                 camCurrent + camStep, Quaternion.LookRotation(camDirection));
         }
 
-        private IEnumerator PositionPlayer(Player player, Building building)
+        private IEnumerator PositionPlayer(Player player, Building building, bool startingPoint = false)
         {
             while (!player.FadeOut())
                 yield return null;
 
-            var filtered = building.PlayerSpawnPoints.Where(x => x.gameObject.activeSelf).ToArray();
+            var filtered = building.PlayerSpawnPoints.Where(x => x.gameObject.activeSelf && 
+                (!startingPoint || x.StartingPoint) ).ToArray();
 
             var spIndex = UnityEngine.Random.Range(0, filtered.Length);
             var sp = filtered[spIndex].transform;
@@ -293,7 +295,7 @@ namespace Assets.Scripts
         {
             PositionCamera(player, building);
 
-            if ((player.transform.position - Vector3.zero).sqrMagnitude > 100.0f)
+            if ((player.transform.position - Vector3.zero).sqrMagnitude > 10.0f)
                 StartCoroutine(PositionPlayer(player, building));
         }
         

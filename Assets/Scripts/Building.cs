@@ -6,7 +6,8 @@ namespace Assets.Scripts
 {
     public class Building : MonoBehaviour
     {
-        public Transform[] PlayerSpawnPoints => playerSpawnPoints;
+        public PlayerSpawnPoint[] PlayerSpawnPoints => 
+            playerSpawnPoints.Select(x => x.GetComponent<PlayerSpawnPoint>()).ToArray();
         public Transform[] ZombieSpawnPoints => zombieSpawnPoints;
 
         private Transform[] playerSpawnPoints;

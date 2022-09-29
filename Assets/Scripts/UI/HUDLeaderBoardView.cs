@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
@@ -12,12 +13,16 @@ namespace Assets.Scripts.UI
         [SerializeField] private GameObject itemPrefab;
         
         private RectTransform rectTransform;
-
+        private RectTransform listRectTransform;
+        private CanvasScaler canvasScaler;
+        private bool prevIsPortrait;
         private readonly Dictionary<string, LeaderBoardItemView> leaders = new();
 
         private void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
+            listRectTransform = layoutGroup.GetComponent<RectTransform>();
+            canvasScaler = GetComponent<CanvasScaler>();
         }
 
         internal void AddPlayer(string id)
@@ -49,5 +54,52 @@ namespace Assets.Scripts.UI
                     sorted[idx].SetListPosition(idx);
             }
         }
+
+        private void OnEnable()
+        {
+            //StartCoroutine(CheckScreenOrientation());
+        }
+
+        private void OnDisable()
+        {
+            //StopCoroutine(CheckScreenOrientation());
+        }
+
+        private IEnumerator CheckScreenOrientation()
+        {
+            ApplyOrientation(CheckIfPortrait());
+
+            while (true)
+            {
+                yield return new WaitForSeconds(1.0f);
+            
+                bool isPortrait = CheckIfPortrait();
+
+                if (prevIsPortrait != isPortrait)
+                    ApplyOrientation(isPortrait);
+
+                prevIsPortrait = isPortrait;
+
+            }
+
+            static bool CheckIfPortrait()
+            {
+                return Screen.orientation switch
+                {
+                    ScreenOrientation.Portrait => true,
+                    ScreenOrientation.PortraitUpsideDown => true,
+                    _ => false,
+                };
+            }
+
+            void ApplyOrientation(bool isPortrait)
+            {
+                var pos = listRectTransform.position;
+                pos.y = isPortrait ? pos.y * 2 : pos.y / 2;
+                pos.y *= rectTransform.localScale.y;
+                listRectTransform.position = pos;
+            }
+        }
+
     }
 }
