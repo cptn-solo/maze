@@ -52,8 +52,12 @@ namespace Assets.Scripts
         {
             CurrentShield = Mathf.Max(0, CurrentShield - damage);
             
-            if (maxShieldScaled > 0 && CurrentShield > 0)
-                damage = Mathf.FloorToInt(damage * (1 - CurrentShield/maxShieldScaled));
+            OnShieldDamage?.Invoke(CurrentShield);
+
+            if (maxShieldScaled > 0 && CurrentShield > maxShieldScaled * .5f)
+                damage = 0;
+            else if (maxShieldScaled > 0 && CurrentShield > 0)
+                damage = (int)Mathf.Floor(damage * (1 - CurrentShield/maxShieldScaled));
 
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
 
