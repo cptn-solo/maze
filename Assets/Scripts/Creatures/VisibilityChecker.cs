@@ -7,8 +7,15 @@ namespace Assets.Scripts
     public class VisibilityChecker : MonoBehaviour
     {
         [SerializeField] private LayerMask layerMask;
+        [SerializeField] private LayerMask playerMask;
+        [SerializeField] private bool isPlayer;
+        [SerializeField] private float visibilityDistance = .3f;
+
+        private readonly Collider[] buff = new Collider[1]; 
 
         public event EventHandler<bool> OnVisibilityChanged;
+        
+        public Transform PlayerTransform { get; set; }
 
         private Transform cam;
         private bool visible;
@@ -41,17 +48,20 @@ namespace Assets.Scripts
                 if (!Time.inFixedTimeStep)
                     yield return new WaitForFixedUpdate();
 
-                var direction = transform.position + Vector3.up * .1f * transform.localScale.y - cam.position;
+                var direction = transform.position + .1f * transform.localScale.y * Vector3.up - cam.position;
                 Ray ray = default;
                 ray.direction = direction;
                 ray.origin = cam.position;
+                var distance = direction.magnitude;
+                
+                var playerNearby = isPlayer || Physics.OverlapSphereNonAlloc(transform.position, visibilityDistance, buff, playerMask) > 0;
 
-                visible = Physics.Raycast(ray, out var hitinfo, direction.magnitude, layerMask) &&
+                visible = playerNearby && Physics.Raycast(ray, out var hitinfo, distance, layerMask) &&
                     hitinfo.collider.gameObject == gameObject;
 
                 OnVisibilityChanged?.Invoke(this, visible);
 
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.5f);
             }
         }
 

@@ -15,7 +15,10 @@ namespace Assets.Scripts
         [SerializeField] private GameObject[] enemyPrefabs;
         [SerializeField] private GameObject[] buildingPrefabs;
         [SerializeField] private GameObject[] collectablePrefabs;
-        
+
+        [SerializeField] private Color playerMarkerColor = Color.green;
+        [SerializeField] private Color zombieMarkerColor = Color.yellow;
+
         [SerializeField] private int MaxZombieCount = 10;
         [SerializeField] private float enemySpawnInterval = 5.0f;
 
@@ -44,8 +47,8 @@ namespace Assets.Scripts
         private readonly string playerId = "Player";
         private readonly string zombiesId = "Zombies";
 
-        private UnitInfo playerScoreInfo = new("Player", Color.green, 0, Color.green, 0, 0);
-        private UnitInfo zombiesScoreInfo = new("Zombies", Color.red, 0, Color.red, 0, 0);
+        private UnitInfo playerScoreInfo = new("Player", Color.green, 0, Color.green, 0, 0, Color.green);
+        private UnitInfo zombiesScoreInfo = new("Zombies", Color.yellow, 0, Color.red, 0, 0, Color.yellow);
 
         public event EventHandler OnPlayerSpawned;
         public event EventHandler OnPlayerKilled;
@@ -262,11 +265,21 @@ namespace Assets.Scripts
             player.OnRespawned(sp.position, sp.rotation);
 
             if (player.TryGetComponent<Visibility>(out var unit))
+            {
+                unit.MarkerColor = playerMarkerColor;
                 markers.AddUnit(unit);
+            }
 
             player.FadeIn();
 
             OnPlayerSpawned?.Invoke(player, null);
+        }
+
+        private static Color PlayerMarkerColor()
+        {
+            var color = Color.green;
+            color.a = .6f;
+            return color;
         }
 
         private IEnumerator PositionZombie(Zombie zombie, Building building)
@@ -285,8 +298,11 @@ namespace Assets.Scripts
             zombie.gameObject.SetActive(true);
             zombie.OnRespawned(sp.position, sp.rotation);
 
-            if (zombie.TryGetComponent<Visibility>(out var unit)) 
+            if (zombie.TryGetComponent<Visibility>(out var unit))
+            {
+                unit.MarkerColor = zombieMarkerColor;
                 markers.AddEnemy(unit, EnemyType.Zombie);
+            }
 
             zombie.FadeIn();
         }

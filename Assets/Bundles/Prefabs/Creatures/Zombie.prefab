@@ -63,7 +63,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   maxHP: 50
+  maxShield: 0
   criticalHP: 10
+  PlayerId: 
 --- !u!1 &1762397133780055631
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,6 +278,11 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 257
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  isPlayer: 0
+  visibilityDistance: 0.5
 --- !u!114 &7851876998557403830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,9 +295,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0489f01106e6a14f8fa2991fd96e88e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combinedMask:
-    serializedVersion: 2
-    m_Bits: 4097
   targetMask:
     serializedVersion: 2
     m_Bits: 4096

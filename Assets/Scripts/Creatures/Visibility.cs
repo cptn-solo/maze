@@ -21,6 +21,7 @@ namespace Assets.Scripts
         #endregion
 
         private UnitInfo unitInfo = default;
+        public Color MarkerColor { get => unitInfo.MarkerHPColor; set => unitInfo.MarkerHPColor = value; }
 
         private void Awake()
         {

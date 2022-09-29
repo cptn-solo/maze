@@ -6,15 +6,17 @@ namespace Assets.Scripts.UI
     {
         public string NickName;
         public Color BodyTintColor;
+        public Color MarkerHPColor;
         public int Score;
         public Color ScoreColor;
         public int Hp;
         public int Shield;
 
-        public UnitInfo(string nickName, Color bodyTintColor, int score, Color scoreColor, int hp, int shield)
+        public UnitInfo(string nickName, Color bodyTintColor, int score, Color scoreColor, int hp, int shield, Color markerHPColor)
         {
             NickName = nickName;
             BodyTintColor = bodyTintColor;
+            MarkerHPColor = markerHPColor;
             Score = score;
             ScoreColor = scoreColor;
             Hp = hp;
@@ -23,9 +25,10 @@ namespace Assets.Scripts.UI
         public string Serialize()
         {
             var colorHex = HexStringFromColor(BodyTintColor);
+            var hpColorHex = HexStringFromColor(MarkerHPColor);
             var scoreColorHex = HexStringFromColor(ScoreColor);
 
-            return $"{NickName}:{colorHex}:{Score}:{scoreColorHex}:{Hp}:{Shield}";
+            return $"{NickName}:{colorHex}:{Score}:{scoreColorHex}:{Hp}:{Shield}:{hpColorHex}";
         }
 
         public static UnitInfo Deserialize(string playerInfo)
@@ -41,6 +44,7 @@ namespace Assets.Scripts.UI
             info.ScoreColor = ColorFromHexString(props[3]);
             info.Hp = int.Parse(props[4]);
             info.Shield = int.Parse(props[5]);
+            info.MarkerHPColor = ColorFromHexString(props[6]);
             return info;
         }
         public static string HexStringFromColor(Color color)

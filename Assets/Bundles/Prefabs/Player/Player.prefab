@@ -206,6 +206,10 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 65
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  isPlayer: 1
 --- !u!114 &5051959995960565163
 MonoBehaviour:
   m_ObjectHideFlags: 0

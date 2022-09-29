@@ -202,6 +202,5 @@ namespace Assets.Scripts
             animator.SetBool(AnimGoBool, true);
             animator.SetBool(AnimAttackBool, false);
         }
-
     }
 }

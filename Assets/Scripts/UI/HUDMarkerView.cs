@@ -59,6 +59,7 @@ namespace Assets.Scripts.UI
         {
             infoLabel.text = $"{e.Score}";
             infoLabel.color = e.ScoreColor;
+            hpImage.color = e.MarkerHPColor;
 
             SetImageWidth(hpImage, e.Hp);
             SetImageWidth(shieldImage, e.Shield);
