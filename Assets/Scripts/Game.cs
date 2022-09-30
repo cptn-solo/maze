@@ -26,6 +26,8 @@ namespace Assets.Scripts
         
         [SerializeField] private float cameraAngle = -35.0f;
         [SerializeField] private float cameraDistance = 2.5f;
+        [SerializeField] private float camPortraitFactor = .4f;
+        [SerializeField] private float camLandscapeFactor = .75f;
         [SerializeField] private float camSpeed = 4.0f;
 
         [SerializeField] private HUDMarkersView markers;
@@ -222,7 +224,13 @@ namespace Assets.Scripts
             listeningForScreenOrientation = true;
             while (listenForScreenOrientation)
             {
-                camDistanceFactor = ((float) Screen.height) * .7f / Screen.width;
+                var factor = Screen.orientation switch
+                {
+                    ScreenOrientation.Portrait => camPortraitFactor,
+                    ScreenOrientation.PortraitUpsideDown => camPortraitFactor,
+                    _ => camLandscapeFactor
+                };
+                camDistanceFactor = ((float) Screen.height) * factor / Screen.width;
 
                 yield return new WaitForSecondsRealtime(1.0f);
             }
@@ -273,13 +281,6 @@ namespace Assets.Scripts
             player.FadeIn();
 
             OnPlayerSpawned?.Invoke(player, null);
-        }
-
-        private static Color PlayerMarkerColor()
-        {
-            var color = Color.green;
-            color.a = .6f;
-            return color;
         }
 
         private IEnumerator PositionZombie(Zombie zombie, Building building)
