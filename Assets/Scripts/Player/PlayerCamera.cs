@@ -16,17 +16,21 @@ namespace Assets.Scripts
 
         private Player player;
         private Camera sceneCamera;
-        private OrbitCamera orbitCamera;
+        //private OrbitCamera orbitCamera;
 
         [SerializeField] private float attachedCameraYOffset = 0.15f;
         [SerializeField] private float attachedCameraZOffset = -0.15f;
+        [SerializeField] private float attachedCameraFollowDelay = 1f;
+
+        private Vector3 prevFocusPosition = default;
 
         private void Awake()
         {
             player = GetComponent<Player>();
             sceneCamera = Camera.main;
-            orbitCamera = sceneCamera.GetComponent<OrbitCamera>();
-            orbitCamera.FocusOn(player.transform);
+            //orbitCamera = sceneCamera.GetComponent<OrbitCamera>();
+            //orbitCamera.FocusOn(player.transform);
+            
             player.TranslateDirActive = false;
         }
 
@@ -61,8 +65,6 @@ namespace Assets.Scripts
 
         private void PositionCameraBehindPlayer()
         {
-            player.TranslateDirActive = false;
-
             var camCurrent = sceneCamera.transform.position;
 
             var camPosition = player.transform.position + 
@@ -78,8 +80,6 @@ namespace Assets.Scripts
         }
         private void PositionCameraTowardsCenter()
         {
-            player.TranslateDirActive = false;
-
             var buildingFloorY = Vector3.zero + Vector3.up * player.transform.position.y;
             var buildingToPlayer = Vector3.Distance(player.transform.position, buildingFloorY);
 
@@ -102,8 +102,14 @@ namespace Assets.Scripts
 
         private void LateUpdate()
         {
-            //PositionCameraBehindPlayer();
-            //PositionCameraTowardsCenter();
+            player.TranslateDirActive =
+                player.transform.position.y < 2.48f &&
+                Mathf.Abs(player.transform.position.x) < 1.5f &&
+                Mathf.Abs(player.transform.position.z) < 1.5f;
+            if (player.TranslateDirActive)
+                PositionCameraTowardsCenter();
+            else
+                PositionCameraBehindPlayer();
         }
 
     }

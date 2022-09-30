@@ -171,8 +171,8 @@ namespace Assets.Scripts
             }
             else
             {
-                localForward = sceneCamera.transform.forward;
-                localRight = sceneCamera.transform.right;
+                localForward = transform.forward;
+                localRight = transform.right;
             }
 
             translatedDir = moveDir.x * localRight + moveDir.z * localForward;
