@@ -9,6 +9,7 @@ namespace Assets.Scripts
         protected Rigidbody rb;
         protected Collider col;
         private Battle battle;
+        private Camera sceneCamera;
 
         [SerializeField] protected Renderer ren;
         [SerializeField] protected Animator animator;
@@ -21,6 +22,7 @@ namespace Assets.Scripts
         [SerializeField] protected float fadeSpeed = 1.0f;
 
         [SerializeField] protected float jumpImpulse = 2.0f;
+        [SerializeField] private float outOfSceneYTreshold = -10.0f;
 
         protected Building building;
 
@@ -31,6 +33,8 @@ namespace Assets.Scripts
 
         private Vector3 translatedDir;
         private Vector3 center = Vector3.zero;
+
+        public bool TranslateDirActive { get; set; } = true;
 
         public IngameSoundEvents SoundEvents { get; set; }
 
@@ -46,6 +50,7 @@ namespace Assets.Scripts
         private event Action OnDestroyAction;
 
         private float sizeScale = 1.0f;
+
         public float SizeScale
         {
             get => sizeScale;
@@ -82,6 +87,8 @@ namespace Assets.Scripts
 
         protected virtual void OnAwake()
         {
+            sceneCamera = Camera.main;
+
             rb = GetComponent<Rigidbody>();
             col = GetComponent<CapsuleCollider>();
             battle = GetComponent<Battle>();
@@ -150,15 +157,23 @@ namespace Assets.Scripts
 
         private void ReadLocalAxis()
         {
-            localForward = (center - Grounded()).normalized;
+            if (TranslateDirActive)
+            {
+                localForward = (center - Grounded()).normalized;
 
-            if (Mathf.Abs(localForward.x) > Mathf.Abs(localForward.z) * 1.2f)
-                localForward = Mathf.Sign(localForward.x) * Vector3.right;
-            else if (Mathf.Abs(localForward.z) > Mathf.Abs(localForward.x) * 1.2f)
-                localForward = Mathf.Sign(localForward.z) * Vector3.forward;
+                if (Mathf.Abs(localForward.x) > Mathf.Abs(localForward.z) * 1.2f)
+                    localForward = Mathf.Sign(localForward.x) * Vector3.right;
+                else if (Mathf.Abs(localForward.z) > Mathf.Abs(localForward.x) * 1.2f)
+                    localForward = Mathf.Sign(localForward.z) * Vector3.forward;
 
-            var r90 = Quaternion.AngleAxis(90.0f, Vector3.up);
-            localRight = r90 * localForward;
+                var r90 = Quaternion.AngleAxis(90.0f, Vector3.up);
+                localRight = r90 * localForward;
+            }
+            else
+            {
+                localForward = sceneCamera.transform.forward;
+                localRight = sceneCamera.transform.right;
+            }
 
             translatedDir = moveDir.x * localRight + moveDir.z * localForward;
         }
@@ -210,6 +225,12 @@ namespace Assets.Scripts
 
         private void FixedUpdate()
         {
+            if (rb.position.y < outOfSceneYTreshold)
+            {
+                OnUnitKilled.Invoke(this);
+                return;
+            }
+
             rb.ResetCenterOfMass();
 
             if (fadingOut)

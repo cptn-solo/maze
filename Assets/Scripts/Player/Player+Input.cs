@@ -1,6 +1,9 @@
 ﻿
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Composites;
 
 namespace Assets.Scripts
 {
@@ -29,7 +32,6 @@ namespace Assets.Scripts
             actions.Default.Item1.performed += Item1_performed;
             actions.Default.Item2.performed += Item2_performed;
 
-
             actions.Mobile.LeftStick.performed += LeftStick_performed;
             actions.Mobile.LeftStick.canceled += LeftStick_canceled;
             actions.Mobile.Jump.performed += Jump_performed;
@@ -37,7 +39,7 @@ namespace Assets.Scripts
             actions.Mobile.Weapon.performed += Minigun_performed;
             actions.Mobile.Item1.performed += Item1_performed;
             actions.Mobile.Item2.performed += Item2_performed;
-        }
+        }        
 
         private void LeftStick_performed(InputAction.CallbackContext obj)
         {

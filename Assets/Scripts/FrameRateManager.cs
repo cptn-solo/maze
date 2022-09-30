@@ -31,12 +31,12 @@ namespace Assets.Scripts
 
             if (prefLimit)
                 preset = FrameRatePreset.Mobile();
-
+#if UNITY_EDITOR
             var prefLowTest = PlayerPrefs.GetInt(PlayerPreferencesService.FpsLowTestKey) != 0;
 
             if (prefLowTest)
                 preset = FrameRatePreset.Low();
-
+#endif
             preset.OnlyTargetFrameRate = true;
 
             if (Application.isMobilePlatform && prefLimit)

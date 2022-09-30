@@ -2,7 +2,6 @@ using Assets.Scripts.UI;
 using System;
 using System.Collections;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -22,25 +21,14 @@ namespace Assets.Scripts
         [SerializeField] private int MaxZombieCount = 10;
         [SerializeField] private float enemySpawnInterval = 5.0f;
 
-        [SerializeField] private Camera sceneCamera;
-        
-        [SerializeField] private float cameraAngle = -35.0f;
-        [SerializeField] private float cameraDistance = 2.5f;
-        [SerializeField] private float camPortraitFactor = .4f;
-        [SerializeField] private float camLandscapeFactor = .75f;
-        [SerializeField] private float camSpeed = 4.0f;
-
         [SerializeField] private HUDMarkersView markers;
         [SerializeField] private HUDLeaderBoardView score;
         [SerializeField] private HUDBalance balance;
 
-        private float camDistanceFactor = 1.0f;
         private GameObject enemies;
         private GameObject collectables;
         private Building building;
         private Player player;
-        private bool listenForScreenOrientation;
-        private bool listeningForScreenOrientation;
 
         private Zombie[] zombies = new Zombie[10];
         private Chest[] chests = new Chest[10];
@@ -204,58 +192,14 @@ namespace Assets.Scripts
 
         private void OnEnable()
         {
-            listenForScreenOrientation = true;
-            if (!listeningForScreenOrientation)
-                StartCoroutine(ScreenOrientationMonitor());
-
             balances.OnBalanceChanged += Balances_OnBalanceChanged;
             perks.OnPerkChanged += Perks_OnPerkChanged;
         }
 
         private void OnDisable()
         {
-            listenForScreenOrientation = false;
             balances.OnBalanceChanged -= Balances_OnBalanceChanged;
             perks.OnPerkChanged -= Perks_OnPerkChanged;
-        }
-
-        private IEnumerator ScreenOrientationMonitor()
-        {
-            listeningForScreenOrientation = true;
-            while (listenForScreenOrientation)
-            {
-                var factor = Screen.orientation switch
-                {
-                    ScreenOrientation.Portrait => camPortraitFactor,
-                    ScreenOrientation.PortraitUpsideDown => camPortraitFactor,
-                    _ => camLandscapeFactor
-                };
-                camDistanceFactor = ((float) Screen.height) * factor / Screen.width;
-
-                yield return new WaitForSecondsRealtime(1.0f);
-            }
-        }
-
-        private void PositionCamera(Player player, Building building)
-        {
-            var buildingFloorY = Vector3.zero + Vector3.up * player.transform.position.y;
-            var buildingToPlayer = Vector3.Distance(player.transform.position, buildingFloorY);
-
-            var yOffset = Mathf.Tan(cameraAngle * Mathf.Deg2Rad) * buildingToPlayer;
-
-            var cameraRay = new Ray(
-                buildingFloorY,
-                (player.transform.position + player.transform.up * yOffset - buildingFloorY).normalized);
-            
-            var camCurrent = sceneCamera.transform.position;
-
-            var camPosition = player.transform.position + camDistanceFactor * cameraDistance * cameraRay.direction;
-            var camDirection = player.transform.position - camPosition;
-
-            var camStep = camSpeed * Time.deltaTime * (camPosition - camCurrent);
-
-            sceneCamera.transform.SetPositionAndRotation(
-                camCurrent + camStep, Quaternion.LookRotation(camDirection));
         }
 
         private IEnumerator PositionPlayer(Player player, Building building, bool startingPoint = false)
@@ -306,15 +250,6 @@ namespace Assets.Scripts
             }
 
             zombie.FadeIn();
-        }
-
-        private void LateUpdate()
-        {
-            PositionCamera(player, building);
-
-            if (player.transform.position.y < -10.0f)
-                StartCoroutine(PositionPlayer(player, building));
-        }
-        
+        }        
     }
 }
