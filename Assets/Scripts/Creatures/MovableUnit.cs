@@ -171,13 +171,14 @@ namespace Assets.Scripts
             }
             else
             {
-                localForward = sceneCamera.transform.forward;
-                localRight = sceneCamera.transform.right;
+                localForward = (Grounded() - Grounded(sceneCamera.transform.position)).normalized;
+                var r90 = Quaternion.AngleAxis(90.0f, Vector3.up);
+                localRight = r90 * localForward;
             }
 
             translatedDir = moveDir.x * localRight + moveDir.z * localForward;
         }
-        static float GetAngle(Vector2 direction)
+        static float GetAngle(Vector3 direction)
         {
             float angle = Mathf.Acos(direction.y) * Mathf.Rad2Deg;
             return direction.x < 0f ? 360f - angle : angle;

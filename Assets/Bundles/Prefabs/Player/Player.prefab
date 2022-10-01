@@ -231,10 +231,13 @@ MonoBehaviour:
   camLandscapeFactor: 0.75
   camSpeed: 5
   attachedCameraYOffset: 0.15
-  attachedCameraZOffset: -0.15
+  attachedCameraZOffset: -0.2
   attachedCameraFollowDelay: 1
+  attachedCameraMaxDistance: 0.7
+  attachedCameraMinDistance: 0.3
   focusRadius: 0.2
   focusCentering: 0.5
+  attachedCameraSpeed: 0.7
 --- !u!114 &5051959995960565163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,6 +312,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 8a6fd51c-d59b-450e-9e46-f487e3b4ed39
     m_ActionName: Mobile/Item2[/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6a2a888a-a972-4831-a6e7-b8451e7dcbea
+    m_ActionName: Default/Camera
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Default

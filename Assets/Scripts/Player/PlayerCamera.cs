@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 namespace Assets.Scripts
 {
@@ -10,7 +11,7 @@ namespace Assets.Scripts
         [SerializeField] private float camPortraitFactor = .5f;
         [SerializeField] private float camLandscapeFactor = .75f;
         [SerializeField] private float camSpeed = 10.0f;
-        
+
         private bool listeningForScreenOrientation;
         private float camDistanceFactor = 1.0f;
 
@@ -18,13 +19,18 @@ namespace Assets.Scripts
         private Camera sceneCamera;
         //private OrbitCamera orbitCamera;
 
-        [SerializeField] private float attachedCameraYOffset = 0.15f;
+        [SerializeField] private float attachedCameraYOffset = 0.02f;
         [SerializeField] private float attachedCameraZOffset = -0.15f;
         [SerializeField] private float attachedCameraFollowDelay = 1f;
+        [SerializeField] private float attachedCameraMaxDistance = .7f;
+        [SerializeField] private float attachedCameraMinDistance = .3f;
+        [SerializeField] private float attachedCameraDistance = .5f;
+        [SerializeField] private float attachedCameraOrbitSpeed = 90f;
 
         private Vector3 focusPoint, previousFocusPoint, camPosition, prevCamPosition = default;
         [SerializeField, Min(0f)] private float focusRadius = 5f;
         [SerializeField, Range(0f, 1f)] private float focusCentering = 0.5f;
+        [SerializeField] private float attachedCameraSpeed = .7f;
 
         private void Awake()
         {
@@ -65,27 +71,171 @@ namespace Assets.Scripts
             }
         }
 
+
+        private Vector3 prevPlayerPos;
+
         private void PositionCameraBehindPlayer()
         {
-            if (prevCamPosition.Equals(default))
-                camPosition = focusPoint + 
-                    attachedCameraYOffset * Vector3.up +
-                    attachedCameraZOffset * player.transform.forward;
+            bool notMoved = 
+                !previousFocusPoint.Equals(default) && 
+                !focusPoint.Equals(default) &&
+                (previousFocusPoint - focusPoint).sqrMagnitude < 0.00001f;
             
-            if (Vector3.Distance(camPosition, focusPoint) > attachedCameraYOffset + attachedCameraYOffset)
+            bool tooClose = !camPosition.Equals(default) &&
+                Vector3.Distance(camPosition, focusPoint) <
+                attachedCameraMinDistance;
+            
+            bool movedAway = !camPosition.Equals(default) &&
+                Vector3.Distance(camPosition, focusPoint) > 
+                attachedCameraMaxDistance;
+            
+            if (notMoved || tooClose)
             {
-                var targetCamPosition = focusPoint +
-                    attachedCameraYOffset * Vector3.up +
-                    attachedCameraZOffset * player.transform.forward;
-                camPosition = Vector3.MoveTowards(camPosition, targetCamPosition, camSpeed * Time.unscaledDeltaTime);
+                Orbit();
+            }
+            else if (movedAway)
+            {
+                Follow();
+            }
+            else if (camPosition.Equals(default))
+            {
+                Focus();
+            }
+            else
+            {
+                LookAt();
             }
 
-            var camDirection = focusPoint + (attachedCameraYOffset/2) * Vector3.up - camPosition;
+            void Orbit()
+            {
+                float angle = TrailAngle();
+
+                if (Mathf.Abs(angle) < 1f)
+                    return;
+
+                var step = attachedCameraOrbitSpeed * Time.unscaledDeltaTime;
+                var delta = angle * step;
+
+                var rotY = Quaternion.AngleAxis(delta, transform.up);
+                var rotX = Quaternion.AngleAxis(cameraAngle, sceneCamera.transform.right);
+                var pos = focusPoint - (rotY * rotX * transform.forward) * attachedCameraDistance;
+                camPosition = Vector3.MoveTowards(
+                        sceneCamera.transform.position, pos,
+                        attachedCameraSpeed * Time.unscaledDeltaTime);
+
+                var dir = focusPoint - camPosition;
+
+                sceneCamera.transform.SetPositionAndRotation(
+                    camPosition,
+                    Quaternion.LookRotation(dir));
+            }
+
+            void Follow()
+            {
+                prevCamPosition = camPosition;
+
+                var angle = TrailAngle();
+                var step = attachedCameraOrbitSpeed * Time.unscaledDeltaTime;
+                var delta = (Mathf.Abs(angle) > 2f) ? 
+                    angle * step : 0f;
+
+                var rotY = Quaternion.AngleAxis(delta, transform.up);
+                var rotX = Quaternion.AngleAxis(cameraAngle, sceneCamera.transform.right);
+                var pos = focusPoint - (rotY * rotX * transform.forward) * attachedCameraDistance;
+
+                camPosition = Vector3.MoveTowards(
+                        sceneCamera.transform.position, pos,
+                        attachedCameraSpeed * Time.unscaledDeltaTime);
+
+                var dir = focusPoint - camPosition;
+
+                sceneCamera.transform.SetPositionAndRotation(
+                    camPosition,
+                    Quaternion.LookRotation(dir));
+            }
+
+            void LookAt()
+            {
+                sceneCamera.transform.LookAt(focusPoint);
+            }
+
+            void Focus()
+            {
+                prevCamPosition = camPosition;
+
+                var rotX = Quaternion.AngleAxis(cameraAngle, sceneCamera.transform.right);
+                var pos = focusPoint - rotX * transform.forward * attachedCameraDistance;
+
+                camPosition = pos;
+
+                var dir = focusPoint - camPosition;
+
+                sceneCamera.transform.SetPositionAndRotation(
+                    camPosition,
+                    Quaternion.LookRotation(dir));
+            }
+            // utils
+            float TrailAngle()
+            {
+                var toCamera = Vector3.ProjectOnPlane(
+                    sceneCamera.transform.position - transform.position, transform.up);
+                var angle = Vector3.SignedAngle(
+                    toCamera, -transform.forward,
+                    transform.up);
+                if (Mathf.Abs(angle) > 90f)
+                    return 90f * Mathf.Sign(angle);
+                return angle;
+            }
+
+        }
+
+        private void PositionCameraBehindPlayer1()
+        {
+            Vector3 TargetCamPos(float distance)
+            {
+                var right = distance > attachedCameraMaxDistance ? 0f :
+                    distance < attachedCameraMinDistance ? 1f :
+                    0f;
+
+                return focusPoint +
+                    (right - 1) * attachedCameraMinDistance * 1.03f * transform.forward +
+                    right * attachedCameraMinDistance * 1.07f * transform.right +
+                    Vector3.up * attachedCameraYOffset;
+            }
+            var distance = Vector3.Distance(
+                sceneCamera.transform.position, transform.position);
+
+            Vector3 targetCamPosition = TargetCamPos(distance);
+
+            if (camPosition.Equals(default) ||
+                sceneCamera.transform.position.y != 
+                    Mathf.Clamp(sceneCamera.transform.position.y, 
+                    transform.position.y - .2f,
+                    transform.position.y + .2f))
+            {
+                camPosition = targetCamPosition;
+                prevCamPosition = camPosition;
+            }
+            else
+            {
+                var speed = 
+                    distance < attachedCameraMinDistance ?
+                    attachedCameraSpeed * 2f : 
+                    distance > attachedCameraMaxDistance ?
+                    attachedCameraSpeed :
+                    attachedCameraSpeed * 0.5f;
+                if ((sceneCamera.transform.position - targetCamPosition).sqrMagnitude > .000001f)
+                    camPosition = Vector3.MoveTowards(
+                        sceneCamera.transform.position, targetCamPosition, speed *
+                        Time.deltaTime);
+                else 
+                    camPosition = targetCamPosition;
+            }
+
+            var camDirection = focusPoint - camPosition;
 
             sceneCamera.transform.SetPositionAndRotation(
                 camPosition, Quaternion.LookRotation(camDirection));
-
-            prevCamPosition = camPosition;
         }
         private void PositionCameraTowardsCenter()
         {
@@ -125,7 +275,9 @@ namespace Assets.Scripts
         void UpdateFocusPoint()
         {
             previousFocusPoint = focusPoint;
-            Vector3 targetPoint = transform.position;
+            Vector3 targetPoint = transform.position + Vector3.up * .02f;
+            focusPoint = targetPoint;
+            return;
             if (focusRadius > 0f)
             {
                 float distance = Vector3.Distance(targetPoint, focusPoint);

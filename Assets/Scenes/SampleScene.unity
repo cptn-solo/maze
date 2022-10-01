@@ -1969,7 +1969,7 @@ MonoBehaviour:
   - {fileID: 1930925136135088810, guid: f6da6478405beb449bb098577e6690a9, type: 3}
   playerMarkerColor: {r: 0.23745102, g: 0.8207547, b: 0.23745102, a: 0.7019608}
   zombieMarkerColor: {r: 1, g: 0.75168884, b: 0.015686274, a: 0.827451}
-  MaxZombieCount: 50
+  MaxZombieCount: 0
   enemySpawnInterval: 5
   markers: {fileID: 1572404561}
   score: {fileID: 2137331532}
