@@ -171,13 +171,17 @@ namespace Assets.Scripts
             }
             else
             {
-                localForward = transform.forward;
-                localRight = transform.right;
+                localForward = sceneCamera.transform.forward;
+                localRight = sceneCamera.transform.right;
             }
 
             translatedDir = moveDir.x * localRight + moveDir.z * localForward;
         }
-
+        static float GetAngle(Vector2 direction)
+        {
+            float angle = Mathf.Acos(direction.y) * Mathf.Rad2Deg;
+            return direction.x < 0f ? 360f - angle : angle;
+        }
         private void Update()
         {
             if ((moveDir.sqrMagnitude != 0.0f || rb.velocity.x != 0.0f || rb.velocity.z != 0.0f) && !fadingOut)

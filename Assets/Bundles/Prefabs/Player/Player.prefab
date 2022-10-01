@@ -229,9 +229,12 @@ MonoBehaviour:
   cameraDistance: 1.5
   camPortraitFactor: 0.5
   camLandscapeFactor: 0.75
-  camSpeed: 10
+  camSpeed: 5
   attachedCameraYOffset: 0.15
   attachedCameraZOffset: -0.15
+  attachedCameraFollowDelay: 1
+  focusRadius: 0.2
+  focusCentering: 0.5
 --- !u!114 &5051959995960565163
 MonoBehaviour:
   m_ObjectHideFlags: 0
