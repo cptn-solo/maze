@@ -163,40 +163,37 @@ namespace Assets.Scripts
             isFollowing = false;
         }
 
-        private IEnumerator OrbitCoroutine()
+        private IEnumerator OrbitCoroutine(Vector3 alignTo = default)
         {
+            if (alignTo.Equals(default))
+                alignTo = -transform.forward;
+
             isOrbiting = true;
 
-            yield return new WaitForSecondsRealtime(1.5f);
+            var angle = TrailAngle();
+            var timeAtSpeed = Mathf.Abs(angle) / attachedCameraOrbitSpeed;
+            var elapsedTime = 0f;
 
-            if ((previousFocusPoint - focusPoint).sqrMagnitude > 0.0001f)
-                isOrbiting = false;
-
-            while (isOrbiting)
+            while (elapsedTime < timeAtSpeed)
             {
-                float angle = TrailAngle();
-               
-                var stepAngle = Mathf.Min(
-                    attachedCameraOrbitSpeed * Time.deltaTime, 
-                    Mathf.Abs(angle));
-                var deltaAngle = Mathf.Sign(angle) * stepAngle;
-                var toCamera = PlaneOffset();
+                if (previousFocusPoint != focusPoint)
+                    break;
 
+                var toCamera = PlaneOffset();
+                var step = Vector3.Slerp(toCamera.normalized, alignTo, 
+                    elapsedTime / timeAtSpeed);
+                
                 var yOffset = Mathf.Tan(cameraAngle * Mathf.Deg2Rad) * attachedCameraDistance;
-                var rotY = Quaternion.AngleAxis(deltaAngle, transform.up);
 
                 var pos = focusPoint + 
-                    rotY * toCamera.normalized * toCamera.magnitude + 
+                    step * toCamera.magnitude + 
                     yOffset * transform.up;
                 
-                //DebugPos(rotY, pos);
-
                 camPosition = pos;
 
                 sceneCamera.transform.position = camPosition;
 
-                if (angle == deltaAngle)
-                    break;
+                elapsedTime += Time.deltaTime;
 
                 yield return null;
             }
@@ -254,25 +251,6 @@ namespace Assets.Scripts
             previousFocusPoint = focusPoint;
             Vector3 targetPoint = transform.position + Vector3.up * .02f;
             focusPoint = targetPoint;
-            return;
-            if (focusRadius > 0f)
-            {
-                float distance = Vector3.Distance(targetPoint, focusPoint);
-                float t = 1f;
-                if (distance > 0.01f && focusCentering > 0f)
-                {
-                    t = Mathf.Pow(1f - focusCentering, Time.unscaledDeltaTime);
-                }
-                if (distance > focusRadius)
-                {
-                    t = Mathf.Min(t, focusRadius / distance);
-                }
-                focusPoint = Vector3.Lerp(targetPoint, focusPoint, t);
-            }
-            else
-            {
-                focusPoint = targetPoint;
-            }
         }
 
         private Vector3 PlaneOffset()
@@ -287,23 +265,7 @@ namespace Assets.Scripts
                 toCamera, -transform.forward,
                 transform.up);
 
-            //if (Mathf.Abs(angle) > 90f)
-            //    return 90f * Mathf.Sign(angle);
-
             return angle;
         }
-
-        private void DebugPos(Quaternion rotY, Vector3 pos)
-        {
-            Debug.Log(pos);
-
-            Debug.DrawRay(focusPoint, rotY * -transform.forward * attachedCameraDistance, Color.cyan, 2f);
-
-            Debug.DrawRay(focusPoint, -transform.forward * attachedCameraDistance, Color.yellow, 2f);
-
-            Debug.DrawLine(focusPoint, pos, Color.green, 2f);
-        }
-
-
     }
 }
