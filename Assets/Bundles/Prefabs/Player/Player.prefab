@@ -231,10 +231,10 @@ MonoBehaviour:
   camLandscapeFactor: 0.75
   camSpeed: 5
   attachedCameraYOffset: 0.15
-  attachedCameraZOffset: -0.2
-  attachedCameraFollowDelay: 1
-  attachedCameraMaxDistance: 0.7
+  attachedCameraMaxDistance: 0.9
   attachedCameraMinDistance: 0.3
+  attachedCameraDistance: 0.7
+  attachedCameraOrbitSpeed: 90
   focusRadius: 0.2
   focusCentering: 0.5
   attachedCameraSpeed: 0.7
