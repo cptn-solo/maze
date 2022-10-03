@@ -11,19 +11,16 @@ namespace Assets.Scripts
     public partial class Player
     {
         private PlayerInputActions actions;
-        private DefaultInputActions defaultActions;
 
         private void ToggleInput(bool toggle)
         {
             if (toggle)
             {
-                defaultActions.Enable();
                 actions.Enable();
             }
                 
             else
             {
-                defaultActions.Disable();
                 actions.Disable();
             }
         }
@@ -31,22 +28,18 @@ namespace Assets.Scripts
         private void BindInputs()
         {
             actions = new PlayerInputActions();
-            defaultActions = new DefaultInputActions();
 
             ToggleInput(true);
             
-            defaultActions.Player.Move.performed += LeftStick_performed;
-            defaultActions.Player.Move.canceled += LeftStick_canceled;
-
-            //actions.Default.Move.performed += Move_performed;
+            actions.Default.Move.performed += Move_performed;
             actions.Default.Jump.performed += Jump_performed;
             actions.Default.Attack.performed += Attack_performed;
             actions.Default.Weapon.performed += Minigun_performed;
             actions.Default.Item1.performed += Item1_performed;
             actions.Default.Item2.performed += Item2_performed;
 
-            //actions.Mobile.LeftStick.performed += LeftStick_performed;
-            //actions.Mobile.LeftStick.canceled += LeftStick_canceled;
+            actions.Mobile.LeftStick.performed += LeftStick_performed;
+            actions.Mobile.LeftStick.canceled += LeftStick_canceled;
             actions.Mobile.Jump.performed += Jump_performed;
             actions.Mobile.Attack.performed += Attack_performed;
             actions.Mobile.Weapon.performed += Minigun_performed;

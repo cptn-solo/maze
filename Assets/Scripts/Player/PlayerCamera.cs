@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using static UnityEditorInternal.ReorderableList;
 using static UnityEngine.Rendering.DebugUI.Table;
 
 namespace Assets.Scripts
@@ -38,7 +39,7 @@ namespace Assets.Scripts
         private bool isFollowing;
         private bool prevTranslateDirActive;
         
-        private DefaultInputActions actions;
+        private PlayerInputActions actions;
         private float cameraSencitivity = .5f;
         private bool cameraControl = true;
         
@@ -51,7 +52,7 @@ namespace Assets.Scripts
             
             player.TranslateDirActive = false;
 
-            actions = new DefaultInputActions();
+            actions = new PlayerInputActions();
         }
         private void Start()
         {
@@ -65,8 +66,8 @@ namespace Assets.Scripts
         private void OnEnable()
         {
             actions.Enable();
-            actions.Player.Look.performed += Look_performed;
-            actions.Player.Look.canceled += Look_canceled;
+            actions.Default.Camera.performed += Look_performed;
+            actions.Default.Camera.canceled += Look_canceled;
 
             if (!listeningForScreenOrientation)
                 StartCoroutine(ScreenOrientationMonitor());
@@ -119,8 +120,8 @@ namespace Assets.Scripts
         private void OnDisable()
         {
             actions.Disable();
-            actions.Player.Look.performed -= Look_performed;
-            actions.Player.Look.canceled -= Look_canceled;
+            actions.Default.Camera.performed -= Look_performed;
+            actions.Default.Camera.canceled -= Look_canceled;
 
             if (listeningForScreenOrientation)
                 StopCoroutine(ScreenOrientationMonitor());
