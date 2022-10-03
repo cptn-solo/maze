@@ -227,8 +227,8 @@ namespace Assets.Scripts
         {
             player.TranslateDirActive =
                 player.transform.position.y < 2.48f &&
-                Mathf.Abs(player.transform.position.x) < 1.5f &&
-                Mathf.Abs(player.transform.position.z) < 1.5f;
+                Mathf.Abs(player.transform.position.x) < 1.25f &&
+                Mathf.Abs(player.transform.position.z) < 1.25f;
             if (player.TranslateDirActive)
             {
                 if (!prevTranslateDirActive)
