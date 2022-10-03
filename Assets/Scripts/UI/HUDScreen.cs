@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
@@ -9,8 +10,12 @@ namespace Assets.Scripts.UI
         internal Action OnSettingsButtonPressed;
 
         [SerializeField] private Button settingsButton;
-        private Canvas canvas;
+        [SerializeField] private OnScreenStick leftStick;
+        [SerializeField] private OnScreenStick rightStick;
 
+        public void ToggleLookStick(bool toggle) =>
+            rightStick.gameObject.SetActive(toggle);
+        
         private void OnEnable()
         {
             settingsButton.onClick.AddListener(SettingsButtonPressed);

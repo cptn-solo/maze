@@ -21,6 +21,7 @@ namespace Assets.Scripts
         [SerializeField] private int MaxZombieCount = 10;
         [SerializeField] private float enemySpawnInterval = 5.0f;
 
+        [SerializeField] private HUDScreen hud;
         [SerializeField] private HUDMarkersView markers;
         [SerializeField] private HUDLeaderBoardView score;
         [SerializeField] private HUDBalance balance;
@@ -72,11 +73,14 @@ namespace Assets.Scripts
             player.OnActiveWeaponAttack += Player_OnActiveWeaponAttack;
             player.OnWallmartApproached += Player_OnWallmartApproached;
             player.OnWallmartLeft += Player_OnWallmartLeft;
+            player.OnTranslateDirActiveChange += Player_OnTranslateDirActiveChange;
             
             player.SoundEvents = soundEvents;
             player.Balances = balances;
             player.Perks = perks;
             player.Prefs = prefs;
+
+            prefs.OnCameraControlChanged += Prefs_OnCameraControlChanged;
 
             chests = building.GetComponentsInChildren<Chest>();
             foreach (var chest in chests)
@@ -95,8 +99,16 @@ namespace Assets.Scripts
             
             StartCoroutine(PositionPlayer(player, building, true));
 
-            InitHUD();            
+            InitHUD();
+
+            hud.ToggleLookStick(!player.TranslateDirActive && prefs.CameraControl);
         }
+
+        private void Player_OnTranslateDirActiveChange(bool obj) =>
+            hud.ToggleLookStick(!obj && prefs.CameraControl);
+
+        private void Prefs_OnCameraControlChanged(bool obj) =>
+            hud.ToggleLookStick(obj && !player.TranslateDirActive);
 
         private void Chest_OnChestOpened(Chest obj)
         {
@@ -114,19 +126,14 @@ namespace Assets.Scripts
             score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
         }
 
-        private void Player_OnUnitKilled(MovableUnit obj)
-        {
+        private void Player_OnUnitKilled(MovableUnit obj) =>
             StartCoroutine(PositionPlayer((Player)obj, building));
-        }
 
-        private void Player_OnActiveWeaponAttack(WeaponType arg1, int arg2)
-        {
+        private void Player_OnActiveWeaponAttack(WeaponType arg1, int arg2) =>
             balance.SetAmmo(arg2);
-        }
-        private void Player_OnWeaponSelected(WeaponType obj)
-        {
+
+        private void Player_OnWeaponSelected(WeaponType obj) =>
             SwitchHUDWeapon(obj);
-        }
 
         private void Zombie_OnUnitBeforeKilled(MovableUnit obj)
         {
@@ -137,15 +144,11 @@ namespace Assets.Scripts
             score.UpdatePlayer(playerId, playerScoreInfo, true);
         }
 
-        private void Zombie_OnUnitKilled(MovableUnit obj)
-        {
+        private void Zombie_OnUnitKilled(MovableUnit obj) =>
             StartCoroutine(PositionZombie((Zombie)obj, building));
-        }
 
-        private void Balances_OnBalanceChanged(CollectableType arg1, int arg2)
-        {
+        private void Balances_OnBalanceChanged(CollectableType arg1, int arg2) =>
             UpdateHUDBalances(arg1, arg2);
-        }
 
         private void Perks_OnPerkChanged(PerkType arg1, int arg2)
         {

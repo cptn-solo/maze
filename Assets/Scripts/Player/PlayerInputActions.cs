@@ -238,6 +238,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""RightStick"",
+                    ""type"": ""Value"",
+                    ""id"": ""330f230d-4ae0-4530-bd0e-d78b1c2a3c99"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""756e6a71-8f2e-4908-8947-a20fe6493587"",
@@ -363,12 +372,12 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1377b9cc-6874-4b51-81de-652e4dc3d26c"",
-                    ""path"": ""<Touchscreen>/touch1/delta"",
+                    ""id"": ""e12157f7-2170-4bc8-8d03-309405f1cc61"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone(min=0.1,max=1)"",
                     ""groups"": """",
-                    ""action"": ""Camera"",
+                    ""action"": ""RightStick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -390,6 +399,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Mobile = asset.FindActionMap("Mobile", throwIfNotFound: true);
         m_Mobile_LeftStick = m_Mobile.FindAction("LeftStick", throwIfNotFound: true);
         m_Mobile_Camera = m_Mobile.FindAction("Camera", throwIfNotFound: true);
+        m_Mobile_RightStick = m_Mobile.FindAction("RightStick", throwIfNotFound: true);
         m_Mobile_Jump = m_Mobile.FindAction("Jump", throwIfNotFound: true);
         m_Mobile_Attack = m_Mobile.FindAction("Attack", throwIfNotFound: true);
         m_Mobile_Weapon = m_Mobile.FindAction("Weapon", throwIfNotFound: true);
@@ -537,6 +547,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private IMobileActions m_MobileActionsCallbackInterface;
     private readonly InputAction m_Mobile_LeftStick;
     private readonly InputAction m_Mobile_Camera;
+    private readonly InputAction m_Mobile_RightStick;
     private readonly InputAction m_Mobile_Jump;
     private readonly InputAction m_Mobile_Attack;
     private readonly InputAction m_Mobile_Weapon;
@@ -548,6 +559,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public MobileActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @LeftStick => m_Wrapper.m_Mobile_LeftStick;
         public InputAction @Camera => m_Wrapper.m_Mobile_Camera;
+        public InputAction @RightStick => m_Wrapper.m_Mobile_RightStick;
         public InputAction @Jump => m_Wrapper.m_Mobile_Jump;
         public InputAction @Attack => m_Wrapper.m_Mobile_Attack;
         public InputAction @Weapon => m_Wrapper.m_Mobile_Weapon;
@@ -568,6 +580,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Camera.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnCamera;
                 @Camera.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnCamera;
                 @Camera.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnCamera;
+                @RightStick.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnRightStick;
+                @RightStick.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnRightStick;
+                @RightStick.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnRightStick;
                 @Jump.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
@@ -593,6 +608,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Camera.started += instance.OnCamera;
                 @Camera.performed += instance.OnCamera;
                 @Camera.canceled += instance.OnCamera;
+                @RightStick.started += instance.OnRightStick;
+                @RightStick.performed += instance.OnRightStick;
+                @RightStick.canceled += instance.OnRightStick;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -626,6 +644,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
         void OnLeftStick(InputAction.CallbackContext context);
         void OnCamera(InputAction.CallbackContext context);
+        void OnRightStick(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnWeapon(InputAction.CallbackContext context);

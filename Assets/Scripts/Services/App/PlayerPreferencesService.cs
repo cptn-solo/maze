@@ -57,7 +57,7 @@ namespace Assets.Scripts
             get => PlayerPrefs.GetInt(PlayerPreferencesService.CameraControlKey) == 1;
             set
             {
-                PlayerPrefs.SetFloat(PlayerPreferencesService.CameraControlKey, value ? 1 : 0);
+                PlayerPrefs.SetInt(PlayerPreferencesService.CameraControlKey, value ? 1 : 0);
                 OnCameraControlChanged?.Invoke(value);
             }
         }

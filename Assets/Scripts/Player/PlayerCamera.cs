@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -63,6 +64,8 @@ namespace Assets.Scripts
             actions.Default.Camera.canceled += Look_canceled;
             actions.Mobile.Camera.performed += Look_performed;
             actions.Mobile.Camera.canceled += Look_canceled;
+            actions.Mobile.RightStick.performed += LookStick_performed;
+            actions.Mobile.RightStick.canceled += LookStick_canceled;
 
             if (!listeningForScreenOrientation)
                 StartCoroutine(ScreenOrientationMonitor());
@@ -84,6 +87,34 @@ namespace Assets.Scripts
         {
             Debug.Log($"Look_canceled: {obj}");
         }
+        Vector2 lookVector = Vector2.zero;
+        private bool isStickLooking;
+
+        private void LookStick_canceled(InputAction.CallbackContext obj)
+        {
+            Debug.Log($"Look_canceled: {obj}");
+            lookVector = Vector2.zero;
+
+            if (isStickLooking)
+            {
+                isStickLooking = false;
+                StopCoroutine(LookWithStick());
+            }
+        }
+
+        private void LookStick_performed(InputAction.CallbackContext obj)
+        {
+            if (!cameraControl || player.TranslateDirActive)
+                return;
+
+            Debug.Log($"LookStick_performed: {obj}");
+
+            var rawInput = obj.ReadValue<Vector2>();
+            lookVector.x = rawInput.x * cameraSencitivity * attachedCameraOrbitSpeed * 2;
+
+            if (!isStickLooking)
+                StartCoroutine(LookWithStick());
+        }
 
         private void Look_performed(InputAction.CallbackContext obj)
         {
@@ -92,11 +123,30 @@ namespace Assets.Scripts
 
             if (EventSystem.current.IsPointerOverGameObject(obj.control.device.deviceId))
                 return;
-            
+
             Debug.Log($"Look_performed: {obj}");
 
+            Look(obj.ReadValue<Vector2>());
+        }
+        private IEnumerator LookWithStick()
+        {
+            isStickLooking = true;
+
+            while (isStickLooking && lookVector.x != 0f)
+            {
+                Look(lookVector);
+                yield return null;
+
+            }
+
+            isStickLooking = false;
+
+        }
+
+        private void Look(Vector2 lookVector)
+        { 
             var toCamera = PlaneOffset();
-            var angle = obj.ReadValue<Vector2>().x * cameraSencitivity;
+            var angle = lookVector.x * cameraSencitivity;
             var rotY = Quaternion.AngleAxis(angle, transform.up);
             var step = rotY * toCamera.normalized;
 
@@ -308,6 +358,12 @@ namespace Assets.Scripts
                 PositionCameraTowardsCenter();
             }
             else {
+
+                if (!prevTranslateDirActive)
+                {
+
+                }
+                
                 UpdateFocusPoint();
                 PositionCameraBehindPlayer();
             }

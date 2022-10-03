@@ -94,7 +94,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6151479223392283082
 RectTransform:
   m_ObjectHideFlags: 0
@@ -665,6 +665,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingsButton: {fileID: 7472098877249022712}
+  leftStick: {fileID: 7472098877179523179}
+  rightStick: {fileID: 6210622384958848502}
 --- !u!114 &9058169109620919897
 MonoBehaviour:
   m_ObjectHideFlags: 0

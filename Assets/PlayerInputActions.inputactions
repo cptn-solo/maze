@@ -216,6 +216,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "RightStick",
+                    "type": "Value",
+                    "id": "330f230d-4ae0-4530-bd0e-d78b1c2a3c99",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Jump",
                     "type": "Button",
                     "id": "756e6a71-8f2e-4908-8947-a20fe6493587",
@@ -341,12 +350,12 @@
                 },
                 {
                     "name": "",
-                    "id": "1377b9cc-6874-4b51-81de-652e4dc3d26c",
-                    "path": "<Touchscreen>/touch1/delta",
+                    "id": "e12157f7-2170-4bc8-8d03-309405f1cc61",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "StickDeadzone(min=0.1,max=1)",
                     "groups": "",
-                    "action": "Camera",
+                    "action": "RightStick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

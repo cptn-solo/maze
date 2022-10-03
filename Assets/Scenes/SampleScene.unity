@@ -2006,6 +2006,7 @@ MonoBehaviour:
   zombieMarkerColor: {r: 1, g: 0.75168884, b: 0.015686274, a: 0.827451}
   MaxZombieCount: 50
   enemySpawnInterval: 5
+  hud: {fileID: 1342398244}
   markers: {fileID: 1572404561}
   score: {fileID: 2137331532}
   balance: {fileID: 1351607017}

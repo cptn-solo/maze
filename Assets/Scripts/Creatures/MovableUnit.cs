@@ -34,13 +34,24 @@ namespace Assets.Scripts
         private Vector3 translatedDir;
         private Vector3 center = Vector3.zero;
 
-        public bool TranslateDirActive { get; set; } = true;
+        private bool translateDirActive = true;
+        public bool TranslateDirActive { 
+            get => translateDirActive;
+            set
+            {
+                var prev = translateDirActive;
+                translateDirActive = value;
+                if (prev != value)
+                    OnTranslateDirActiveChange?.Invoke(value);
+            }
+        }
 
         public IngameSoundEvents SoundEvents { get; set; }
 
         public event Action<MovableUnit> OnUnitBeforeKilled;
         public event Action<MovableUnit> OnUnitRespawned;
         public event Action<MovableUnit> OnUnitKilled;
+        public event Action<bool> OnTranslateDirActiveChange;
 
         private event Action OnAwakeAction;
         private event Action OnStartAction;
