@@ -98,7 +98,6 @@ GameObject:
   - component: {fileID: 5354519564394010553}
   - component: {fileID: 2282283848571713013}
   - component: {fileID: 428592380451784672}
-  - component: {fileID: 5051959995960565163}
   - component: {fileID: 3744990945522907042}
   - component: {fileID: 2163345901459843618}
   m_Layer: 6
@@ -225,102 +224,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5a23694a73133047963720de5d06595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraAngle: 18
+  cameraAngle: 20
   cameraDistance: 1.5
   camPortraitFactor: 0.5
   camLandscapeFactor: 0.75
   camSpeed: 5
-  attachedCameraYOffset: 0.15
-  attachedCameraMaxDistance: 0.9
-  attachedCameraMinDistance: 0.3
-  attachedCameraDistance: 0.7
-  attachedCameraOrbitSpeed: 90
-  focusRadius: 0.2
-  focusCentering: 0.5
+  attachedCameraAngle: 37
+  attachedCameraMaxDistance: 1.5
+  attachedCameraMinDistance: 0.5
+  attachedCameraDistance: 1
+  attachedCameraOrbitSpeed: 60
   attachedCameraSpeed: 0.7
---- !u!114 &5051959995960565163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2409413581255877363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 3187bd9c9f577cc48ab6eea25cb9c249,
-    type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: cce2f2f4-b4ed-4869-93d7-c5c8f7ba3426
-    m_ActionName: Default/Move
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 4dab0cdc-2e53-4a1c-b62b-37a5a649c848
-    m_ActionName: Default/Jump[/Keyboard/space]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 2849989f-a590-4e67-bfa7-d159a0e0d0d9
-    m_ActionName: Default/Fire[/Mouse/leftButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 0730f2fc-e3f2-41ad-ad45-64038dfe3a5d
-    m_ActionName: Mobile/LeftStick
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 756e6a71-8f2e-4908-8947-a20fe6493587
-    m_ActionName: Mobile/Jump
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: df3903cb-5d2e-499f-82da-acf0598e04ee
-    m_ActionName: Mobile/Fire
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: d247cf25-185f-4b6e-b499-524e7a74525a
-    m_ActionName: Default/Weapon[/Keyboard/1]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 4244bbaf-72a3-43f2-867d-4e04f74a7779
-    m_ActionName: Default/Item1[/Keyboard/2]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: e7c5e091-cc2b-48a6-9cd5-7d7e03517f6f
-    m_ActionName: Default/Item2[/Keyboard/3]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 16cba9d7-dcc1-421c-974a-ac3392817f4f
-    m_ActionName: Mobile/Weapon[/Keyboard/1]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: bdd29929-1a94-4c98-892b-52ba745044eb
-    m_ActionName: Mobile/Item1[/Keyboard/2]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 8a6fd51c-d59b-450e-9e46-f487e3b4ed39
-    m_ActionName: Mobile/Item2[/Keyboard/3]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 6a2a888a-a972-4831-a6e7-b8451e7dcbea
-    m_ActionName: Default/Camera
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Default
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!136 &3744990945522907042
 CapsuleCollider:
   m_ObjectHideFlags: 0

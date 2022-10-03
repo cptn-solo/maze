@@ -1,8 +1,9 @@
 ﻿using System.Collections;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace Assets.Scripts
 {
@@ -21,10 +22,11 @@ namespace Assets.Scripts
         private Camera sceneCamera;
         //private OrbitCamera orbitCamera;
 
-        [SerializeField] private float attachedCameraMaxDistance = .7f;
-        [SerializeField] private float attachedCameraMinDistance = .3f;
-        [SerializeField] private float attachedCameraDistance = .5f;
-        [SerializeField] private float attachedCameraOrbitSpeed = 90f;
+        [SerializeField] private float attachedCameraAngle = 45.0f;
+        [SerializeField] private float attachedCameraMaxDistance = 1.6f;
+        [SerializeField] private float attachedCameraMinDistance = .4f;
+        [SerializeField] private float attachedCameraDistance = .8f;
+        [SerializeField] private float attachedCameraOrbitSpeed = 45f;
 
         private Vector3 focusPoint, previousFocusPoint, camPosition = default;
         [SerializeField] private float attachedCameraSpeed = .7f;
@@ -39,6 +41,8 @@ namespace Assets.Scripts
         
         private void Awake()
         {
+            EnhancedTouchSupport.Enable();
+
             player = GetComponent<Player>();
             sceneCamera = Camera.main;
             //orbitCamera = sceneCamera.GetComponent<OrbitCamera>();
@@ -50,6 +54,10 @@ namespace Assets.Scripts
         }
         private void Start()
         {
+            textStyle.fontStyle = FontStyle.Bold;
+            textStyle.fontSize = 36;
+            textStyle.normal.textColor = Color.green;
+
             cameraSencitivity = player.Prefs.CameraSencitivity;
             cameraControl = player.Prefs.CameraControl;
 
@@ -89,6 +97,8 @@ namespace Assets.Scripts
         }
         Vector2 lookVector = Vector2.zero;
         private bool isStickLooking;
+        
+        private readonly GUIStyle textStyle = new ();
 
         private void LookStick_canceled(InputAction.CallbackContext obj)
         {
@@ -150,7 +160,7 @@ namespace Assets.Scripts
             var rotY = Quaternion.AngleAxis(angle, transform.up);
             var step = rotY * toCamera.normalized;
 
-            var yOffset = Mathf.Tan(cameraAngle * Mathf.Deg2Rad) * attachedCameraDistance;
+            var yOffset = Mathf.Tan(attachedCameraAngle * Mathf.Deg2Rad) * attachedCameraDistance;
 
             var pos = focusPoint +
                 step * toCamera.magnitude +
@@ -210,9 +220,11 @@ namespace Assets.Scripts
             bool tooClose = distance < attachedCameraMinDistance;
             
             bool tooFar = distance > attachedCameraMaxDistance;
+            
+            var yOffset = Mathf.Tan(attachedCameraAngle * Mathf.Deg2Rad) * attachedCameraDistance;
 
             bool lost = camPosition.y != Mathf.Clamp(
-                    camPosition.y, focusPoint.y, focusPoint.y + .3f);
+                    camPosition.y, focusPoint.y, focusPoint.y + yOffset + .1f);
 
             if (!cameraControl && notMoved && !isFollowing && !isOrbiting)
                 StartCoroutine(OrbitCoroutine());
@@ -242,7 +254,7 @@ namespace Assets.Scripts
 
             void Focus()
             {
-                var rotX = Quaternion.AngleAxis(cameraAngle, sceneCamera.transform.right);
+                var rotX = Quaternion.AngleAxis(attachedCameraAngle, sceneCamera.transform.right);
                 var pos = focusPoint + rotX * -transform.forward * attachedCameraDistance;
 
                 camPosition = pos;
@@ -265,7 +277,12 @@ namespace Assets.Scripts
                     Mathf.Abs(deltaDistance));
 
                 var dir = toCamera.normalized * sign;
+
+                var yOffset = Mathf.Tan(attachedCameraAngle * Mathf.Deg2Rad) *
+                    attachedCameraDistance;
+
                 var pos = sceneCamera.transform.position + step * dir;
+                pos.y = focusPoint.y + yOffset;
 
                 camPosition = pos;
 
@@ -300,7 +317,8 @@ namespace Assets.Scripts
                 var step = Vector3.Slerp(toCamera.normalized, alignTo, 
                     elapsedTime / timeAtSpeed);
                 
-                var yOffset = Mathf.Tan(cameraAngle * Mathf.Deg2Rad) * attachedCameraDistance;
+                var yOffset = Mathf.Tan(attachedCameraAngle * Mathf.Deg2Rad) * 
+                    attachedCameraDistance;
 
                 var pos = focusPoint + 
                     step * toCamera.magnitude + 
@@ -339,6 +357,13 @@ namespace Assets.Scripts
             sceneCamera.transform.SetPositionAndRotation(
                 camCurrent + camStep, Quaternion.LookRotation(camDirection));
         }
+        private void OnGUI()
+        {
+            GUI.Label(new Rect(42, 300, 100, 40),
+                $"F:{Touch.activeFingers.Count} T:{Touch.activeTouches.Count}",
+                textStyle);
+        }
+
 
         private void LateUpdate()
         {
@@ -372,7 +397,7 @@ namespace Assets.Scripts
         void UpdateFocusPoint()
         {
             previousFocusPoint = focusPoint;
-            Vector3 targetPoint = transform.position + Vector3.up * .02f;
+            Vector3 targetPoint = transform.position + Vector3.up * .08f;
             focusPoint = targetPoint;
         }
 
