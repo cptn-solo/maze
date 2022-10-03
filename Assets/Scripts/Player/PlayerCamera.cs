@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI.Table;
 
 namespace Assets.Scripts
@@ -34,7 +36,11 @@ namespace Assets.Scripts
         private bool isOrbiting;
         private bool isFollowing;
         private bool prevTranslateDirActive;
-
+        
+        private DefaultInputActions actions;
+        private float cameraSencitivity = .5f;
+        private bool cameraControl = true;
+        
         private void Awake()
         {
             player = GetComponent<Player>();
@@ -43,16 +49,75 @@ namespace Assets.Scripts
             //orbitCamera.FocusOn(player.transform);
             
             player.TranslateDirActive = false;
+
+            actions = new DefaultInputActions();
+        }
+        private void Start()
+        {
+            cameraSencitivity = player.Prefs.CameraSencitivity;
+            cameraControl = player.Prefs.CameraControl;
+
+            player.Prefs.OnCameraControlChanged += Prefs_OnCameraControlChanged;
+            player.Prefs.OnCameraSencitivityChanged += Prefs_OnCameraSencitivityChanged;
         }
 
         private void OnEnable()
         {
+            actions.Enable();
+            actions.Player.Look.performed += Look_performed;
+            actions.Player.Look.canceled += Look_canceled;
+
             if (!listeningForScreenOrientation)
                 StartCoroutine(ScreenOrientationMonitor());
         }
 
+        private void Prefs_OnCameraSencitivityChanged(float obj)
+        {
+            cameraSencitivity = obj;
+            Debug.Log($"Prefs_OnCameraSencitivityChanged {obj}");
+        }
+
+        private void Prefs_OnCameraControlChanged(bool obj)
+        {
+            cameraControl = obj;
+            Debug.Log($"Prefs_OnCameraControlChanged {obj}");
+        }
+
+        private void Look_canceled(InputAction.CallbackContext obj)
+        {
+            Debug.Log($"Look_canceled: {obj}");
+        }
+
+        private void Look_performed(InputAction.CallbackContext obj)
+        {
+            if (!cameraControl || player.TranslateDirActive)
+                return;
+            
+            Debug.Log($"Look_performed: {obj}");
+
+            var toCamera = PlaneOffset();
+            var angle = obj.ReadValue<Vector2>().x * cameraSencitivity;
+            var rotY = Quaternion.AngleAxis(angle, transform.up);
+            var step = rotY * toCamera.normalized;
+
+            var yOffset = Mathf.Tan(cameraAngle * Mathf.Deg2Rad) * attachedCameraDistance;
+
+            var pos = focusPoint +
+                step * toCamera.magnitude +
+                yOffset * transform.up;
+
+            camPosition = pos;
+            
+            sceneCamera.transform.position = camPosition;
+
+        }
+
         private void OnDisable()
         {
+            actions.Disable();
+            actions.Player.Look.performed -= Look_performed;
+            actions.Player.Look.canceled -= Look_canceled;
+
             if (listeningForScreenOrientation)
                 StopCoroutine(ScreenOrientationMonitor());
         }
@@ -97,7 +162,7 @@ namespace Assets.Scripts
             bool lost = camPosition.y != Mathf.Clamp(
                     camPosition.y, focusPoint.y, focusPoint.y + .3f);
 
-            if (notMoved && !isFollowing && !isOrbiting)
+            if (!cameraControl && notMoved && !isFollowing && !isOrbiting)
                 StartCoroutine(OrbitCoroutine());
 
             if (tooClose || tooFar)

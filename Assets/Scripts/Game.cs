@@ -37,8 +37,10 @@ namespace Assets.Scripts
         private readonly string playerId = "Player";
         private readonly string zombiesId = "Zombies";
 
-        private UnitInfo playerScoreInfo = new("Player", Color.green, 0, Color.green, 0, 0, Color.green);
-        private UnitInfo zombiesScoreInfo = new("Zombies", Color.yellow, 0, Color.red, 0, 0, Color.yellow);
+        private UnitInfo playerScoreInfo = 
+            new("Player", Color.green, 0, Color.green, 0, 0, Color.green);
+        private UnitInfo zombiesScoreInfo = 
+            new("Zombies", Color.yellow, 0, Color.red, 0, 0, Color.yellow);
 
         public event EventHandler OnPlayerSpawned;
         public event EventHandler OnPlayerKilled;
@@ -46,12 +48,14 @@ namespace Assets.Scripts
         private IngameSoundEvents soundEvents;
         private PlayerBalanceService balances;
         private PlayerPerkService perks;
+        private PlayerPreferencesService prefs;
 
         private void Awake()
         {
             soundEvents = GetComponent<IngameSoundEvents>();
             balances = GetComponent<PlayerBalanceService>();
             perks = GetComponent<PlayerPerkService>();
+            prefs = GetComponent<PlayerPreferencesService>();
         }
 
         void Start()
@@ -72,6 +76,7 @@ namespace Assets.Scripts
             player.SoundEvents = soundEvents;
             player.Balances = balances;
             player.Perks = perks;
+            player.Prefs = prefs;
 
             chests = building.GetComponentsInChildren<Chest>();
             foreach (var chest in chests)

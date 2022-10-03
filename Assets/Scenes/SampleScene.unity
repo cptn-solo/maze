@@ -1165,6 +1165,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -640
       objectReference: {fileID: 0}
+    - target: {fileID: 734902137076954410, guid: a6f140b3d262fa94199b23e4afaca094,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 734902137076954410, guid: a6f140b3d262fa94199b23e4afaca094,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 897954746621591398, guid: a6f140b3d262fa94199b23e4afaca094,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1229,6 +1239,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.x
       value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2293099570824760605, guid: a6f140b3d262fa94199b23e4afaca094,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2293099570824760605, guid: a6f140b3d262fa94199b23e4afaca094,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2483432296313594372, guid: a6f140b3d262fa94199b23e4afaca094,
         type: 3}
@@ -1397,6 +1417,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4519619534652498746, guid: a6f140b3d262fa94199b23e4afaca094,
         type: 3}
+      propertyPath: playerPrefsService
+      value: 
+      objectReference: {fileID: 998581040}
+    - target: {fileID: 4519619534652498746, guid: a6f140b3d262fa94199b23e4afaca094,
+        type: 3}
       propertyPath: audioPlaybackService
       value: 
       objectReference: {fileID: 998581041}
@@ -1519,6 +1544,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5739456325824496341, guid: a6f140b3d262fa94199b23e4afaca094,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5818618601584209626, guid: a6f140b3d262fa94199b23e4afaca094,
         type: 3}

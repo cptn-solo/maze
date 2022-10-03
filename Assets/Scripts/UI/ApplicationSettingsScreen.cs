@@ -17,9 +17,13 @@ namespace Assets.Scripts.UI
         [SerializeField] private Toggle fpsLimitToggle;
         [SerializeField] private Toggle fpsLowTestToggle;
         [SerializeField] private Toggle antialiasingToggle;
+        
+        [SerializeField] private Slider cameraSencitivitySlider;
+        [SerializeField] private Toggle cameraControlToggle;
 
 
         [SerializeField] private AudioPlaybackService audioPlaybackService;
+        [SerializeField] private PlayerPreferencesService playerPrefsService;
 
         internal Action OnCloseButtonPressed;
 
@@ -30,6 +34,9 @@ namespace Assets.Scripts.UI
 
             sfxToggle.isOn = audioPlaybackService.SfxToggle;
             sfxSlider.value = audioPlaybackService.SfxVolume;
+
+            cameraSencitivitySlider.value = playerPrefsService.CameraSencitivity;
+            cameraControlToggle.isOn = playerPrefsService.CameraControl;
 
             fpsLimitToggle.isOn = FpsLimitToggle;
             fpsLowTestToggle.isOn = FpsLowTestToggle;
@@ -52,6 +59,9 @@ namespace Assets.Scripts.UI
             antialiasingToggle.onValueChanged.AddListener(OnAntialiasing2xToggleChange);
 
             closeButton.onClick.AddListener(Close);
+
+            cameraSencitivitySlider.onValueChanged.AddListener(OnCameraSencitivityChange);
+            cameraControlToggle.onValueChanged.AddListener(OnCameraControlChange);
         }
 
         private void OnDisable()
@@ -66,6 +76,9 @@ namespace Assets.Scripts.UI
             sfxSlider.onValueChanged.RemoveListener(OnSfxSliderChange);
 
             antialiasingToggle.onValueChanged.RemoveListener(OnAntialiasing2xToggleChange);
+
+            cameraSencitivitySlider.onValueChanged.RemoveListener(OnCameraSencitivityChange);
+            cameraControlToggle.onValueChanged.RemoveListener(OnCameraControlChange);
 
             closeButton.onClick.RemoveListener(Close);
         }
@@ -133,6 +146,15 @@ namespace Assets.Scripts.UI
 
             Antialiasing2xToggle = antialiasingToggle.isOn;
 
+        }
+
+        public void OnCameraSencitivityChange(float value)
+        {
+            playerPrefsService.CameraSencitivity = value;
+        }
+        public void OnCameraControlChange(bool value)
+        {
+            playerPrefsService.CameraControl = value;
         }
 
     }

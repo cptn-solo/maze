@@ -9,6 +9,7 @@ namespace Assets.Scripts.UI
         internal Action OnSettingsButtonPressed;
 
         [SerializeField] private Button settingsButton;
+        private Canvas canvas;
 
         private void OnEnable()
         {

@@ -24,6 +24,7 @@ namespace Assets.Scripts
         public event Action<WeaponType, int> OnActiveWeaponAttack;
 
         public PlayerBalanceService Balances { get; set; }
+        public PlayerPreferencesService Prefs { get; set; }
 
         private bool inAttackState;
         private AimTarget aim;

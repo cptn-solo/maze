@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
 namespace Assets.Scripts
@@ -22,12 +23,17 @@ namespace Assets.Scripts
         public const string FpsLimitKey = "FpsLimitKey";
         public const string FpsLowTestKey = "FpsLowTestKey";
         public const string Antialiasing2xKey = "Antialiasing2xKey";
-
+        public const string CameraControlKey = "CameraControlKey";
+        public const string CameraSencitivityKey = "CameraSencitivityKey";
+        public const float CameraSencitivityDefault = .1f;
 
         public const string ScoreKey = "Score"; // temporary, to keep score between games
         public const string BalanceKey = "Balance"; // temporary, to keep score between games        
         public const string WeaponKey = "Weapon"; // temporary, to keep score between games        
         public const string PerkKey = "Perk"; // temporary, to keep score between games        
+
+        public event Action<float> OnCameraSencitivityChanged;
+        public event Action<bool> OnCameraControlChanged;
 
         private void Awake()
         {
@@ -36,6 +42,26 @@ namespace Assets.Scripts
             InitDeveloperPreferences();
 #endif
         }
+
+        public float CameraSencitivity
+        {
+            get => PlayerPrefs.GetFloat(PlayerPreferencesService.CameraSencitivityKey);
+            set
+            {
+                PlayerPrefs.SetFloat(PlayerPreferencesService.CameraSencitivityKey, value);
+                OnCameraSencitivityChanged?.Invoke(value);
+            }
+        }
+        public bool CameraControl
+        {
+            get => PlayerPrefs.GetInt(PlayerPreferencesService.CameraControlKey) == 1;
+            set
+            {
+                PlayerPrefs.SetFloat(PlayerPreferencesService.CameraControlKey, value ? 1 : 0);
+                OnCameraControlChanged?.Invoke(value);
+            }
+        }
+
 
         public void InitPlayerPreferences()
         {
@@ -50,6 +76,12 @@ namespace Assets.Scripts
 
             if (!PlayerPrefs.HasKey(SfxVolumeKey))
                 PlayerPrefs.SetInt(SfxVolumeKey, SfxVolumeDefault);
+            
+            if (!PlayerPrefs.HasKey(CameraControlKey))
+                PlayerPrefs.SetInt(CameraControlKey, 1);
+
+            if (!PlayerPrefs.HasKey(CameraSencitivityKey))
+                PlayerPrefs.SetFloat(CameraSencitivityKey, CameraSencitivityDefault);
 
             if (!PlayerPrefs.HasKey(NickNameKey))
                 PlayerPrefs.SetString(NickNameKey, "");
