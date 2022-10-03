@@ -182,41 +182,8 @@
                 },
                 {
                     "name": "",
-                    "id": "8b127f27-2aee-4bd4-a298-17facc57ab2a",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Camera",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "04431240-7f8d-4e1d-a276-50deda5fa19f",
-                    "path": "<Touchscreen>/primaryTouch/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Camera",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b89fb754-dd6a-4c45-9b8d-41047fb9397c",
-                    "path": "<Touchscreen>/touch0/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Camera",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "5e1e9a04-d2c3-4c30-9aa1-aced15c1752d",
-                    "path": "<Touchscreen>/touch1/delta",
+                    "path": "<Pointer>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -234,6 +201,15 @@
                     "name": "LeftStick",
                     "type": "Value",
                     "id": "0730f2fc-e3f2-41ad-ad45-64038dfe3a5d",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Camera",
+                    "type": "Value",
+                    "id": "d8d11a63-d909-4f9d-a483-f434a3112a3d",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -349,6 +325,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Item2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "425d9701-9cb0-4696-a3b5-82e5d6a14451",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Camera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

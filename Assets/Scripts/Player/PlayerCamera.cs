@@ -20,15 +20,12 @@ namespace Assets.Scripts
         private Camera sceneCamera;
         //private OrbitCamera orbitCamera;
 
-        [SerializeField] private float attachedCameraYOffset = 0.02f;
         [SerializeField] private float attachedCameraMaxDistance = .7f;
         [SerializeField] private float attachedCameraMinDistance = .3f;
         [SerializeField] private float attachedCameraDistance = .5f;
         [SerializeField] private float attachedCameraOrbitSpeed = 90f;
 
-        private Vector3 focusPoint, previousFocusPoint, camPosition, prevCamPosition = default;
-        [SerializeField, Min(0f)] private float focusRadius = 5f;
-        [SerializeField, Range(0f, 1f)] private float focusCentering = 0.5f;
+        private Vector3 focusPoint, previousFocusPoint, camPosition = default;
         [SerializeField] private float attachedCameraSpeed = .7f;
 
         private bool isOrbiting;
@@ -64,6 +61,8 @@ namespace Assets.Scripts
             actions.Enable();
             actions.Default.Camera.performed += Look_performed;
             actions.Default.Camera.canceled += Look_canceled;
+            actions.Mobile.Camera.performed += Look_performed;
+            actions.Mobile.Camera.canceled += Look_canceled;
 
             if (!listeningForScreenOrientation)
                 StartCoroutine(ScreenOrientationMonitor());
@@ -118,6 +117,8 @@ namespace Assets.Scripts
             actions.Disable();
             actions.Default.Camera.performed -= Look_performed;
             actions.Default.Camera.canceled -= Look_canceled;
+            actions.Mobile.Camera.performed += Look_performed;
+            actions.Mobile.Camera.canceled += Look_canceled;
 
             if (listeningForScreenOrientation)
                 StopCoroutine(ScreenOrientationMonitor());

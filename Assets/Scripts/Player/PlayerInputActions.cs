@@ -204,41 +204,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8b127f27-2aee-4bd4-a298-17facc57ab2a"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Camera"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""04431240-7f8d-4e1d-a276-50deda5fa19f"",
-                    ""path"": ""<Touchscreen>/primaryTouch/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Camera"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b89fb754-dd6a-4c45-9b8d-41047fb9397c"",
-                    ""path"": ""<Touchscreen>/touch0/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Camera"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""5e1e9a04-d2c3-4c30-9aa1-aced15c1752d"",
-                    ""path"": ""<Touchscreen>/touch1/delta"",
+                    ""path"": ""<Pointer>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -256,6 +223,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""name"": ""LeftStick"",
                     ""type"": ""Value"",
                     ""id"": ""0730f2fc-e3f2-41ad-ad45-64038dfe3a5d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Camera"",
+                    ""type"": ""Value"",
+                    ""id"": ""d8d11a63-d909-4f9d-a483-f434a3112a3d"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -373,6 +349,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Item2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""425d9701-9cb0-4696-a3b5-82e5d6a14451"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -391,6 +378,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         // Mobile
         m_Mobile = asset.FindActionMap("Mobile", throwIfNotFound: true);
         m_Mobile_LeftStick = m_Mobile.FindAction("LeftStick", throwIfNotFound: true);
+        m_Mobile_Camera = m_Mobile.FindAction("Camera", throwIfNotFound: true);
         m_Mobile_Jump = m_Mobile.FindAction("Jump", throwIfNotFound: true);
         m_Mobile_Attack = m_Mobile.FindAction("Attack", throwIfNotFound: true);
         m_Mobile_Weapon = m_Mobile.FindAction("Weapon", throwIfNotFound: true);
@@ -537,6 +525,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Mobile;
     private IMobileActions m_MobileActionsCallbackInterface;
     private readonly InputAction m_Mobile_LeftStick;
+    private readonly InputAction m_Mobile_Camera;
     private readonly InputAction m_Mobile_Jump;
     private readonly InputAction m_Mobile_Attack;
     private readonly InputAction m_Mobile_Weapon;
@@ -547,6 +536,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         private @PlayerInputActions m_Wrapper;
         public MobileActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @LeftStick => m_Wrapper.m_Mobile_LeftStick;
+        public InputAction @Camera => m_Wrapper.m_Mobile_Camera;
         public InputAction @Jump => m_Wrapper.m_Mobile_Jump;
         public InputAction @Attack => m_Wrapper.m_Mobile_Attack;
         public InputAction @Weapon => m_Wrapper.m_Mobile_Weapon;
@@ -564,6 +554,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @LeftStick.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnLeftStick;
                 @LeftStick.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnLeftStick;
                 @LeftStick.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnLeftStick;
+                @Camera.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnCamera;
+                @Camera.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnCamera;
+                @Camera.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnCamera;
                 @Jump.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
@@ -586,6 +579,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @LeftStick.started += instance.OnLeftStick;
                 @LeftStick.performed += instance.OnLeftStick;
                 @LeftStick.canceled += instance.OnLeftStick;
+                @Camera.started += instance.OnCamera;
+                @Camera.performed += instance.OnCamera;
+                @Camera.canceled += instance.OnCamera;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -618,6 +614,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     public interface IMobileActions
     {
         void OnLeftStick(InputAction.CallbackContext context);
+        void OnCamera(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnWeapon(InputAction.CallbackContext context);
