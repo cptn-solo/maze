@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI.Table;
@@ -91,6 +92,9 @@ namespace Assets.Scripts
         private void Look_performed(InputAction.CallbackContext obj)
         {
             if (!cameraControl || player.TranslateDirActive)
+                return;
+
+            if (EventSystem.current.IsPointerOverGameObject())
                 return;
             
             Debug.Log($"Look_performed: {obj}");
