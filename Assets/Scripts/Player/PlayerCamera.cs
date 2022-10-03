@@ -1,11 +1,7 @@
 ﻿using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-using static UnityEditorInternal.ReorderableList;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 namespace Assets.Scripts
 {
