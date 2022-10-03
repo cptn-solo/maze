@@ -60,6 +60,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd9fea9a9d87cb240adfda3b095e2883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponPerk: 0
+  playerPerk: 0
   icon: {fileID: 5050467966994155777}
   valueLabel: {fileID: 4816988296521339513}
 --- !u!1 &6591952166197877688
@@ -198,7 +200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

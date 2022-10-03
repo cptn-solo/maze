@@ -198,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.07944696, g: 0.66171074, b: 0.9716981, a: 0.16470589}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -229,6 +229,8 @@ MonoBehaviour:
   titleLabel: {fileID: 3976723927965987681}
   infoLabel: {fileID: 4173828285131032207}
   worldYOffset: 0.17
+  shieldImage: {fileID: 0}
+  hpImage: {fileID: 0}
 --- !u!1 &8506971924448675964
 GameObject:
   m_ObjectHideFlags: 0

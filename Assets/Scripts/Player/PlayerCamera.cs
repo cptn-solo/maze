@@ -94,7 +94,7 @@ namespace Assets.Scripts
             if (!cameraControl || player.TranslateDirActive)
                 return;
 
-            if (EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current.IsPointerOverGameObject(obj.control.device.deviceId))
                 return;
             
             Debug.Log($"Look_performed: {obj}");
