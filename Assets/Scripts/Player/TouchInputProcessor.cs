@@ -54,7 +54,7 @@ namespace Assets.Scripts
         private void Touch_onFingerDown(Finger obj)
         {
             var pos = obj.currentTouch.startScreenPosition;
-            if (pos.x <= Screen.currentResolution.width * .5f)
+            if (pos.x <= Screen.currentResolution.width * .3f)
             {
                 leftFinger = obj;
                 leftPosPrev = pos;
@@ -70,7 +70,7 @@ namespace Assets.Scripts
 
         private void Touch_onFingerUp(Finger obj)
         {
-            if (obj.currentTouch.startScreenPosition.x <= Screen.currentResolution.width * .5f)
+            if (obj.currentTouch.startScreenPosition.x <= Screen.currentResolution.width * .3f)
             {
                 leftFinger = null;
                 leftPosPrev = default;

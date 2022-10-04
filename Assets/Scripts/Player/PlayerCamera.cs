@@ -93,7 +93,7 @@ namespace Assets.Scripts
                 return;
 
             var toCamera = PlaneOffset();
-            var angle = -lookVector.x * CameraSencitivity * .1f;
+            var angle = -lookVector.x * CameraSencitivity * .5f;
             var rotY = Quaternion.AngleAxis(angle, transform.up);
             var step = rotY * toCamera.normalized;
 
