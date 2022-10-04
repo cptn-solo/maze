@@ -2,8 +2,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.EnhancedTouch;
-using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace Assets.Scripts
 {
@@ -38,11 +36,9 @@ namespace Assets.Scripts
         private PlayerInputActions actions;
         private float cameraSencitivity = .5f;
         private bool cameraControl = true;
-        
+
         private void Awake()
         {
-            EnhancedTouchSupport.Enable();
-
             player = GetComponent<Player>();
             sceneCamera = Camera.main;
             //orbitCamera = sceneCamera.GetComponent<OrbitCamera>();
@@ -54,10 +50,6 @@ namespace Assets.Scripts
         }
         private void Start()
         {
-            textStyle.fontStyle = FontStyle.Bold;
-            textStyle.fontSize = 36;
-            textStyle.normal.textColor = Color.green;
-
             cameraSencitivity = player.Prefs.CameraSencitivity;
             cameraControl = player.Prefs.CameraControl;
 
@@ -98,8 +90,6 @@ namespace Assets.Scripts
         Vector2 lookVector = Vector2.zero;
         private bool isStickLooking;
         
-        private readonly GUIStyle textStyle = new ();
-
         private void LookStick_canceled(InputAction.CallbackContext obj)
         {
             Debug.Log($"Look_canceled: {obj}");
@@ -361,23 +351,6 @@ namespace Assets.Scripts
                 sceneCamera.transform.SetPositionAndRotation(
                     camCurrent + camStep, Quaternion.LookRotation(camDirection));
         }
-        private void OnGUI()
-        {
-            if (!EnhancedTouchSupport.enabled)
-                return;
-
-            GUI.Label(new Rect(42, 300, 100, 40),
-                $"F:{Touch.activeFingers.Count} T:{Touch.activeTouches.Count}",
-                textStyle);
-
-            for (int i = 0; i < Touch.activeTouches.Count; i++)
-            {
-                GUI.Label(new Rect(42, 350 + (50 * i), 100, 40),
-                    $"T:{i} D:{Touch.activeTouches[i].delta}",
-                    textStyle);
-            }
-        }
-
 
         private void LateUpdate()
         {
