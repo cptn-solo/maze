@@ -11,24 +11,15 @@ namespace Assets.Scripts.UI
 
         [SerializeField] private Button settingsButton;
         [SerializeField] private OnScreenStick leftStick;
-        [SerializeField] private OnScreenStick rightStick;
-
-        public void ToggleLookStick(bool toggle) =>
-            rightStick.gameObject.SetActive(toggle);
         
-        private void OnEnable()
-        {
+        private void OnEnable() =>
             settingsButton.onClick.AddListener(SettingsButtonPressed);
-        }
 
-        private void OnDisable()
-        {
+        private void OnDisable() =>
             settingsButton.onClick.RemoveListener(SettingsButtonPressed);
-        }
 
-        private void SettingsButtonPressed()
-        {
+        private void SettingsButtonPressed() =>
             OnSettingsButtonPressed?.Invoke();
-        }
+
     }
 }

@@ -116,19 +116,11 @@ namespace Assets.Scripts
             moveDir = Vector3.zero;
         }
 
-        protected virtual void OnResurrected()
-        {
+        protected virtual void OnResurrected() { }
 
-        }
-
-        protected virtual void OnTakingDamage(bool critical)
-        {
-
-        }
-        private void Battle_OnTakingDamage(bool critical)
-        {
+        protected virtual void OnTakingDamage(bool critical) { }
+        private void Battle_OnTakingDamage(bool critical) =>
             OnTakingDamage(critical);
-        }
 
         private void Battle_OnBattleInfoChange(BattleInfo obj)
         {
@@ -149,22 +141,26 @@ namespace Assets.Scripts
         }
 
         protected virtual void OnStart() => OnStartAction?.Invoke();
-
         protected virtual void OnObjEnable() => OnEnabledAction?.Invoke();
-
         protected virtual void OnObjDisable() => OnDisabledAction?.Invoke();            
-
         protected virtual void OnObjDestroy() => OnDestroyAction?.Invoke();
-
         private void Awake() => OnAwake();
-
         private void Start() => OnStart();
-
-        private void OnEnable() => OnObjEnable();
-        
+        private void OnEnable() => OnObjEnable();        
         private void OnDisable() => OnObjDisable();
-
         private void OnDestroy() => OnObjDestroy();
+
+        protected virtual float CurrentMoveSpeed(float speed) => speed;
+        protected virtual float CurrentRotationSpeed(float rotationSpeed) => rotationSpeed;
+        protected virtual Vector3 CurrentMoveDir(Vector3 translatedDir) => translatedDir;
+        protected virtual Vector3 CurrentRotationDir(Vector3 translatedDir) => translatedDir;
+        private Vector3 Grounded(Vector3 position = default)
+        {
+            if (position == default)
+                position = rb.position;
+
+            return position - Vector3.up * position.y;
+        }
 
         private void ReadLocalAxis()
         {
@@ -189,11 +185,7 @@ namespace Assets.Scripts
 
             translatedDir = moveDir.x * localRight + moveDir.z * localForward;
         }
-        static float GetAngle(Vector3 direction)
-        {
-            float angle = Mathf.Acos(direction.y) * Mathf.Rad2Deg;
-            return direction.x < 0f ? 360f - angle : angle;
-        }
+
         private void Update()
         {
             if ((moveDir.sqrMagnitude != 0.0f || rb.velocity.x != 0.0f || rb.velocity.z != 0.0f) && !fadingOut)
@@ -218,26 +210,11 @@ namespace Assets.Scripts
             var desiredSpeed = (moveDir.sqrMagnitude != 0.0f && !fadingOut) ? speedCur : 0;
 
             desiredVelocity = CurrentMoveDir(translatedDir) * desiredSpeed;
-        }
-        protected virtual float CurrentMoveSpeed(float speed)
-        {
-            return speed;
+
+            ToggleTranslateDir();
         }
 
-        protected virtual float CurrentRotationSpeed(float rotationSpeed)
-        {
-            return rotationSpeed;
-        }
-
-        protected virtual Vector3 CurrentMoveDir(Vector3 translatedDir)
-        {
-            return translatedDir;
-        }
-
-        protected virtual Vector3 CurrentRotationDir(Vector3 translatedDir)
-        {
-            return translatedDir;
-        }
+        protected virtual void ToggleTranslateDir() { }
 
         private void FixedUpdate()
         {
@@ -275,14 +252,6 @@ namespace Assets.Scripts
 
             rb.angularVelocity = rotVelocity;
 
-        }
-
-        private Vector3 Grounded(Vector3 position = default)
-        {
-            if (position == default)
-                position = rb.position;
-
-            return position - Vector3.up * position.y;
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 namespace Assets.Scripts
 {
@@ -17,8 +15,8 @@ namespace Assets.Scripts
         private float camDistanceFactor = 1.0f;
 
         private Player player;
+        private TouchInputProcessor touches;
         private Camera sceneCamera;
-        //private OrbitCamera orbitCamera;
 
         [SerializeField] private float attachedCameraAngle = 45.0f;
         [SerializeField] private float attachedCameraMaxDistance = 1.6f;
@@ -31,125 +29,70 @@ namespace Assets.Scripts
 
         private bool isOrbiting;
         private bool isFollowing;
-        private bool prevTranslateDirActive;
         
-        private PlayerInputActions actions;
-        private float cameraSencitivity = .5f;
-        private bool cameraControl = true;
+        public float CameraSencitivity { get; set; } = .5f;
+        public bool CameraControl { get; set; } = true;
 
         private void Awake()
         {
             player = GetComponent<Player>();
-            sceneCamera = Camera.main;
-            //orbitCamera = sceneCamera.GetComponent<OrbitCamera>();
-            //orbitCamera.FocusOn(player.transform);
-            
-            player.TranslateDirActive = false;
-
-            actions = new PlayerInputActions();
-        }
-        private void Start()
-        {
-            cameraSencitivity = player.Prefs.CameraSencitivity;
-            cameraControl = player.Prefs.CameraControl;
-
-            player.Prefs.OnCameraControlChanged += Prefs_OnCameraControlChanged;
-            player.Prefs.OnCameraSencitivityChanged += Prefs_OnCameraSencitivityChanged;
+            touches = GetComponent<TouchInputProcessor>();
+            sceneCamera = Camera.main;            
         }
 
         private void OnEnable()
         {
-            actions.Enable();
-            actions.Default.Camera.performed += Look_performed;
-            actions.Default.Camera.canceled += Look_canceled;
-            actions.Mobile.Camera.performed += Look_performed;
-            actions.Mobile.Camera.canceled += Look_canceled;
-            actions.Mobile.RightStick.performed += LookStick_performed;
-            actions.Mobile.RightStick.canceled += LookStick_canceled;
+            touches.OnRightTouchMove += Look;
+            player.OnTranslateDirActiveChange += Player_OnTranslateDirActiveChange;
 
             if (!listeningForScreenOrientation)
                 StartCoroutine(ScreenOrientationMonitor());
         }
 
-        private void Prefs_OnCameraSencitivityChanged(float obj)
+        private void Player_OnTranslateDirActiveChange(bool obj)
         {
-            cameraSencitivity = obj;
-            Debug.Log($"Prefs_OnCameraSencitivityChanged {obj}");
+            if (!obj)
+                return;
+
+            isOrbiting = false;
+            isFollowing = false;
+            StopCoroutine(OrbitCoroutine());
+            StopCoroutine(FollowCoroutine());
         }
 
-        private void Prefs_OnCameraControlChanged(bool obj)
+        private void OnDisable()
         {
-            cameraControl = obj;
-            Debug.Log($"Prefs_OnCameraControlChanged {obj}");
+            touches.OnRightTouchMove -= Look;
+            player.OnTranslateDirActiveChange -= Player_OnTranslateDirActiveChange;
+
+            if (listeningForScreenOrientation)
+                StopCoroutine(ScreenOrientationMonitor());
         }
 
-        private void Look_canceled(InputAction.CallbackContext obj)
+        private void LateUpdate()
         {
-            Debug.Log($"Look_canceled: {obj}");
-        }
-        Vector2 lookVector = Vector2.zero;
-        private bool isStickLooking;
-        
-        private void LookStick_canceled(InputAction.CallbackContext obj)
-        {
-            Debug.Log($"Look_canceled: {obj}");
-            lookVector = Vector2.zero;
-
-            if (isStickLooking)
+            if (player.TranslateDirActive)
             {
-                isStickLooking = false;
-                StopCoroutine(LookWithStick());
+                PositionCameraTowardsCenter();
             }
-        }
-
-        private void LookStick_performed(InputAction.CallbackContext obj)
-        {
-            if (!cameraControl || player.TranslateDirActive)
-                return;
-
-            Debug.Log($"LookStick_performed: {obj}");
-
-            var rawInput = obj.ReadValue<Vector2>();
-            lookVector.x = rawInput.x * cameraSencitivity * attachedCameraOrbitSpeed * 2;
-
-            if (!isStickLooking)
-                StartCoroutine(LookWithStick());
-        }
-
-        private void Look_performed(InputAction.CallbackContext obj)
-        {
-            if (!cameraControl || player.TranslateDirActive)
-                return;
-
-            if (EventSystem.current.IsPointerOverGameObject(obj.control.device.deviceId))
-                return;
-
-            Debug.Log($"Look_performed: {obj}");
-            
-            Look(obj.ReadValue<Vector2>());
-        }
-        private IEnumerator LookWithStick()
-        {
-            isStickLooking = true;
-
-            while (isStickLooking && lookVector.x != 0f)
+            else
             {
-                Look(lookVector);
-                yield return null;
-
+                UpdateFocusPoint();
+                PositionCameraBehindPlayer();
             }
-
-            isStickLooking = false;
-
         }
 
         private void Look(Vector2 lookVector)
         {
-            if (Mathf.Abs(lookVector.x) > 1000)
+            if (lookVector == default)
+                return;
+
+            if (float.IsInfinity(lookVector.x) ||
+                float.IsNaN(lookVector.x))
                 return;
 
             var toCamera = PlaneOffset();
-            var angle = lookVector.x * cameraSencitivity;
+            var angle = lookVector.x * CameraSencitivity;
             var rotY = Quaternion.AngleAxis(angle, transform.up);
             var step = rotY * toCamera.normalized;
 
@@ -162,19 +105,6 @@ namespace Assets.Scripts
             camPosition = pos;
             
             sceneCamera.transform.position = camPosition;
-
-        }
-
-        private void OnDisable()
-        {
-            actions.Disable();
-            actions.Default.Camera.performed -= Look_performed;
-            actions.Default.Camera.canceled -= Look_canceled;
-            actions.Mobile.Camera.performed += Look_performed;
-            actions.Mobile.Camera.canceled += Look_canceled;
-
-            if (listeningForScreenOrientation)
-                StopCoroutine(ScreenOrientationMonitor());
         }
 
         private IEnumerator ScreenOrientationMonitor()
@@ -219,7 +149,7 @@ namespace Assets.Scripts
             bool lost = camPosition.y != Mathf.Clamp(
                     camPosition.y, focusPoint.y, focusPoint.y + yOffset + .1f);
 
-            if (!cameraControl && notMoved && !isFollowing && !isOrbiting)
+            if (!CameraControl && notMoved && !isFollowing && !isOrbiting)
                 StartCoroutine(OrbitCoroutine());
 
             if (tooClose || tooFar)
@@ -351,36 +281,7 @@ namespace Assets.Scripts
                 sceneCamera.transform.SetPositionAndRotation(
                     camCurrent + camStep, Quaternion.LookRotation(camDirection));
         }
-
-        private void LateUpdate()
-        {
-            player.TranslateDirActive =
-                player.transform.position.y < 2.48f &&
-                Mathf.Abs(player.transform.position.x) < 1.25f &&
-                Mathf.Abs(player.transform.position.z) < 1.25f;
-            if (player.TranslateDirActive)
-            {
-                if (!prevTranslateDirActive)
-                {
-                    isOrbiting = false;
-                    isFollowing = false;
-                    StopCoroutine(OrbitCoroutine());
-                    StopCoroutine(FollowCoroutine());
-                }
-                PositionCameraTowardsCenter();
-            }
-            else {
-
-                if (!prevTranslateDirActive)
-                {
-
-                }
-                
-                UpdateFocusPoint();
-                PositionCameraBehindPlayer();
-            }
-            prevTranslateDirActive = player.TranslateDirActive;
-        }
+        
         void UpdateFocusPoint()
         {
             previousFocusPoint = focusPoint;

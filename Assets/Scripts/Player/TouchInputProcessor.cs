@@ -7,22 +7,19 @@ namespace Assets.Scripts
 {
     public class TouchInputProcessor : MonoBehaviour
     {
-        public event Action<Vector2> OnLeftTouchBegin;
         public event Action<Vector2> OnLeftTouchMove;
-        public event Action<Vector2> OnLeftTouchEnd;
 
-        public event Action<Vector2> OnRightTouchBegin;
         public event Action<Vector2> OnRightTouchMove;
-        public event Action<Vector2> OnRightTouchEnd;
 
         private readonly GUIStyle textStyleLeft = new();
         private readonly GUIStyle textStyleRight = new();
         
-        private Finger leftFinger = null;
-        private Finger rightFinger = null;
-
         private Vector2 leftDelta = default;
         private Vector2 rightDelta = default;
+
+        public Vector2 LeftDelta => leftDelta;
+        public Vector2 RightDelta => rightDelta;
+
 
         private void Awake()
         {
@@ -50,47 +47,42 @@ namespace Assets.Scripts
             Touch.onFingerDown -= Touch_onFingerDown;
             Touch.onFingerMove -= Touch_onFingerMove;
             Touch.onFingerUp -= Touch_onFingerUp;
+
+            leftDelta = default;
+            rightDelta = default;
         }
         private void Touch_onFingerUp(Finger obj)
         {
-            if (obj.screenPosition.x < Screen.currentResolution.width * .5f)
-            {
-                leftFinger = null;
+            if (obj.currentTouch.startScreenPosition.x <= Screen.currentResolution.width * .5f)
                 leftDelta = default;
-            }
             else
-            {
-                rightFinger = null;
                 rightDelta = default;
-            }
         }
 
         private void Touch_onFingerMove(Finger obj)
         {
             var delta = obj.currentTouch.delta;
-            if (leftFinger != null && leftFinger.index == obj.index)
+            if (obj.currentTouch.startScreenPosition.x <= Screen.currentResolution.width * .5f)
+            {
                 leftDelta = delta;
+                OnLeftTouchMove?.Invoke(leftDelta);
+            }
             else
+            {
                 rightDelta = delta;
+                Debug.Log(rightDelta);
+                OnRightTouchMove?.Invoke(rightDelta);
+            }
         }
 
         private void Touch_onFingerDown(Finger obj)
         {
-            if (obj.screenPosition.x < Screen.currentResolution.width * .5f)
-            {
-                leftFinger = obj;
+            if (obj.screenPosition.x <= Screen.currentResolution.width * .5f)
                 leftDelta = Vector2.zero;
-            }
             else
-            {
-                rightFinger = obj;
                 rightDelta = Vector2.zero;
-            }
         }
 
-        private void Update()
-        {            
-        }
         private void OnGUI()
         {
             if (!EnhancedTouchSupport.enabled)

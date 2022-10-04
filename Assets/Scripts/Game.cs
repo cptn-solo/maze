@@ -73,14 +73,11 @@ namespace Assets.Scripts
             player.OnActiveWeaponAttack += Player_OnActiveWeaponAttack;
             player.OnWallmartApproached += Player_OnWallmartApproached;
             player.OnWallmartLeft += Player_OnWallmartLeft;
-            player.OnTranslateDirActiveChange += Player_OnTranslateDirActiveChange;
             
             player.SoundEvents = soundEvents;
             player.Balances = balances;
             player.Perks = perks;
             player.Prefs = prefs;
-
-            prefs.OnCameraControlChanged += Prefs_OnCameraControlChanged;
 
             chests = building.GetComponentsInChildren<Chest>();
             foreach (var chest in chests)
@@ -100,15 +97,8 @@ namespace Assets.Scripts
             StartCoroutine(PositionPlayer(player, building, true));
 
             InitHUD();
-
-            hud.ToggleLookStick(!player.TranslateDirActive && prefs.CameraControl);
         }
 
-        private void Player_OnTranslateDirActiveChange(bool obj) =>
-            hud.ToggleLookStick(!obj && prefs.CameraControl);
-
-        private void Prefs_OnCameraControlChanged(bool obj) =>
-            hud.ToggleLookStick(obj && !player.TranslateDirActive);
 
         private void Chest_OnChestOpened(Chest obj)
         {

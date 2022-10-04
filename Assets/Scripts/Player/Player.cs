@@ -27,14 +27,27 @@ namespace Assets.Scripts
         public PlayerPreferencesService Prefs { get; set; }
 
         private bool inAttackState;
+        private TouchInputProcessor touches;
+        private PlayerCamera playerCamera;
         private AimTarget aim;
         private Collector collector;
         private Hitbox hitbox;
+        protected override void ToggleTranslateDir()
+        {
+            base.ToggleTranslateDir();
+            TranslateDirActive =
+                transform.position.y < 2.48f &&
+                Mathf.Abs(transform.position.x) < 1.25f &&
+                Mathf.Abs(transform.position.z) < 1.25f;
+        }
 
         protected override void OnAwake()
         {
             base.OnAwake();
             BindInputs();
+
+            touches = GetComponent<TouchInputProcessor>();
+            playerCamera = GetComponent<PlayerCamera>();
 
             aim = GetComponent<AimTarget>();
             hitbox = GetComponentInChildren<Hitbox>();
@@ -43,6 +56,31 @@ namespace Assets.Scripts
 
             hitbox.PlayerId = gameObject.ToString(); // to be replaced with network id
         }
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            ToggleCameraControl();
+
+            Prefs.OnCameraControlChanged += Prefs_OnCameraControlChanged;
+            Prefs.OnCameraSencitivityChanged += Prefs_OnCameraSencitivityChanged;
+            OnTranslateDirActiveChange += Player_OnTranslateDirActiveChange;
+        }
+
+        private void ToggleCameraControl()
+        {
+            playerCamera.CameraControl = Prefs.CameraControl && !TranslateDirActive;
+            touches.enabled = playerCamera.CameraControl;
+        }
+
+        private void Player_OnTranslateDirActiveChange(bool obj) =>
+            ToggleCameraControl();
+
+        private void Prefs_OnCameraControlChanged(bool obj) =>
+            ToggleCameraControl();
+
+        private void Prefs_OnCameraSencitivityChanged(float obj) =>
+            playerCamera.CameraSencitivity = obj;
 
         private void Collector_OnCollected(CollectableType collectableType, int cnt)
         {
