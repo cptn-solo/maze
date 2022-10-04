@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
@@ -7,14 +6,14 @@ namespace Assets.Scripts
 {
     public class TouchInputProcessor : MonoBehaviour
     {
-        public event Action<Vector2> OnLeftTouchMove;
-
-        public event Action<Vector2> OnRightTouchMove;
-
         private readonly GUIStyle textStyleLeft = new();
         private readonly GUIStyle textStyleRight = new();
-        
+        private Finger leftFinger;
+        private Vector2 leftPosPrev = default;
         private Vector2 leftDelta = default;
+        
+        private Finger rightFinger;
+        private Vector2 rightPosPrev = default;
         private Vector2 rightDelta = default;
 
         public Vector2 LeftDelta => leftDelta;
@@ -36,7 +35,6 @@ namespace Assets.Scripts
             EnhancedTouchSupport.Enable();
 
             Touch.onFingerDown += Touch_onFingerDown;
-            Touch.onFingerMove += Touch_onFingerMove;
             Touch.onFingerUp += Touch_onFingerUp;
         }
 
@@ -45,42 +43,67 @@ namespace Assets.Scripts
             EnhancedTouchSupport.Disable();
 
             Touch.onFingerDown -= Touch_onFingerDown;
-            Touch.onFingerMove -= Touch_onFingerMove;
             Touch.onFingerUp -= Touch_onFingerUp;
 
+            leftPosPrev = default;
             leftDelta = default;
+
+            rightPosPrev = default;
             rightDelta = default;
         }
+        private void Touch_onFingerDown(Finger obj)
+        {
+            var pos = obj.currentTouch.startScreenPosition;
+            if (pos.x <= Screen.currentResolution.width * .5f)
+            {
+                leftFinger = obj;
+                leftPosPrev = pos;
+                leftDelta = Vector2.zero;
+            }
+            else
+            {
+                rightFinger = obj;
+                rightPosPrev = pos;
+                rightDelta = Vector2.zero;
+            }
+        }
+
         private void Touch_onFingerUp(Finger obj)
         {
             if (obj.currentTouch.startScreenPosition.x <= Screen.currentResolution.width * .5f)
-                leftDelta = default;
+            {
+                leftFinger = null;
+                leftPosPrev = default;
+                leftDelta = default;    
+            }
             else
+            {
+                rightFinger = null;
+                rightPosPrev = default;
                 rightDelta = default;
-        }
-
-        private void Touch_onFingerMove(Finger obj)
-        {
-            var delta = obj.currentTouch.delta;
-            if (obj.currentTouch.startScreenPosition.x <= Screen.currentResolution.width * .5f)
-            {
-                leftDelta = delta;
-                OnLeftTouchMove?.Invoke(leftDelta);
-            }
-            else
-            {
-                rightDelta = delta;
-                Debug.Log(rightDelta);
-                OnRightTouchMove?.Invoke(rightDelta);
             }
         }
 
-        private void Touch_onFingerDown(Finger obj)
+        private void Update()
         {
-            if (obj.screenPosition.x <= Screen.currentResolution.width * .5f)
-                leftDelta = Vector2.zero;
-            else
-                rightDelta = Vector2.zero;
+            if (rightFinger != null && rightFinger.isActive &&
+                rightFinger.currentTouch is Touch rightTouch &&
+                rightTouch.phase == UnityEngine.InputSystem.TouchPhase.Moved)
+            {
+                rightDelta = rightTouch.screenPosition - rightPosPrev;
+                rightPosPrev = rightTouch.screenPosition;
+                Debug.Log($"RD:{rightDelta.x}");
+            }
+
+            if (leftFinger != null && leftFinger.isActive &&
+                leftFinger.currentTouch is Touch leftTouch &&
+                leftTouch.phase == UnityEngine.InputSystem.TouchPhase.Moved)
+            {
+                leftDelta = leftTouch.screenPosition - leftPosPrev;
+                //leftPosPrev = leftTouch.screenPosition; // for joystick delta is always from the touch start;
+                Debug.Log($"LD:{leftDelta.x}");
+            }
+
         }
 
         private void OnGUI()

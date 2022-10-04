@@ -1,10 +1,5 @@
-﻿
-using System;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Composites;
-using static PlayerInputActions;
 
 namespace Assets.Scripts
 {
@@ -57,42 +52,25 @@ namespace Assets.Scripts
 
             OnMove(mappedInput);
         }
-        private void LeftStick_canceled(InputAction.CallbackContext obj)
-        {
+        private void LeftStick_canceled(InputAction.CallbackContext obj) =>
             OnMove(Vector3.zero);
-        }
 
-        private void Move_performed(InputAction.CallbackContext obj)
-        {
+        private void Move_performed(InputAction.CallbackContext obj) =>
             OnMove(obj.ReadValue<Vector3>());
-        }
 
-        private void Jump_performed(InputAction.CallbackContext obj)
-        {
+        private void Jump_performed(InputAction.CallbackContext obj) =>
             OnJump();
-        }
 
-        private void Attack_performed(InputAction.CallbackContext obj)
-        {
+        private void Attack_performed(InputAction.CallbackContext obj) =>
             OnAttack(obj.ReadValueAsButton());
-        }
 
-        private void Minigun_performed(InputAction.CallbackContext obj)
-        {
+        private void Minigun_performed(InputAction.CallbackContext obj) =>
             OnWeaponSelect();
-        }
 
-        private void Item1_performed(InputAction.CallbackContext obj)
-        {
+        private void Item1_performed(InputAction.CallbackContext obj) =>
             OnItem1Select();
-        }
 
-        private void Item2_performed(InputAction.CallbackContext obj)
-        {
+        private void Item2_performed(InputAction.CallbackContext obj) =>
             OnItem2Select();
-        }
-
-
-
     }
 }

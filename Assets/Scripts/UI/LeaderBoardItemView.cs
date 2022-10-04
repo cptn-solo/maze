@@ -16,7 +16,7 @@ namespace Assets.Scripts.UI
         private RectTransform rectTransform;
 
         public UnitInfo Info { get; private set; }
-        public void Attach(RectTransform parent, string networkId, float scale)
+        public void Attach(RectTransform parent, string networkId, float scale = 1.0f)
         {
             rectTransform.SetParent(parent);
             rectTransform.localScale *= scale;

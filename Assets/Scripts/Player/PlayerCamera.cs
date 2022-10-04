@@ -42,7 +42,6 @@ namespace Assets.Scripts
 
         private void OnEnable()
         {
-            touches.OnRightTouchMove += Look;
             player.OnTranslateDirActiveChange += Player_OnTranslateDirActiveChange;
 
             if (!listeningForScreenOrientation)
@@ -62,7 +61,6 @@ namespace Assets.Scripts
 
         private void OnDisable()
         {
-            touches.OnRightTouchMove -= Look;
             player.OnTranslateDirActiveChange -= Player_OnTranslateDirActiveChange;
 
             if (listeningForScreenOrientation)
@@ -77,6 +75,9 @@ namespace Assets.Scripts
             }
             else
             {
+                if (touches.RightDelta is Vector2 delta && delta != default)
+                    Look(delta);
+
                 UpdateFocusPoint();
                 PositionCameraBehindPlayer();
             }
@@ -92,7 +93,7 @@ namespace Assets.Scripts
                 return;
 
             var toCamera = PlaneOffset();
-            var angle = lookVector.x * CameraSencitivity;
+            var angle = -lookVector.x * CameraSencitivity * .1f;
             var rotY = Quaternion.AngleAxis(angle, transform.up);
             var step = rotY * toCamera.normalized;
 

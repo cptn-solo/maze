@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 46454046}
   - component: {fileID: 46454047}
   - component: {fileID: 46454049}
-  - component: {fileID: 46454048}
+  - component: {fileID: 46454050}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -181,7 +181,22 @@ MonoBehaviour:
   Markers: {fileID: 1572404561}
   Leaderboard: {fileID: 2137331532}
   game: {fileID: 998581037}
---- !u!114 &46454048
+--- !u!114 &46454049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46454045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!114 &46454050
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,21 +237,6 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 2
   m_CursorLockBehavior: 0
---- !u!114 &46454049
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 46454045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
 --- !u!1001 &119681362
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -253,16 +253,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 72654366071587359, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 72654366071587359, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2828380664000034294, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
         type: 3}
@@ -374,10 +364,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5808035090617443482, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
+    - target: {fileID: 7704842159940000018, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
         type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 7704842159940000018, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
+        type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 960
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e36b1aa56e6fda349b1d43816bbd9f6a, type: 3}

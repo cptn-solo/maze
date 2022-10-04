@@ -15,15 +15,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Camera",
-                    "type": "Value",
-                    "id": "6a2a888a-a972-4831-a6e7-b8451e7dcbea",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Jump",
                     "type": "Button",
                     "id": "4dab0cdc-2e53-4a1c-b62b-37a5a649c848",
@@ -179,17 +170,6 @@
                     "action": "Item2",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5e1e9a04-d2c3-4c30-9aa1-aced15c1752d",
-                    "path": "<Pointer>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Camera",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
@@ -201,24 +181,6 @@
                     "name": "LeftStick",
                     "type": "Value",
                     "id": "0730f2fc-e3f2-41ad-ad45-64038dfe3a5d",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Camera",
-                    "type": "Value",
-                    "id": "d8d11a63-d909-4f9d-a483-f434a3112a3d",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "RightStick",
-                    "type": "Value",
-                    "id": "330f230d-4ae0-4530-bd0e-d78b1c2a3c99",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -334,28 +296,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Item2",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "425d9701-9cb0-4696-a3b5-82e5d6a14451",
-                    "path": "<Pointer>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Camera",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e12157f7-2170-4bc8-8d03-309405f1cc61",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "StickDeadzone(min=0.1,max=1)",
-                    "groups": "",
-                    "action": "RightStick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

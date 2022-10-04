@@ -73,19 +73,8 @@ public class OrbitCamera : MonoBehaviour
     void Awake()
     {
         regularCamera = GetComponent<Camera>();
-        transform.localRotation = Quaternion.Euler(orbitAngles);
-        actions = new PlayerInputActions();
-        actions.Enable();
-
-        actions.Default.Camera.performed += Camera_performed;
-        actions.Default.Camera.canceled += Camera_canceled;
-
+        transform.localRotation = Quaternion.Euler(orbitAngles);        
     }
-
-    private void Camera_canceled(InputAction.CallbackContext obj) =>
-        axisX = Vector2.zero;
-    private void Camera_performed(InputAction.CallbackContext obj) =>
-        axisX = obj.ReadValue<Vector2>();
 
     void LateUpdate()
     {
