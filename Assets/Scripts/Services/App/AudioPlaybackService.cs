@@ -66,8 +66,6 @@ namespace Assets.Scripts.Services.App
             //AudioListener.volume = MusicVolume;
             SetMixerValue(musicGroupKey, MusicVolume);
             SetMixerValue(fxGroupKey, SfxVolume);
-            Debug.LogFormat("Initial AudioListener {0}", AudioListener.volume);
-
         }
     }
 }

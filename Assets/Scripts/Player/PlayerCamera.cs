@@ -135,7 +135,7 @@ namespace Assets.Scripts
                 return;
 
             Debug.Log($"Look_performed: {obj}");
-
+            
             Look(obj.ReadValue<Vector2>());
         }
         private IEnumerator LookWithStick()
@@ -154,7 +154,10 @@ namespace Assets.Scripts
         }
 
         private void Look(Vector2 lookVector)
-        { 
+        {
+            if (Mathf.Abs(lookVector.x) > 1000)
+                return;
+
             var toCamera = PlaneOffset();
             var angle = lookVector.x * cameraSencitivity;
             var rotY = Quaternion.AngleAxis(angle, transform.up);
@@ -354,14 +357,25 @@ namespace Assets.Scripts
 
             var camStep = camSpeed * Time.deltaTime * (camPosition - camCurrent);
 
-            sceneCamera.transform.SetPositionAndRotation(
-                camCurrent + camStep, Quaternion.LookRotation(camDirection));
+            if (!camDirection.Equals(Vector3.zero))
+                sceneCamera.transform.SetPositionAndRotation(
+                    camCurrent + camStep, Quaternion.LookRotation(camDirection));
         }
         private void OnGUI()
         {
+            if (!EnhancedTouchSupport.enabled)
+                return;
+
             GUI.Label(new Rect(42, 300, 100, 40),
                 $"F:{Touch.activeFingers.Count} T:{Touch.activeTouches.Count}",
                 textStyle);
+
+            for (int i = 0; i < Touch.activeTouches.Count; i++)
+            {
+                GUI.Label(new Rect(42, 350 + (50 * i), 100, 40),
+                    $"T:{i} D:{Touch.activeTouches[i].delta}",
+                    textStyle);
+            }
         }
 
 
