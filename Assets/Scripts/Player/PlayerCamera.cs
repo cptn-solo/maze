@@ -43,25 +43,18 @@ namespace Assets.Scripts
         private void OnEnable()
         {
             player.OnTranslateDirActiveChange += Player_OnTranslateDirActiveChange;
+            player.OnBeforeFadeOut += Player_OnBeforeFadeOut;
+            player.OnAfterFadeIn += Player_OnAfterFadeIn;
 
             if (!listeningForScreenOrientation)
                 StartCoroutine(ScreenOrientationMonitor());
         }
 
-        private void Player_OnTranslateDirActiveChange(bool obj)
-        {
-            if (!obj)
-                return;
-
-            isOrbiting = false;
-            isFollowing = false;
-            StopCoroutine(OrbitCoroutine());
-            StopCoroutine(FollowCoroutine());
-        }
-
         private void OnDisable()
         {
             player.OnTranslateDirActiveChange -= Player_OnTranslateDirActiveChange;
+            player.OnBeforeFadeOut -= Player_OnBeforeFadeOut;
+            player.OnAfterFadeIn -= Player_OnAfterFadeIn;
 
             if (listeningForScreenOrientation)
                 StopCoroutine(ScreenOrientationMonitor());
@@ -81,6 +74,37 @@ namespace Assets.Scripts
                 UpdateFocusPoint();
                 PositionCameraBehindPlayer();
             }
+        }
+
+        private void Player_OnAfterFadeIn(MovableUnit obj)
+        {
+            if (!player.TranslateDirActive)
+                Focus();
+        }
+
+        private void Player_OnBeforeFadeOut(MovableUnit obj)
+        {
+        }
+
+        private void Player_OnTranslateDirActiveChange(bool obj)
+        {
+            if (obj)
+                return;
+
+            isOrbiting = false;
+            isFollowing = false;
+            StopCoroutine(OrbitCoroutine());
+            StopCoroutine(FollowCoroutine());
+        }
+
+        void Focus()
+        {
+            var rotX = Quaternion.AngleAxis(attachedCameraAngle, sceneCamera.transform.right);
+            var pos = focusPoint + rotX * -transform.forward * attachedCameraDistance;
+
+            camPosition = pos;
+
+            sceneCamera.transform.position = camPosition;
         }
 
         private void Look(Vector2 lookVector)
@@ -179,15 +203,6 @@ namespace Assets.Scripts
 
             sceneCamera.transform.LookAt(focusPoint);
 
-            void Focus()
-            {
-                var rotX = Quaternion.AngleAxis(attachedCameraAngle, sceneCamera.transform.right);
-                var pos = focusPoint + rotX * -transform.forward * attachedCameraDistance;
-
-                camPosition = pos;
-
-                sceneCamera.transform.position = camPosition;
-            }
         }
         private IEnumerator FollowCoroutine()
         {

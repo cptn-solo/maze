@@ -36,6 +36,9 @@ namespace Assets.Scripts
         private Vector3 center = Vector3.zero;
 
         private bool translateDirActive = true;
+
+        public event Action<MovableUnit> OnBeforeFadeOut;
+        public event Action<MovableUnit> OnAfterFadeIn;
         public bool TranslateDirActive { 
             get => translateDirActive;
             set

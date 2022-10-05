@@ -11,6 +11,9 @@ namespace Assets.Scripts
 
         protected void TogglePhisBody(bool toggle)
         {
+            if (!toggle)
+                OnBeforeFadeOut?.Invoke(this);
+
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.ResetCenterOfMass();
@@ -34,6 +37,12 @@ namespace Assets.Scripts
                 rb.useGravity = toggle;
                 rb.mass = toggle ? 1.0f * SizeScale : 0.0f;
                 col.enabled = toggle;
+            }
+
+            if (toggle)
+            {
+                ToggleTranslateDir();
+                OnAfterFadeIn?.Invoke(this);
             }
         }
 
