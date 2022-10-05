@@ -33,7 +33,7 @@ namespace Assets.Scripts
                 coins >= info.Price)
             {
                 var level = perks.AddPerk(item, 1);
-                balances.AddBalance(CollectableType.Coin, -info.Price);
+                balances.AddBalance(CollectableType.Coin, -info.Price, false);
                 UpdateHUDPerk(PlayerPerkService.PerkForWallmart(item), level);
                 return true;
             }

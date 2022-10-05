@@ -44,9 +44,9 @@ namespace Assets.Scripts
                 CurrentBalance(CollectableForWeapon(weaponType)) :
                 -1;
 
-        public int AddBalance(CollectableType collectableType, int count)
+        public int AddBalance(CollectableType collectableType, int count, bool applyX = true)
         {
-            if (collectableType == CollectableType.Coin)
+            if (applyX && collectableType == CollectableType.Coin)
                 count *= CurrentCoinX;
 
             var balance = CurrentBalance(collectableType) + count;
