@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -10,6 +11,8 @@ namespace Assets.Scripts
         [SerializeField] private float camPortraitFactor = .5f;
         [SerializeField] private float camLandscapeFactor = .75f;
         [SerializeField] private float camSpeed = 10.0f;
+
+        [SerializeField] private LayerMask obstructionMask;
 
         private bool listeningForScreenOrientation;
         private float camDistanceFactor = 1.0f;
@@ -29,7 +32,8 @@ namespace Assets.Scripts
 
         private bool isOrbiting;
         private bool isFollowing;
-        
+        private bool obscured;
+
         public float CameraSencitivity { get; set; } = .5f;
         public bool CameraControl { get; set; } = true;
 
@@ -102,7 +106,7 @@ namespace Assets.Scripts
             var rotX = Quaternion.AngleAxis(attachedCameraAngle, sceneCamera.transform.right);
             var pos = focusPoint + rotX * -transform.forward * attachedCameraDistance;
 
-            camPosition = pos;
+            camPosition = AvoidObstacles(pos);
 
             sceneCamera.transform.position = camPosition;
         }
@@ -120,7 +124,7 @@ namespace Assets.Scripts
                 return;
 
             var toCamera = PlaneOffset();
-            var angle = -lookVector.x * CameraSencitivity * .5f;
+            var angle = -lookVector.x * CameraSencitivity * .05f;
             var rotY = Quaternion.AngleAxis(angle, transform.up);
             var step = rotY * toCamera.normalized;
 
@@ -130,8 +134,8 @@ namespace Assets.Scripts
                 step * toCamera.magnitude +
                 yOffset * transform.up;
 
-            camPosition = pos;
-            
+            camPosition = AvoidObstacles(pos);
+
             sceneCamera.transform.position = camPosition;
         }
 
@@ -174,13 +178,13 @@ namespace Assets.Scripts
             
             var yOffset = Mathf.Tan(attachedCameraAngle * Mathf.Deg2Rad) * attachedCameraDistance;
 
-            bool lost = camPosition.y != Mathf.Clamp(
-                    camPosition.y, focusPoint.y, focusPoint.y + yOffset + .1f);
+            bool lost = false;// camPosition.y != Mathf.Clamp(
+                    //camPosition.y, focusPoint.y, focusPoint.y + yOffset + .1f);
 
             if (!CameraControl && notMoved && !isFollowing && !isOrbiting)
                 StartCoroutine(OrbitCoroutine());
 
-            if (tooClose || tooFar)
+            if ((!obscured || !notMoved) && (tooClose || tooFar))
             {
                 if (isOrbiting)
                 {
@@ -207,12 +211,14 @@ namespace Assets.Scripts
         private IEnumerator FollowCoroutine()
         {
             isFollowing = true;
-                        
+
+            var optimalDistance = attachedCameraDistance;
+
             while (isFollowing)
             {
                 var toCamera = PlaneOffset();
                 var distance = toCamera.magnitude;
-                var deltaDistance = distance - attachedCameraDistance;
+                var deltaDistance = distance - optimalDistance;
                 var sign = -Mathf.Sign(deltaDistance);
                 var step = Mathf.Min(
                     attachedCameraSpeed * Time.deltaTime, 
@@ -221,16 +227,16 @@ namespace Assets.Scripts
                 var dir = toCamera.normalized * sign;
 
                 var yOffset = Mathf.Tan(attachedCameraAngle * Mathf.Deg2Rad) *
-                    attachedCameraDistance;
+                    optimalDistance;
 
                 var pos = sceneCamera.transform.position + step * dir;
                 pos.y = focusPoint.y + yOffset;
-
-                camPosition = pos;
+                
+                camPosition = AvoidObstacles(pos);
 
                 sceneCamera.transform.position = camPosition;
 
-                if (step == Mathf.Abs(deltaDistance))
+                if (obscured || step == Mathf.Abs(deltaDistance))
                     break;
 
                 yield return null;
@@ -265,8 +271,8 @@ namespace Assets.Scripts
                 var pos = focusPoint + 
                     step * toCamera.magnitude + 
                     yOffset * transform.up;
-                
-                camPosition = pos;
+
+                camPosition = AvoidObstacles(pos);
 
                 sceneCamera.transform.position = camPosition;
 
@@ -308,10 +314,12 @@ namespace Assets.Scripts
             focusPoint = targetPoint;
         }
 
-        private Vector3 PlaneOffset()
+        private Vector3 PlaneOffset(Vector3 pos = default)
         {
+            if (pos == default)
+                pos = sceneCamera.transform.position;
             return Vector3.ProjectOnPlane(
-                sceneCamera.transform.position - focusPoint, transform.up);
+                pos - focusPoint, transform.up);
         }
         private float TrailAngle()
         {
@@ -321,6 +329,45 @@ namespace Assets.Scripts
                 transform.up);
 
             return angle;
+        }
+        private Vector3 CameraHalfExtends
+        {
+            get
+            {
+                Vector3 halfExtends;
+                halfExtends.y =
+                    sceneCamera.nearClipPlane *
+                    Mathf.Tan(0.5f * Mathf.Deg2Rad * sceneCamera.fieldOfView);
+                halfExtends.x = halfExtends.y * sceneCamera.aspect;
+                halfExtends.z = 0f;
+                return halfExtends;
+            }
+        }
+        private Vector3 AvoidObstacles(Vector3 pos)
+        {
+            Vector3 lookPosition = pos;
+            Vector3 lookDirection = (focusPoint - lookPosition).normalized;
+            Vector3 rectOffset = lookDirection * sceneCamera.nearClipPlane;
+            Vector3 rectPosition = lookPosition + rectOffset;
+            Vector3 castFrom = focusPoint;
+            Vector3 castLine = rectPosition - castFrom;
+            float castDistance = castLine.magnitude;
+            Vector3 castDirection = castLine / castDistance;
+
+            Quaternion lookOrientation = Quaternion.LookRotation(lookDirection);
+            
+            obscured = false;
+
+            if (Physics.BoxCast(
+                castFrom, CameraHalfExtends, castDirection, out RaycastHit hit,
+                lookOrientation, castDistance, obstructionMask
+            ))
+            {
+                obscured = true;
+                rectPosition = castFrom + castDirection * hit.distance;
+                return rectPosition - rectOffset;
+            }
+            return pos;
         }
     }
 }

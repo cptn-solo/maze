@@ -242,6 +242,9 @@ MonoBehaviour:
   camPortraitFactor: 0.5
   camLandscapeFactor: 0.75
   camSpeed: 5
+  obstructionMask:
+    serializedVersion: 2
+    m_Bits: 129
   attachedCameraAngle: 37
   attachedCameraMaxDistance: 1.5
   attachedCameraMinDistance: 0.5

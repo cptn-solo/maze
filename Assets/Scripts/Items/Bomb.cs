@@ -19,9 +19,11 @@ namespace Assets.Scripts
 
         public IngameSoundEvents SoundEvents { get; set; }
 
+        protected virtual void OnAwake() { }
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
+            OnAwake();
         }
 
         private void OnEnable()

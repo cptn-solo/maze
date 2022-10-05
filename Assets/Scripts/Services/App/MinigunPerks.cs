@@ -13,8 +13,8 @@ namespace Assets.Scripts
                 WeaponPerks = new[]
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 1),
-                    KeyValuePair.Create(WeaponPerk.HPDamage, 4),
-                    KeyValuePair.Create(WeaponPerk.FireRate, 5),
+                    KeyValuePair.Create(WeaponPerk.HPDamage, 2),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 8),
                 },
             };
         public static PerkInfo MinigunPerk2Info
@@ -26,8 +26,8 @@ namespace Assets.Scripts
                 WeaponPerks = new[]
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 2),
-                    KeyValuePair.Create(WeaponPerk.HPDamage, 6),
-                    KeyValuePair.Create(WeaponPerk.FireRate, 5),
+                    KeyValuePair.Create(WeaponPerk.HPDamage, 4),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 8),
                 },
             };
         public static PerkInfo MinigunPerk3Info
@@ -40,7 +40,7 @@ namespace Assets.Scripts
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 3),
                     KeyValuePair.Create(WeaponPerk.HPDamage, 8),
-                    KeyValuePair.Create(WeaponPerk.FireRate, 3),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 6),
                 },
             };
         public static PerkInfo PerkForLevel(int currentPerk) => currentPerk switch

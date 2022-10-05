@@ -8,47 +8,50 @@ namespace Assets.Scripts
 {
     public class Landmine : Bomb
     {
-        [SerializeField] private float armedTime = 10.0f;
+        private const string AnimSetup = "setup";
+        private const string AnimArmed = "armed";
+
+
+        [SerializeField] private float armedTime = 5.0f;
         [SerializeField] private float triggerDistance;
         [SerializeField] private GameObject redBeam;
         [SerializeField] private GameObject greenBeam;
         [SerializeField] private LayerMask playerMask;
 
+        private Animator animator;
+
         public string OwnerPlayerId; // to check if a player is the one installed the landmine
 
-        private readonly List<Hitbox> targets = new();        
+        private readonly List<Hitbox> targets = new();
+
+        protected override void OnAwake()
+        {
+            base.OnAwake();
+            animator = GetComponent<Animator>();
+        }
 
         protected override IEnumerator WaitForEngage()
         {
             yield return new WaitForSeconds(.2f);
 
-            greenBeam.SetActive(true);
-
+            animator.SetBool(AnimSetup, true);
+           
             while (PlayerInRange())
                 yield return new WaitForSeconds(.3f);
 
-            greenBeam.SetActive(false);
+            animator.SetBool(AnimSetup, false);
+            animator.SetBool(AnimArmed, true);
 
             var elapsedTime = 0.0f;
             while (elapsedTime <= armedTime && targets.Count == 0)
             {
                 TryGetAttackTarget();
-
-                elapsedTime += Time.deltaTime;
-
-                redBeam.SetActive(true);
-
-                yield return new WaitForSeconds(.2f);
                 
-                redBeam.SetActive(false);
-                
-                yield return new WaitForSeconds(.2f);
+                yield return new WaitForSeconds(.1f);
+                elapsedTime += .1f;
             }
 
-            redBeam.SetActive(false);
-            yield return new WaitForSeconds(.1f);
-            modelVisual.SetActive(false);
-            flash.gameObject.SetActive(true);
+            animator.SetBool(AnimArmed, false);
             SoundEvents.BombExplode();
 
             foreach (var target in targets)
@@ -58,9 +61,6 @@ namespace Assets.Scripts
                     maxDamage :
                     Mathf.FloorToInt(maxDamage * (attackDistance - distance) / attackDistance));
             }
-
-            yield return new WaitForSeconds(.2f);
-            flash.gameObject.SetActive(false);
 
             yield return new WaitForSeconds(2.0f);
 

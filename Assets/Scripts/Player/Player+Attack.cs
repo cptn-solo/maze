@@ -1,5 +1,6 @@
 ﻿
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -152,12 +153,14 @@ namespace Assets.Scripts
                 {
                     case WeaponType.Minigun:
                         {
+                            float seconds = 1 / (float)PerkRateOfFire;
+                            Debug.Log(seconds);
                             if (ammo <= 0)
                             {
                                 minigun.Attack(false);
                                 SoundEvents.OutOfAmmo();
                                 
-                                yield return new WaitForSeconds(1 / PerkRateOfFire);
+                                yield return new WaitForSeconds(seconds);
                                 
                                 break;
                             }
@@ -166,13 +169,15 @@ namespace Assets.Scripts
                             SoundEvents.MinigunShot();
                             ammo--;
                             OnActiveWeaponAttack?.Invoke(currentWeapon, ammo);
-                            
-                            yield return new WaitForSeconds(1 / PerkRateOfFire);
+
+                            yield return new WaitForSeconds(seconds);
 
                             break;
                         }
                     default:
                         {
+                            float seconds = 1 / (float)PerkRateOfFire;
+
                             animator.SetBool(AnimAttackBool, true);
 
                             shell.transform.SetParent(null, true);
@@ -191,8 +196,8 @@ namespace Assets.Scripts
                             shell.transform.SetParent(launcher, false);
                             shell.transform.localPosition = Vector3.zero;
                             shell.transform.localRotation = Quaternion.identity;
-                            
-                            yield return new WaitForSeconds(1 / PerkRateOfFire);
+
+                            yield return new WaitForSeconds(seconds);
 
                             break;
                         }

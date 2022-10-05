@@ -154,6 +154,8 @@ namespace Assets.Scripts
             base.OnGotKilled();
             
             ToggleInput(false);
+            
+            OnMove(Vector2.zero);
 
             inAttackState = false;
 

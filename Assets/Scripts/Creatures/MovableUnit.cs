@@ -114,11 +114,8 @@ namespace Assets.Scripts
             OnAwakeAction?.Invoke();
         }
 
-        protected virtual void OnGotKilled()
-        {
+        protected virtual void OnGotKilled() =>
             OnUnitBeforeKilled?.Invoke(this);
-            moveDir = Vector2.zero;
-        }
 
         protected virtual void OnResurrected() { }
 
