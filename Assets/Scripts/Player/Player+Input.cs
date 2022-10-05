@@ -41,11 +41,9 @@ namespace Assets.Scripts
             actions.Mobile.Item2.performed += Item2_performed;
         }
 
-        private void Move_performed(InputAction.CallbackContext obj)
-        {
+        private void Move_performed(InputAction.CallbackContext obj) =>
             keyboardMoveDir = obj.ReadValue<Vector2>();
-            Debug.Log(keyboardMoveDir);
-        }
+
         private void Move_canceled(InputAction.CallbackContext obj) =>
             keyboardMoveDir = Vector2.zero;
 

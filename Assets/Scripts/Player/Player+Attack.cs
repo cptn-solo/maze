@@ -113,7 +113,6 @@ namespace Assets.Scripts
 
         private void OnAttack(bool toggle)
         {
-            Debug.Log($"OnAttack {toggle}");
             inAttackState = toggle;
             if (inAttackState && !attackRunning)
                 StartCoroutine(AttackCoroutine());

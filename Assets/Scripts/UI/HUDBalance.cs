@@ -49,6 +49,9 @@ namespace Assets.Scripts
         public void SetBalance(int value) =>
             playerInfoView.CurrenBalance = value;
 
+        public void SetCoinX(int value) =>
+            playerInfoView.CurrenCoinX = value;
+
         internal void SetItemAmmo(CollectableType arg1, int arg2)
         {
             if (arg1 == CollectableType.Bomb)

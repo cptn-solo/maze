@@ -7,6 +7,7 @@ namespace Assets.Scripts.UI
     {
         [SerializeField] private HUDPerk[] perksViews;
         [SerializeField] private HUDPerk balanceView;
+        [SerializeField] private HUDPerk coninXView;
 
         public PerkInfo CurrentPerk
         { 
@@ -17,6 +18,14 @@ namespace Assets.Scripts.UI
                     var rawValue = value.PlayerPerks.FirstOrDefault(x => x.Key == item.PlayerPerk);
                     item.ValueLabel.text = rawValue.Equals(default) ? "" : $"{rawValue.Value}";
                 }
+            }
+        }
+        public int CurrenCoinX
+        {
+            set
+            {
+                coninXView.gameObject.SetActive(value > 0);
+                coninXView.ValueLabel.text = $"{value}";
             }
         }
         public int CurrenBalance

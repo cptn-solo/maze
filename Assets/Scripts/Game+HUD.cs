@@ -7,6 +7,8 @@ namespace Assets.Scripts
     {
         private void InitHUD()
         {
+            balance.SetCoinX(balances.CurrentCoinX);
+
             balance.SetItemAmmo(CollectableType.Bomb, balances.CurrentBalance(CollectableType.Bomb));
             balance.SetItemAmmo(CollectableType.Landmine, balances.CurrentBalance(CollectableType.Landmine));
 

@@ -111,9 +111,11 @@ namespace Assets.Scripts
         private void Player_OnUnitBeforeKilled(MovableUnit obj)
         {
             OnPlayerKilled?.Invoke(obj, null);
-            
-            zombiesScoreInfo.Score++;
+
+            balances.EnemyScore++;
+            zombiesScoreInfo.Score = balances.EnemyScore;
             score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
+            balance.SetCoinX(balances.CurrentCoinX);
         }
 
         private void Player_OnUnitKilled(MovableUnit obj) =>
@@ -130,10 +132,11 @@ namespace Assets.Scripts
             soundEvents.ZombieKilled();
 
             SpawnCollectables(obj);
-            playerScoreInfo.Score++;
+            balances.PlayerScore++;
+            playerScoreInfo.Score = balances.PlayerScore;
             score.UpdatePlayer(playerId, playerScoreInfo, true);
+            balance.SetCoinX(balances.CurrentCoinX);
         }
-
         private void Zombie_OnUnitKilled(MovableUnit obj) =>
             StartCoroutine(PositionZombie((Zombie)obj, building));
 
