@@ -85,6 +85,9 @@ namespace Assets.Scripts
 
         private void Look(Vector2 lookVector)
         {
+            if (!CameraControl)
+                return;
+
             if (lookVector == default)
                 return;
 

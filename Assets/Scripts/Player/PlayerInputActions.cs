@@ -31,7 +31,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""cce2f2f4-b4ed-4869-93d7-c5c8f7ba3426"",
-                    ""expectedControlType"": ""Vector3"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -95,9 +95,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""3D Vector"",
+                    ""name"": ""2D Vector"",
                     ""id"": ""b6fa36a5-e722-4396-992c-0aeb433f4ca1"",
-                    ""path"": ""3DVector"",
+                    ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -106,7 +106,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""left"",
+                    ""name"": ""Up"",
                     ""id"": ""59108e56-4c3f-4db5-a4f8-5842e819de0c"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
@@ -117,7 +117,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""right"",
+                    ""name"": ""Down"",
                     ""id"": ""e93c87b1-27de-4f39-918d-322e1f532544"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
@@ -128,7 +128,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""forward"",
+                    ""name"": ""Left"",
                     ""id"": ""6d4a7b82-97d7-4e2d-9e86-81efae0e513d"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
@@ -139,7 +139,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""backward"",
+                    ""name"": ""Right"",
                     ""id"": ""97fb5a4a-bbb8-4b8c-b61f-d79956395eb8"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
@@ -200,15 +200,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
             ""id"": ""7027a820-b6f9-46f8-ba32-dbaf03497369"",
             ""actions"": [
                 {
-                    ""name"": ""LeftStick"",
-                    ""type"": ""Value"",
-                    ""id"": ""0730f2fc-e3f2-41ad-ad45-64038dfe3a5d"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""756e6a71-8f2e-4908-8947-a20fe6493587"",
@@ -255,17 +246,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""fd8e8641-c4c9-4eb0-ab61-930111b61a92"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": ""StickDeadzone(min=0.7,max=1)"",
-                    ""groups"": """",
-                    ""action"": ""LeftStick"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""165e21ec-0110-49d8-83e4-d2af6580f34f"",
@@ -336,7 +316,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_Default_Item2 = m_Default.FindAction("Item2", throwIfNotFound: true);
         // Mobile
         m_Mobile = asset.FindActionMap("Mobile", throwIfNotFound: true);
-        m_Mobile_LeftStick = m_Mobile.FindAction("LeftStick", throwIfNotFound: true);
         m_Mobile_Jump = m_Mobile.FindAction("Jump", throwIfNotFound: true);
         m_Mobile_Attack = m_Mobile.FindAction("Attack", throwIfNotFound: true);
         m_Mobile_Weapon = m_Mobile.FindAction("Weapon", throwIfNotFound: true);
@@ -474,7 +453,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     // Mobile
     private readonly InputActionMap m_Mobile;
     private IMobileActions m_MobileActionsCallbackInterface;
-    private readonly InputAction m_Mobile_LeftStick;
     private readonly InputAction m_Mobile_Jump;
     private readonly InputAction m_Mobile_Attack;
     private readonly InputAction m_Mobile_Weapon;
@@ -484,7 +462,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
         private @PlayerInputActions m_Wrapper;
         public MobileActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @LeftStick => m_Wrapper.m_Mobile_LeftStick;
         public InputAction @Jump => m_Wrapper.m_Mobile_Jump;
         public InputAction @Attack => m_Wrapper.m_Mobile_Attack;
         public InputAction @Weapon => m_Wrapper.m_Mobile_Weapon;
@@ -499,9 +476,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_MobileActionsCallbackInterface != null)
             {
-                @LeftStick.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnLeftStick;
-                @LeftStick.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnLeftStick;
-                @LeftStick.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnLeftStick;
                 @Jump.started -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_MobileActionsCallbackInterface.OnJump;
@@ -521,9 +495,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
             m_Wrapper.m_MobileActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @LeftStick.started += instance.OnLeftStick;
-                @LeftStick.performed += instance.OnLeftStick;
-                @LeftStick.canceled += instance.OnLeftStick;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -554,7 +525,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     }
     public interface IMobileActions
     {
-        void OnLeftStick(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnWeapon(InputAction.CallbackContext context);

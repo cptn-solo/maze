@@ -92,7 +92,6 @@ namespace Assets.Scripts
             {
                 rightDelta = rightTouch.screenPosition - rightPosPrev;
                 rightPosPrev = rightTouch.screenPosition;
-                Debug.Log($"RD:{rightDelta.x}");
             }
 
             if (leftFinger != null && leftFinger.isActive &&
@@ -101,31 +100,7 @@ namespace Assets.Scripts
             {
                 leftDelta = leftTouch.screenPosition - leftPosPrev;
                 //leftPosPrev = leftTouch.screenPosition; // for joystick delta is always from the touch start;
-                Debug.Log($"LD:{leftDelta.x}");
-            }
-
+           }
         }
-
-        private void OnGUI()
-        {
-            if (!EnhancedTouchSupport.enabled)
-                return;
-
-            GUI.Label(new Rect(42, 300, 100, 40),
-                $"F:{Touch.activeFingers.Count} T:{Touch.activeTouches.Count}",
-                textStyleLeft);
-
-            if (leftDelta != default)
-                GUI.Label(new Rect(42, 350, 100, 40),
-                    $"{leftDelta}",
-                    textStyleLeft);
-
-            if (rightDelta != default)
-                GUI.Label(new Rect(42, 400, 100, 40),
-                    $"{rightDelta}",
-                    textStyleRight);
-        }
-
-
     }
 }

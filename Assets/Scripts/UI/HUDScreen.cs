@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
@@ -10,7 +9,6 @@ namespace Assets.Scripts.UI
         internal Action OnSettingsButtonPressed;
 
         [SerializeField] private Button settingsButton;
-        [SerializeField] private OnScreenStick leftStick;
         
         private void OnEnable() =>
             settingsButton.onClick.AddListener(SettingsButtonPressed);

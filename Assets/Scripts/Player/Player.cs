@@ -40,6 +40,21 @@ namespace Assets.Scripts
                 Mathf.Abs(transform.position.x) < 1.25f &&
                 Mathf.Abs(transform.position.z) < 1.25f;
         }
+        protected override void ProcessTouchInput()
+        {
+            base.ProcessTouchInput();
+            var moveVector = touches.LeftDelta;
+            if (moveVector == default ||
+                float.IsInfinity(moveVector.x) ||
+                float.IsNaN(moveVector.x) ||
+                moveVector.sqrMagnitude <= 400.0f)
+            {
+                OnMove(Vector2.zero);
+                return;
+            }
+
+            OnMove(moveVector.normalized);
+        }
 
         protected override void OnAwake()
         {
@@ -70,7 +85,6 @@ namespace Assets.Scripts
         private void ToggleCameraControl()
         {
             playerCamera.CameraControl = Prefs.CameraControl && !TranslateDirActive;
-            touches.enabled = playerCamera.CameraControl;
         }
 
         private void Player_OnTranslateDirActiveChange(bool obj) =>
@@ -153,7 +167,7 @@ namespace Assets.Scripts
             animator.SetBool(AnimAttackBool, false);
             animator.SetBool(AnimJumpBool, false);
         }
-        private void OnMove(Vector3 inputDir)
+        private void OnMove(Vector2 inputDir)
         {
             moveDir = inputDir;
             var go = moveDir.sqrMagnitude > 0;

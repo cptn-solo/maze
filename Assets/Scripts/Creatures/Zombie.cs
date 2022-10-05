@@ -159,7 +159,7 @@ namespace Assets.Scripts
             base.OnResurrected();
             
             var dirRandom = Random.Range(0, 2);
-            moveDir = dirRandom == 0 ? Vector3.right : Vector3.left;
+            moveDir = dirRandom == 0 ? Vector2.right : Vector2.left;
 
             damage.Active = true;
             damage.SizeScale = SizeScale;

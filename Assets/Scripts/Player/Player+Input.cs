@@ -33,8 +33,6 @@ namespace Assets.Scripts
             actions.Default.Item1.performed += Item1_performed;
             actions.Default.Item2.performed += Item2_performed;
 
-            actions.Mobile.LeftStick.performed += LeftStick_performed;
-            actions.Mobile.LeftStick.canceled += LeftStick_canceled;
             actions.Mobile.Jump.performed += Jump_performed;
             actions.Mobile.Attack.performed += Attack_performed;
             actions.Mobile.Weapon.performed += Minigun_performed;
@@ -42,21 +40,8 @@ namespace Assets.Scripts
             actions.Mobile.Item2.performed += Item2_performed;
         }        
 
-        private void LeftStick_performed(InputAction.CallbackContext obj)
-        {
-            var rawInput = obj.ReadValue<Vector2>();
-            Vector3 mappedInput = default;
-            mappedInput.x = rawInput.x;
-            mappedInput.y = 0.0f;
-            mappedInput.z = rawInput.y;
-
-            OnMove(mappedInput);
-        }
-        private void LeftStick_canceled(InputAction.CallbackContext obj) =>
-            OnMove(Vector3.zero);
-
         private void Move_performed(InputAction.CallbackContext obj) =>
-            OnMove(obj.ReadValue<Vector3>());
+            OnMove(obj.ReadValue<Vector2>());
 
         private void Jump_performed(InputAction.CallbackContext obj) =>
             OnJump();

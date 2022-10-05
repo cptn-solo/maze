@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -26,7 +27,7 @@ namespace Assets.Scripts
 
         protected Building building;
 
-        protected Vector3 moveDir;
+        protected Vector2 moveDir;
 
         protected Vector3 localRight;
         protected Vector3 localForward;
@@ -113,7 +114,7 @@ namespace Assets.Scripts
         protected virtual void OnGotKilled()
         {
             OnUnitBeforeKilled?.Invoke(this);
-            moveDir = Vector3.zero;
+            moveDir = Vector2.zero;
         }
 
         protected virtual void OnResurrected() { }
@@ -183,11 +184,15 @@ namespace Assets.Scripts
                 localRight = r90 * localForward;
             }
 
-            translatedDir = moveDir.x * localRight + moveDir.z * localForward;
+            translatedDir = moveDir.x * localRight + moveDir.y * localForward;
         }
 
         private void Update()
         {
+            ProcessTouchInput();
+
+            ToggleTranslateDir();
+
             if ((moveDir.sqrMagnitude != 0.0f || rb.velocity.x != 0.0f || rb.velocity.z != 0.0f) && !fadingOut)
                 ReadLocalAxis();
 
@@ -210,12 +215,10 @@ namespace Assets.Scripts
             var desiredSpeed = (moveDir.sqrMagnitude != 0.0f && !fadingOut) ? speedCur : 0;
 
             desiredVelocity = CurrentMoveDir(translatedDir) * desiredSpeed;
-
-            ToggleTranslateDir();
         }
 
         protected virtual void ToggleTranslateDir() { }
-
+        protected virtual void ProcessTouchInput() { }
         private void FixedUpdate()
         {
             if (rb.position.y < outOfSceneYTreshold)
