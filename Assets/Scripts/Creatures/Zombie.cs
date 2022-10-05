@@ -142,16 +142,18 @@ namespace Assets.Scripts
 
         protected override void OnGotKilled()
         {
-            base.OnGotKilled();
-
             damage.Active = false;
             
             scouting = false;
             StopCoroutine(LookForTarget());
 
+            moveDir = Vector2.zero;
+
             animator.SetBool(AnimDieBool, true);
             animator.SetBool(AnimGoBool, false);
             animator.SetBool(AnimAttackBool, false);
+            
+            base.OnGotKilled();
         }
 
         protected override void OnResurrected()

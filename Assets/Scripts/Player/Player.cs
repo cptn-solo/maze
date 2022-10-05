@@ -66,7 +66,6 @@ namespace Assets.Scripts
         protected override void OnAwake()
         {
             base.OnAwake();
-            BindInputs();
 
             touches = GetComponent<TouchInputProcessor>();
             playerCamera = GetComponent<PlayerCamera>();
@@ -77,6 +76,8 @@ namespace Assets.Scripts
             collector.OnCollected += Collector_OnCollected;
 
             hitbox.PlayerId = gameObject.ToString(); // to be replaced with network id
+
+            BindInputs();
         }
         protected override void OnStart()
         {
@@ -151,10 +152,8 @@ namespace Assets.Scripts
 
         protected override void OnGotKilled()
         {
-            base.OnGotKilled();
-            
             ToggleInput(false);
-            
+
             OnMove(Vector2.zero);
 
             inAttackState = false;
@@ -163,14 +162,14 @@ namespace Assets.Scripts
             animator.SetBool(AnimGoBool, false);
             animator.SetBool(AnimAttackBool, false);
             animator.SetBool(AnimJumpBool, false);
+
+            base.OnGotKilled();
         }
 
         protected override void OnResurrected()
         {
             base.OnResurrected();
-            
-            ToggleInput(true);
-
+                       
             animator.SetBool(AnimDieBool, false);
             animator.SetBool(AnimGoBool, false);
             animator.SetBool(AnimAttackBool, false);

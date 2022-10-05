@@ -14,7 +14,7 @@ namespace Assets.Scripts
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 1),
                     KeyValuePair.Create(WeaponPerk.HPDamage, 2),
-                    KeyValuePair.Create(WeaponPerk.FireRate, 2),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 4),
                 },
             };
 
@@ -28,7 +28,7 @@ namespace Assets.Scripts
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 2),
                     KeyValuePair.Create(WeaponPerk.HPDamage, 3),
-                    KeyValuePair.Create(WeaponPerk.FireRate, 4),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 5),
                 },
             };
         public static PerkInfo ShurikenPerk2Info
@@ -40,7 +40,7 @@ namespace Assets.Scripts
                 WeaponPerks = new[]
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 2),
-                    KeyValuePair.Create(WeaponPerk.HPDamage, 4),
+                    KeyValuePair.Create(WeaponPerk.HPDamage, 6),
                     KeyValuePair.Create(WeaponPerk.FireRate, 4),
                 },
             };
@@ -54,7 +54,7 @@ namespace Assets.Scripts
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 3),
                     KeyValuePair.Create(WeaponPerk.HPDamage, 10),
-                    KeyValuePair.Create(WeaponPerk.FireRate, 3),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 4),
                 },
             };
         public static PerkInfo PerkForLevel(int currentPerk) => currentPerk switch

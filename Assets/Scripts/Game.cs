@@ -226,6 +226,8 @@ namespace Assets.Scripts
             player.FadeIn();
 
             OnPlayerSpawned?.Invoke(player, null);
+
+            player.ToggleInput(true);
         }
 
         private IEnumerator PositionZombie(Zombie zombie, Building building)

@@ -7,16 +7,17 @@ namespace Assets.Scripts
     {
         private PlayerInputActions actions;
 
-        private void ToggleInput(bool toggle)
+        public void ToggleInput(bool toggle)
         {
             if (toggle)
             {
                 actions.Enable();
-            }
-                
+                touches.enabled = true;
+            }                
             else
             {
                 actions.Disable();
+                touches.enabled = false;
             }
         }
 

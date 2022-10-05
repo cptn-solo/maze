@@ -187,17 +187,15 @@ namespace Assets.Scripts
                             shell.gameObject.SetActive(true);
 
                             SoundEvents.PlayerAttack();
-
-                            yield return new WaitForSeconds(.3f);
                             
+                            yield return new WaitForSeconds(seconds);
+
                             animator.SetBool(AnimAttackBool, false);
 
                             shell.gameObject.SetActive(false);
                             shell.transform.SetParent(launcher, false);
                             shell.transform.localPosition = Vector3.zero;
                             shell.transform.localRotation = Quaternion.identity;
-
-                            yield return new WaitForSeconds(seconds);
 
                             break;
                         }

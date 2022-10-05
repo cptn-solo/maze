@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.UI;
 
 namespace Assets.Scripts.UI
 {
@@ -11,7 +12,14 @@ namespace Assets.Scripts.UI
         [SerializeField] private HUDLeaderBoardView Leaderboard;
 
         [SerializeField] private Game game;
-        
+
+        private InputSystemUIInputModule inputModule;
+
+        private void Awake()
+        {
+            inputModule = GetComponent<InputSystemUIInputModule>();
+        }
+
         private void OnEnable()
         {
             HUDScreen.OnSettingsButtonPressed += ShowSettingsScreen;
@@ -34,11 +42,17 @@ namespace Assets.Scripts.UI
         private void Game_OnWallmartLeft() =>
             WallmartScreen.gameObject.SetActive(false);
         
-        private void Game_OnPlayerSpawned(object sender, System.EventArgs e) =>
+        private void Game_OnPlayerSpawned(object sender, System.EventArgs e)
+        {
             HUDScreen.gameObject.SetActive(true);
+            inputModule.enabled = true;
+        }
 
-        private void Game_OnPlayerKilled(object sender, System.EventArgs e) =>
+        private void Game_OnPlayerKilled(object sender, System.EventArgs e)
+        {
+            inputModule.enabled = false;
             HUDScreen.gameObject.SetActive(false);
+        }
 
         private void OnDisable()
         {
