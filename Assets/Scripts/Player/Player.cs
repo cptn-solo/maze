@@ -32,6 +32,10 @@ namespace Assets.Scripts
         private AimTarget aim;
         private Collector collector;
         private Hitbox hitbox;
+
+        private Vector2 keyboardMoveDir = Vector2.zero;
+        private Vector2 touchMoveDir = Vector2.zero;
+
         protected override void ToggleTranslateDir()
         {
             base.ToggleTranslateDir();
@@ -40,20 +44,23 @@ namespace Assets.Scripts
                 Mathf.Abs(transform.position.x) < 1.25f &&
                 Mathf.Abs(transform.position.z) < 1.25f;
         }
-        protected override void ProcessTouchInput()
+        protected override void ProcessMove()
         {
-            base.ProcessTouchInput();
+            base.ProcessMove();
             var moveVector = touches.LeftDelta;
             if (moveVector == default ||
                 float.IsInfinity(moveVector.x) ||
                 float.IsNaN(moveVector.x) ||
                 moveVector.sqrMagnitude <= 400.0f)
             {
-                OnMove(Vector2.zero);
-                return;
+                touchMoveDir = Vector2.zero;
             }
 
-            OnMove(moveVector.normalized);
+            touchMoveDir = moveVector.normalized;
+            OnMove((keyboardMoveDir.sqrMagnitude > 0) ? 
+                keyboardMoveDir : 
+                touchMoveDir
+                );
         }
 
         protected override void OnAwake()

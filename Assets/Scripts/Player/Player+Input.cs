@@ -27,6 +27,7 @@ namespace Assets.Scripts
             ToggleInput(true);
             
             actions.Default.Move.performed += Move_performed;
+            actions.Default.Move.canceled += Move_canceled;
             actions.Default.Jump.performed += Jump_performed;
             actions.Default.Attack.performed += Attack_performed;
             actions.Default.Weapon.performed += Minigun_performed;
@@ -38,10 +39,15 @@ namespace Assets.Scripts
             actions.Mobile.Weapon.performed += Minigun_performed;
             actions.Mobile.Item1.performed += Item1_performed;
             actions.Mobile.Item2.performed += Item2_performed;
-        }        
+        }
 
-        private void Move_performed(InputAction.CallbackContext obj) =>
-            OnMove(obj.ReadValue<Vector2>());
+        private void Move_performed(InputAction.CallbackContext obj)
+        {
+            keyboardMoveDir = obj.ReadValue<Vector2>();
+            Debug.Log(keyboardMoveDir);
+        }
+        private void Move_canceled(InputAction.CallbackContext obj) =>
+            keyboardMoveDir = Vector2.zero;
 
         private void Jump_performed(InputAction.CallbackContext obj) =>
             OnJump();

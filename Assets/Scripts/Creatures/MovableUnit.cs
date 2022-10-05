@@ -189,10 +189,12 @@ namespace Assets.Scripts
 
             translatedDir = moveDir.x * localRight + moveDir.y * localForward;
         }
+        protected virtual void ToggleTranslateDir() { }
+        protected virtual void ProcessMove() { }
 
         private void Update()
         {
-            ProcessTouchInput();
+            ProcessMove();
 
             ToggleTranslateDir();
 
@@ -220,8 +222,6 @@ namespace Assets.Scripts
             desiredVelocity = CurrentMoveDir(translatedDir) * desiredSpeed;
         }
 
-        protected virtual void ToggleTranslateDir() { }
-        protected virtual void ProcessTouchInput() { }
         private void FixedUpdate()
         {
             if (rb.position.y < outOfSceneYTreshold)
