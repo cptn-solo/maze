@@ -1944,9 +1944,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 2409413581255877363, guid: b2665cec2428a70499e06ca1e4d05c6a,
     type: 3}
-  enemyKeys: 00000000
+  enemyKeys: 0000000001000000
   enemyPrefabs:
   - {fileID: 3935691605891884070, guid: c2ca2e6b7acd509449249dbc0c130581, type: 3}
+  - {fileID: 3935691605891884070, guid: 28d247b7cea780f4784cba89c2ad016c, type: 3}
   buildingPrefabs:
   - {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72, type: 3}
   zombieCollectablePrefabs:
@@ -1956,11 +1957,17 @@ MonoBehaviour:
   - {fileID: 8099999383400644917, guid: d7a12035a7ed65b4586c29f655d22762, type: 3}
   - {fileID: 1930925136135088810, guid: d01b558f8e1d81b45a3dc8bae8f51fae, type: 3}
   - {fileID: 2541319415720170856, guid: 4f1cbbd871e4c864e89317700680072f, type: 3}
+  spiderCollectablePrefabs:
+  - {fileID: 8099999383400644917, guid: d7a12035a7ed65b4586c29f655d22762, type: 3}
+  - {fileID: 1930925136135088810, guid: d01b558f8e1d81b45a3dc8bae8f51fae, type: 3}
+  - {fileID: 2541319415720170856, guid: 4f1cbbd871e4c864e89317700680072f, type: 3}
   chestCollectablePrefabs:
   - {fileID: 2541319415720170856, guid: 4f1cbbd871e4c864e89317700680072f, type: 3}
   playerMarkerColor: {r: 0.23745102, g: 0.8207547, b: 0.23745102, a: 0.7019608}
   zombieMarkerColor: {r: 1, g: 0.75168884, b: 0.015686274, a: 0.827451}
+  spiderMarkerColor: {r: 1, g: 0, b: 1, a: 1}
   MaxZombieCount: 50
+  MaxSpiderCount: 3
   enemySpawnInterval: 5
   hud: {fileID: 1342398244}
   markers: {fileID: 1572404561}

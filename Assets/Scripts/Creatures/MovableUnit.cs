@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Diagnostics;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -65,6 +64,7 @@ namespace Assets.Scripts
         private event Action OnDestroyAction;
 
         private float sizeScale = 1.0f;
+        private bool isCancelMoveOnDealingDamage;
 
         public float SizeScale
         {
@@ -105,7 +105,7 @@ namespace Assets.Scripts
             sceneCamera = Camera.main;
 
             rb = GetComponent<Rigidbody>();
-            col = GetComponent<CapsuleCollider>();
+            col = GetComponent<Collider>();
             battle = GetComponent<Battle>();
 
             battle.OnBattleInfoChange += Battle_OnBattleInfoChange;
@@ -118,6 +118,10 @@ namespace Assets.Scripts
             OnUnitBeforeKilled?.Invoke(this);
 
         protected virtual void OnResurrected() { }
+        protected virtual void OnDealingDamage(Hitbox hitbox) {
+            if (!isCancelMoveOnDealingDamage)
+                StartCoroutine(CancelMoveOnDealingDamage());
+        }
 
         protected virtual void OnTakingDamage(bool critical) { }
         private void Battle_OnTakingDamage(bool critical) =>
@@ -138,6 +142,14 @@ namespace Assets.Scripts
             yield return new WaitForSeconds(3.0f);
 
             OnUnitKilled?.Invoke(this);
+
+        }
+
+        private IEnumerator CancelMoveOnDealingDamage()
+        {
+            isCancelMoveOnDealingDamage = true;
+            yield return new WaitForSeconds(.5f);
+            isCancelMoveOnDealingDamage = false;
 
         }
 
@@ -202,7 +214,8 @@ namespace Assets.Scripts
 
             var rotationDirCur = CurrentRotationDir(translatedDir);
             var rotSpeedCur = CurrentRotationSpeed(rotationSpeed);
-            var speedCur = CurrentMoveSpeed(speed);
+            
+            var speedCur = isCancelMoveOnDealingDamage ? 0 : CurrentMoveSpeed(speed);
 
             var rs = rotSpeedCur * Mathf.Deg2Rad; // 3 ~ 180 deg/s
             var angleY = Vector3.SignedAngle(transform.forward, rotationDirCur, Vector3.up) * Mathf.Deg2Rad;

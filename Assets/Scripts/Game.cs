@@ -14,12 +14,15 @@ namespace Assets.Scripts
         [SerializeField] private GameObject[] enemyPrefabs;
         [SerializeField] private GameObject[] buildingPrefabs;
         [SerializeField] private GameObject[] zombieCollectablePrefabs;
+        [SerializeField] private GameObject[] spiderCollectablePrefabs;
         [SerializeField] private GameObject[] chestCollectablePrefabs;
 
         [SerializeField] private Color playerMarkerColor = Color.green;
         [SerializeField] private Color zombieMarkerColor = Color.yellow;
+        [SerializeField] private Color spiderMarkerColor = Color.magenta;
 
         [SerializeField] private int MaxZombieCount = 10;
+        [SerializeField] private int MaxSpiderCount = 3;
         [SerializeField] private float enemySpawnInterval = 5.0f;
 
         [SerializeField] private HUDScreen hud;
@@ -33,6 +36,7 @@ namespace Assets.Scripts
         private Player player;
 
         private Zombie[] zombies = new Zombie[10];
+        private Spider[] spiders = new Spider[10];
         private Chest[] chests = new Chest[10];
         private Collectable[] drops = new Collectable[20];
 
@@ -90,8 +94,8 @@ namespace Assets.Scripts
             score.AddPlayer(zombiesId);
             score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
 
-            for (int i = 0; i < enemyPrefabs.Length; i++)
-                StartCoroutine(StartSpawnEnemy(i));
+            foreach(var key in enemyKeys)
+                StartCoroutine(StartSpawnEnemy(key));
 
             player.InitPerkedItems(); 
             
@@ -139,6 +143,20 @@ namespace Assets.Scripts
         private void Zombie_OnUnitKilled(MovableUnit obj) =>
             StartCoroutine(PositionZombie((Zombie)obj, building));
 
+        private void Spider_OnUnitBeforeKilled(MovableUnit obj)
+        {
+            soundEvents.ZombieKilled();
+
+            SpawnCollectables(obj.transform, spiderCollectablePrefabs, Mathf.FloorToInt(obj.SizeScale * 20));
+            balances.PlayerScore += 10;
+            playerScoreInfo.Score = balances.PlayerScore;
+            score.UpdatePlayer(playerId, playerScoreInfo, true);
+            balance.SetCoinX(balances.CurrentCoinX);
+        }
+        private void Spider_OnUnitKilled(MovableUnit obj) =>
+            StartCoroutine(PositionSpider((Spider)obj, building));
+
+
         private void Balances_OnBalanceChanged(CollectableType arg1, int arg2) =>
             UpdateHUDBalances(arg1, arg2);
 
@@ -150,33 +168,81 @@ namespace Assets.Scripts
             UpdateHUDPerk(arg1, arg2);
         }
 
-        private IEnumerator StartSpawnEnemy(int enemyPrefabIdx)
+        private Zombie GetZombie()
         {
+            var idx = Array.IndexOf(enemyKeys, EnemyType.Zombie);
+            var prefab = enemyPrefabs[idx];
 
-            Array.Resize(ref zombies, MaxZombieCount);
-            var prefab = enemyPrefabs[enemyPrefabIdx];
-            for (int i = 0; i < MaxZombieCount; i++)
+            var zombie = Instantiate(prefab).GetComponent<Zombie>();
+            zombie.transform.SetParent(enemies.transform);
+            zombie.OnUnitBeforeKilled += Zombie_OnUnitBeforeKilled;
+            zombie.OnUnitKilled += Zombie_OnUnitKilled;
+            zombie.SoundEvents = soundEvents;
+            zombie.SizeScale = Random.Range(.5f, 2.0f);
+
+            zombie.gameObject.SetActive(false);
+            
+            return zombie;
+        }
+        private Spider GetSpider()
+        {
+            var idx = Array.IndexOf(enemyKeys, EnemyType.Spider);
+            var prefab = enemyPrefabs[idx];
+
+            var spider = Instantiate(prefab).GetComponent<Spider>();
+            spider.transform.SetParent(enemies.transform);
+            spider.OnUnitBeforeKilled += Spider_OnUnitBeforeKilled;
+            spider.OnUnitKilled += Spider_OnUnitKilled;
+            spider.SoundEvents = soundEvents;
+            spider.SizeScale = Random.Range(.5f, 2.0f);
+
+            spider.gameObject.SetActive(false);
+
+            return spider;
+        }
+
+
+        private IEnumerator StartSpawnEnemy(EnemyType enemyType)
+        {
+            switch (enemyType)
             {
-                var zombie = Instantiate(prefab).GetComponent<Zombie>();
-                zombie.transform.SetParent(enemies.transform);
-                zombie.OnUnitBeforeKilled += Zombie_OnUnitBeforeKilled;
-                zombie.OnUnitKilled += Zombie_OnUnitKilled;
-                zombie.SoundEvents = soundEvents;
-                zombie.SizeScale = Random.Range(.5f, 2.0f);
+                case EnemyType.Zombie:
+                    {
+                        Array.Resize(ref zombies, MaxZombieCount);
+                        for (int i = 0; i < MaxZombieCount; i++)
+                        {
+                            zombies[i] = GetZombie();
+                            yield return null;
+                        }
 
-                zombie.gameObject.SetActive(false);
+                        for (int i = 0; i < MaxZombieCount; i++)
+                        {
+                            yield return new WaitForSeconds(enemySpawnInterval);
 
-                zombies[i] = zombie;
-                yield return null;
-            }
+                            StartCoroutine(PositionZombie(zombies[i], building));
+                        }
+                    }
+                    break;
+                case EnemyType.Spider:
+                    {
+                        Array.Resize(ref spiders, MaxSpiderCount);
+                        for (int i = 0; i < MaxSpiderCount; i++)
+                        {
+                            spiders[i] = GetSpider();
+                            yield return null;
+                        }
 
-            for (int i = 0; i < MaxZombieCount; i++)
-            {
-                yield return new WaitForSeconds(enemySpawnInterval);
+                        for (int i = 0; i < MaxSpiderCount; i++)
+                        {
+                            yield return new WaitForSeconds(enemySpawnInterval);
 
-                var zombie = zombies[i];
+                            StartCoroutine(PositionSpider(spiders[i], building));
+                        }
 
-                StartCoroutine(PositionZombie(zombie, building));
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -226,6 +292,31 @@ namespace Assets.Scripts
             OnPlayerSpawned?.Invoke(player, null);
 
             player.ToggleInput(true);
+        }
+
+        private IEnumerator PositionSpider(Spider spider, Building building)
+        {
+            if (spider.isActiveAndEnabled)
+            {
+                while (!spider.FadeOut())
+                    yield return null;
+            }
+
+            var filtered = building.SpiderSpawnPoints.Where(x => x.gameObject.activeSelf).ToArray();
+            var spIndex = UnityEngine.Random.Range(0, filtered.Length);
+            var sp = filtered[spIndex].transform;
+            spider.Building = building;
+
+            spider.gameObject.SetActive(true);
+            spider.OnRespawned(sp.position, sp.rotation);
+
+            if (spider.TryGetComponent<Visibility>(out var unit))
+            {
+                unit.MarkerColor = spiderMarkerColor;
+                markers.AddEnemy(unit, EnemyType.Spider);
+            }
+
+            spider.FadeIn();
         }
 
         private IEnumerator PositionZombie(Zombie zombie, Building building)
