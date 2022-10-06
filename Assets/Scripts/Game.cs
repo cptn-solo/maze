@@ -13,7 +13,8 @@ namespace Assets.Scripts
         [SerializeField] private EnemyType[] enemyKeys;
         [SerializeField] private GameObject[] enemyPrefabs;
         [SerializeField] private GameObject[] buildingPrefabs;
-        [SerializeField] private GameObject[] collectablePrefabs;
+        [SerializeField] private GameObject[] zombieCollectablePrefabs;
+        [SerializeField] private GameObject[] chestCollectablePrefabs;
 
         [SerializeField] private Color playerMarkerColor = Color.green;
         [SerializeField] private Color zombieMarkerColor = Color.yellow;
@@ -103,9 +104,7 @@ namespace Assets.Scripts
         private void Chest_OnChestOpened(Chest obj)
         {
             soundEvents.ChestOpen();
-            var prefab = collectablePrefabs[Random.Range(0, collectablePrefabs.Length)];
-            Instantiate(prefab, obj.transform.position + Vector3.up * .07f - obj.transform.forward * .07f, Quaternion.identity,
-                collectables.transform);
+            SpawnCollectables(obj.transform, chestCollectablePrefabs, Random.Range(7, 14));
         }
 
         private void Player_OnUnitBeforeKilled(MovableUnit obj)
@@ -131,7 +130,7 @@ namespace Assets.Scripts
         {
             soundEvents.ZombieKilled();
 
-            SpawnCollectables(obj);
+            SpawnCollectables(obj.transform, zombieCollectablePrefabs, Mathf.FloorToInt(obj.SizeScale * 5));
             balances.PlayerScore++;
             playerScoreInfo.Score = balances.PlayerScore;
             score.UpdatePlayer(playerId, playerScoreInfo, true);
@@ -181,13 +180,12 @@ namespace Assets.Scripts
             }
         }
 
-        private void SpawnCollectables(MovableUnit obj)
+        private void SpawnCollectables(Transform location, GameObject[] source, int cnt)
         {
-            var cnt = Mathf.FloorToInt(obj.SizeScale * 5);
             for (int i = 0; i < cnt; i++)
             {
-                var prefab = collectablePrefabs[Random.Range(0, collectablePrefabs.Length)];
-                Instantiate(prefab, obj.transform.position + Vector3.up * .05f + .01f * i * obj.transform.forward, Quaternion.identity, collectables.transform);
+                var prefab = source[Random.Range(0, source.Length)];
+                Instantiate(prefab, location.position + Vector3.up * .05f + .01f * i * location.forward, Quaternion.identity, collectables.transform);
             }
         }
 

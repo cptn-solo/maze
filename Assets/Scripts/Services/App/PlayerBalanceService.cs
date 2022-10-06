@@ -9,17 +9,8 @@ namespace Assets.Scripts
         public int PlayerScore { get; set; } = 0; // zombies eliminated by player
         public int EnemyScore { get; set; } = 0;// player eliminated by zombies and other npc
 
-        public int CurrentCoinX
-        {
-            get
-            {
-                if (EnemyScore == 0)
-                    return 1 + Mathf.FloorToInt(PlayerScore * .1f);
-
-                return 1 + Mathf.FloorToInt((PlayerScore / EnemyScore) * .1f);
-            }
-        }
-
+        public int CurrentCoinX =>
+            1 + Mathf.FloorToInt((PlayerScore / (1 + EnemyScore * .2f)) * .1f);
 
         public static CollectableType CollectableForWeapon(WeaponType weaponType)
         {

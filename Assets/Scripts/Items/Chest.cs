@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
 {
     public class Chest : MonoBehaviour
     {
         private Animator animator;
+        
         [SerializeField] private LayerMask openMask;
+        [SerializeField] private float dropCooldownTime = 60.0f;
 
         private const string AnimOpenBool = "open";
         private bool nearby = false;
@@ -60,7 +61,7 @@ namespace Assets.Scripts
             while (nearby)
                 yield return new WaitForSeconds(1.0f);
 
-            yield return new WaitForSeconds(5.0f);
+            yield return new WaitForSeconds(dropCooldownTime);
             
             dropped = false;
             nearby = false;

@@ -310,7 +310,7 @@ namespace Assets.Scripts
         void UpdateFocusPoint()
         {
             previousFocusPoint = focusPoint;
-            Vector3 targetPoint = transform.position + Vector3.up * .08f;
+            Vector3 targetPoint = transform.position + Vector3.up * .14f;
             focusPoint = targetPoint;
         }
 

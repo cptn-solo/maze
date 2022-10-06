@@ -1949,13 +1949,15 @@ MonoBehaviour:
   - {fileID: 3935691605891884070, guid: c2ca2e6b7acd509449249dbc0c130581, type: 3}
   buildingPrefabs:
   - {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72, type: 3}
-  collectablePrefabs:
-  - {fileID: 2541319415720170856, guid: 4f1cbbd871e4c864e89317700680072f, type: 3}
-  - {fileID: 8099999383400644917, guid: d7a12035a7ed65b4586c29f655d22762, type: 3}
-  - {fileID: 1930925136135088810, guid: d01b558f8e1d81b45a3dc8bae8f51fae, type: 3}
-  - {fileID: 4554145090234826782, guid: fdefa8771d030dc488bbc7aa6e1f2c0d, type: 3}
+  zombieCollectablePrefabs:
   - {fileID: 1930925136135088810, guid: 496a099fe9a74684485a9a828f991b02, type: 3}
   - {fileID: 1930925136135088810, guid: f6da6478405beb449bb098577e6690a9, type: 3}
+  - {fileID: 4554145090234826782, guid: fdefa8771d030dc488bbc7aa6e1f2c0d, type: 3}
+  - {fileID: 8099999383400644917, guid: d7a12035a7ed65b4586c29f655d22762, type: 3}
+  - {fileID: 1930925136135088810, guid: d01b558f8e1d81b45a3dc8bae8f51fae, type: 3}
+  - {fileID: 2541319415720170856, guid: 4f1cbbd871e4c864e89317700680072f, type: 3}
+  chestCollectablePrefabs:
+  - {fileID: 2541319415720170856, guid: 4f1cbbd871e4c864e89317700680072f, type: 3}
   playerMarkerColor: {r: 0.23745102, g: 0.8207547, b: 0.23745102, a: 0.7019608}
   zombieMarkerColor: {r: 1, g: 0.75168884, b: 0.015686274, a: 0.827451}
   MaxZombieCount: 50
