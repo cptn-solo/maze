@@ -345,6 +345,8 @@ namespace Assets.Scripts
         }
         private Vector3 AvoidObstacles(Vector3 pos)
         {
+            return pos;
+
             Vector3 lookPosition = pos;
             Vector3 lookDirection = (focusPoint - lookPosition).normalized;
             Vector3 rectOffset = lookDirection * sceneCamera.nearClipPlane;

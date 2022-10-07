@@ -93,6 +93,8 @@ namespace Assets.Scripts
         private void ToggleCameraControl()
         {
             playerCamera.CameraControl = Prefs.CameraControl && !TranslateDirActive;
+            if (playerCamera.CameraControl)
+                playerCamera.CameraSencitivity = Prefs.CameraSencitivity;
         }
 
         private void Player_OnTranslateDirActiveChange(bool obj) =>
