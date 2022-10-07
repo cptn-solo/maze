@@ -136,6 +136,12 @@ namespace Assets.Scripts
             scouting = false;
             StopCoroutine(LookForTarget());
 
+            onTargetRunning = false;
+            StopCoroutine(OnTarget());
+
+            rangeAttackRunning = false;            
+            StopCoroutine(nameof(RangeAttack));
+
             moveDir = Vector2.zero;
 
             animator.SetBool(AnimDieBool, true);

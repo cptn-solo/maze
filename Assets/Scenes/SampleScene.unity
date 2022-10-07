@@ -1966,8 +1966,8 @@ MonoBehaviour:
   playerMarkerColor: {r: 0.23745102, g: 0.8207547, b: 0.23745102, a: 0.7019608}
   zombieMarkerColor: {r: 1, g: 0.75168884, b: 0.015686274, a: 0.827451}
   spiderMarkerColor: {r: 1, g: 0, b: 1, a: 1}
-  MaxZombieCount: 50
-  MaxSpiderCount: 3
+  MaxZombieCount: 0
+  MaxSpiderCount: 1
   enemySpawnInterval: 5
   hud: {fileID: 1342398244}
   markers: {fileID: 1572404561}

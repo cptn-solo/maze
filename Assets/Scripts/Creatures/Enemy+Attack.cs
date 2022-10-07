@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -9,7 +8,8 @@ namespace Assets.Scripts
         [SerializeField] private bool rangeAttackEnabled;
         [SerializeField] private float rangeAttackInterval = 3.0f;
 
-        private bool onTargetRunning;
+        protected bool onTargetRunning;
+        protected bool rangeAttackRunning;
 
         private IEnumerator AttackAnimation()
         {
@@ -55,7 +55,7 @@ namespace Assets.Scripts
                 yield return new WaitForSeconds(rangeAttackInterval);
                 
                 // double check
-                if (onTargetRunning && aim.AttackTarget != null)
+                if (onTargetRunning && !rangeAttackRunning && aim.AttackTarget != null)
                     StartCoroutine(RangeAttack(aim.AttackTarget));
             }
 
@@ -63,7 +63,11 @@ namespace Assets.Scripts
         }
 
         protected virtual IEnumerator RangeAttack(Transform target) {
+            rangeAttackRunning = true;
+            
             yield return null;
+            
+            rangeAttackRunning = false;
         }
     }
 }

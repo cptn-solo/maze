@@ -13,16 +13,21 @@ namespace Assets.Scripts
 
         protected override IEnumerator RangeAttack(Transform target)
         {
+            rangeAttackRunning = true;
+
             OnRangeAttack();
 
             StartCoroutine(ShootAnimation());
             
-            yield return new WaitForSeconds(.08f);
-
-            SoundEvents.SpiderBeamAttack();
-
-            while (true)
+            while (rangeAttackRunning)
             {
+                yield return new WaitForSeconds(.08f);
+
+                if (!rangeAttackRunning)
+                    break;
+
+                SoundEvents.SpiderBeamAttack();
+
                 if (!Physics.Raycast(beam.position, beam.forward, out var hitInfo, beamRange, targetMask))
                     break;
 
@@ -36,10 +41,8 @@ namespace Assets.Scripts
 
                 break;
             }
-
-            yield return null;
-
-
+            
+            rangeAttackRunning = false;
         }
 
     }
