@@ -23,6 +23,8 @@ namespace Assets.Scripts
         [SerializeField] private AudioClip outOfAmmo;
         [SerializeField] private AudioClip bombExplode;
 
+        [SerializeField] private AudioClip spiderBeamAttack;
+
         private AudioSource audioSource;
 
         private void Awake()
@@ -40,6 +42,8 @@ namespace Assets.Scripts
                 soundEvents.OnPlayerJump += SoundEvents_OnPlayerJump;
                 soundEvents.OnCollectedItem += SoundEvents_OnCollectedItem;
 
+                soundEvents.OnSpiderBeamAttack += SoundEvents_OnSpiderBeamAttack;
+
                 soundEvents.OnZombieAttack += ZombieEvents_OnZombieAttack;
                 soundEvents.OnZombieDamaged += ZombieEvents_OnZombieDamaged;
                 soundEvents.OnZombieDamagedCritical += ZombieEvents_OnZombieDamagedCritical;
@@ -51,7 +55,7 @@ namespace Assets.Scripts
                 soundEvents.OnBombExplode += SoundEvents_OnBombExplode;
             }
         }
-        
+
         private void OnDisable()
         {
             if (soundEvents != null)
@@ -73,70 +77,37 @@ namespace Assets.Scripts
                 soundEvents.OnBombExplode -= SoundEvents_OnBombExplode;
             }
         }
-        private void SoundEvents_OnBombExplode(object sender, EventArgs e)
-        {
+
+        private void SoundEvents_OnSpiderBeamAttack(object sender, EventArgs e) =>
+            audioSource.PlayOneShot(spiderBeamAttack);
+        private void SoundEvents_OnBombExplode(object sender, EventArgs e) =>
             audioSource.PlayOneShot(bombExplode);
-        }
-
-        private void SoundEvents_OnOutOfAmmo(object sender, EventArgs e)
-        {
+        private void SoundEvents_OnOutOfAmmo(object sender, EventArgs e) =>
             audioSource.PlayOneShot(outOfAmmo);
-        }
-
-        private void SoundEvents_OnMinigunShot(object sender, EventArgs e)
-        {
+        private void SoundEvents_OnMinigunShot(object sender, EventArgs e) =>
             audioSource.PlayOneShot(minigunShot);
-        }
-
-        private void SoundEvents_OnPlayerJump(object sender, EventArgs e)
-        {
-            audioSource.PlayOneShot(jumpPlayer);
-        }
-
-        private void SoundEvents_OnChestOpen(object sender, EventArgs e)
-        {
+        private void SoundEvents_OnPlayerJump(object sender, EventArgs e) =>
+            audioSource.PlayOneShot(jumpPlayer);        
+        private void SoundEvents_OnChestOpen(object sender, EventArgs e) =>
             audioSource.PlayOneShot(chestOpen);
-        }
-
-        private void SoundEvents_OnCollectedItem(object sender, EventArgs e)
-        {
+        private void SoundEvents_OnCollectedItem(object sender, EventArgs e) =>
             audioSource.PlayOneShot(collectedItem);
-        }
-
-        private void SoundEvents_OnZombieKilled(object sender, EventArgs e)
-        {
+        private void SoundEvents_OnZombieKilled(object sender, EventArgs e) =>
             audioSource.PlayOneShot(killedZombie);
-        }
-
         private void ZombieEvents_OnZombieAttack(object sender, EventArgs e)
         {
             if (attackZombie != null)
                 audioSource.PlayOneShot(attackZombie);
         }
-
-        private void ZombieEvents_OnZombieDamagedCritical(object sender, EventArgs e)
-        {
+        private void ZombieEvents_OnZombieDamagedCritical(object sender, EventArgs e) =>
+            audioSource.PlayOneShot(damageZombie);        
+        private void ZombieEvents_OnZombieDamaged(object sender, EventArgs e) =>
             audioSource.PlayOneShot(damageZombie);
-        }
-
-        private void ZombieEvents_OnZombieDamaged(object sender, EventArgs e)
-        {
-            audioSource.PlayOneShot(damageZombie);
-        }
-
-        private void PlayerEvents_OnPlayerDamagedCritical(object sender, EventArgs e)
-        {
+        private void PlayerEvents_OnPlayerDamagedCritical(object sender, EventArgs e) =>
             audioSource.PlayOneShot(damagePlayer);
-        }
-
-        private void PlayerEvents_OnPlayerDamaged(object sender, EventArgs e)
-        {
+        private void PlayerEvents_OnPlayerDamaged(object sender, EventArgs e) =>
             audioSource.PlayOneShot(damagePlayer);
-        }
-
-        private void PlayerEvents_OnPlayerAttack(object sender, EventArgs e)
-        {
+        private void PlayerEvents_OnPlayerAttack(object sender, EventArgs e) =>
             audioSource.PlayOneShot(attackPlayer);
-        }
     }
 }

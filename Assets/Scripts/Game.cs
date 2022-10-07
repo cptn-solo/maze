@@ -41,12 +41,12 @@ namespace Assets.Scripts
         private Collectable[] drops = new Collectable[20];
 
         private readonly string playerId = "Player";
-        private readonly string zombiesId = "Zombies";
+        private readonly string zombiesId = "NPCs";
 
         private UnitInfo playerScoreInfo = 
             new("Player", Color.green, 0, Color.green, 0, 0, Color.green);
         private UnitInfo zombiesScoreInfo = 
-            new("Zombies", Color.yellow, 0, Color.red, 0, 0, Color.yellow);
+            new("NPCs", Color.yellow, 0, Color.red, 0, 0, Color.yellow);
 
         public event EventHandler OnPlayerSpawned;
         public event EventHandler OnPlayerKilled;

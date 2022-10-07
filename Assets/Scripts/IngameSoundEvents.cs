@@ -10,6 +10,7 @@ namespace Assets.Scripts
         public event EventHandler OnPlayerDamagedCritical;
         public event EventHandler OnPlayerWalk;
         public event EventHandler OnPlayerJump;
+        public event EventHandler OnSpiderBeamAttack;
         public event EventHandler OnZombieAttack;
         public event EventHandler OnZombieDamaged;
         public event EventHandler OnZombieDamagedCritical;
@@ -28,6 +29,7 @@ namespace Assets.Scripts
         public void PlayerDamagedCritical() => OnPlayerDamagedCritical?.Invoke(this, null);
         public void PlayerWalk() => OnPlayerWalk?.Invoke(this, null);
         public void PlayerJump() => OnPlayerJump?.Invoke(this, null);
+        public void SpiderBeamAttack() => OnSpiderBeamAttack?.Invoke(this, null);
         public void ZombieAttack() => OnZombieAttack?.Invoke(this, null);
         public void ZombieDamaged() => OnZombieDamaged?.Invoke(this, null);
         public void ZombieDamagedCritical() => OnZombieDamagedCritical?.Invoke(this, null);

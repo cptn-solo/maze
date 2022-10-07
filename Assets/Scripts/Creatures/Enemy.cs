@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class Enemy : MovableUnit
+    public partial class Enemy : MovableUnit
     {
         private const string AnimGoBool = "go";
         private const string AnimDieBool = "die";
@@ -62,7 +62,14 @@ namespace Assets.Scripts
             scouting = false;
          
             StopCoroutine(LookForTarget());
+
             aim.Engage(false);
+
+            if (onTargetRunning)
+            {
+                onTargetRunning = false;
+                StopCoroutine(OnTarget());
+            }
 
             yield return new WaitForSeconds(interval);
 
@@ -88,27 +95,6 @@ namespace Assets.Scripts
 
             animator.SetBool(AnimDamageBool, false);
 
-        }
-        private IEnumerator AttackAnimation()
-        {
-            animator.SetBool(AnimAttackBool, true);
-
-            yield return new WaitForSeconds(.5f);
-
-            animator.SetBool(AnimAttackBool, false);
-
-        }
-
-
-        private IEnumerator LookForTarget()
-        {
-            while (scouting)
-            {                
-                yield return new WaitForSeconds(1.0f);
-
-                if (scouting && (aim.AttackTarget == null || aim.AttackTargetLost))
-                    aim.Engage(true);
-            }
         }
 
         protected override Vector3 CurrentMoveDir(Vector3 translatedDir)

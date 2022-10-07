@@ -55,7 +55,6 @@ namespace Assets.Scripts
         internal void Engage(bool v)
         {
             attackTarget = v ? TryGetAttackTarget() : null;
-
         }
     }
 }

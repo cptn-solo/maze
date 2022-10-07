@@ -24,6 +24,9 @@ namespace Assets.Scripts
         [SerializeField] protected float jumpImpulse = 2.0f;
         [SerializeField] private float outOfSceneYTreshold = -10.0f;
 
+        [SerializeField] private float movePauseForRangeAttack = 2.0f;
+        [SerializeField] private float movePauseForMeleeAttack = .5f;
+
         protected Building building;
 
         protected Vector2 moveDir;
@@ -65,6 +68,7 @@ namespace Assets.Scripts
 
         private float sizeScale = 1.0f;
         private bool isCancelMoveOnDealingDamage;
+        private bool isCancelMoveOnRangeAttack;
 
         public float SizeScale
         {
@@ -118,6 +122,12 @@ namespace Assets.Scripts
             OnUnitBeforeKilled?.Invoke(this);
 
         protected virtual void OnResurrected() { }
+        protected virtual void OnRangeAttack()
+        {
+            if (!isCancelMoveOnRangeAttack)
+                StartCoroutine(CancelMoveOnRangeAttack());
+        }
+
         protected virtual void OnDealingDamage(Hitbox hitbox) {
             if (!isCancelMoveOnDealingDamage)
                 StartCoroutine(CancelMoveOnDealingDamage());
@@ -148,9 +158,15 @@ namespace Assets.Scripts
         private IEnumerator CancelMoveOnDealingDamage()
         {
             isCancelMoveOnDealingDamage = true;
-            yield return new WaitForSeconds(.5f);
+            yield return new WaitForSeconds(movePauseForMeleeAttack);
             isCancelMoveOnDealingDamage = false;
+        }
 
+        private IEnumerator CancelMoveOnRangeAttack()
+        {
+            isCancelMoveOnRangeAttack = true;
+            yield return new WaitForSeconds(movePauseForRangeAttack);
+            isCancelMoveOnRangeAttack = false;
         }
 
         protected virtual void OnStart() => OnStartAction?.Invoke();
@@ -215,7 +231,8 @@ namespace Assets.Scripts
             var rotationDirCur = CurrentRotationDir(translatedDir);
             var rotSpeedCur = CurrentRotationSpeed(rotationSpeed);
             
-            var speedCur = isCancelMoveOnDealingDamage ? 0 : CurrentMoveSpeed(speed);
+            var speedCur = isCancelMoveOnDealingDamage || isCancelMoveOnRangeAttack ?
+                0 : CurrentMoveSpeed(speed);
 
             var rs = rotSpeedCur * Mathf.Deg2Rad; // 3 ~ 180 deg/s
             var angleY = Vector3.SignedAngle(transform.forward, rotationDirCur, Vector3.up) * Mathf.Deg2Rad;
