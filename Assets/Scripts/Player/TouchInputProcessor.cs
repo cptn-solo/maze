@@ -6,6 +6,7 @@ namespace Assets.Scripts
 {
     public class TouchInputProcessor : MonoBehaviour
     {
+        private const float leftRightRatio = .4f;
         private readonly GUIStyle textStyleLeft = new();
         private readonly GUIStyle textStyleRight = new();
         private Finger leftFinger;
@@ -54,7 +55,7 @@ namespace Assets.Scripts
         private void Touch_onFingerDown(Finger obj)
         {
             var pos = obj.currentTouch.startScreenPosition;
-            if (pos.x <= Screen.currentResolution.width * .3f)
+            if (pos.x <= Screen.currentResolution.width * leftRightRatio)
             {
                 leftFinger = obj;
                 leftPosPrev = pos;
@@ -70,7 +71,7 @@ namespace Assets.Scripts
 
         private void Touch_onFingerUp(Finger obj)
         {
-            if (obj.currentTouch.startScreenPosition.x <= Screen.currentResolution.width * .3f)
+            if (obj.currentTouch.startScreenPosition.x <= Screen.currentResolution.width * leftRightRatio)
             {
                 leftFinger = null;
                 leftPosPrev = default;
