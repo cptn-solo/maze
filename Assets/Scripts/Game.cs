@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
@@ -69,7 +70,7 @@ namespace Assets.Scripts
             enemies = new GameObject("Enemies");
             collectables = new GameObject("Collectables");
 
-            building = Instantiate(buildingPrefabs[0]).GetComponent<Building>();
+            building = GetSceneBuilding();
             player = Instantiate(playerPrefab).GetComponent<Player>();
 
             player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
@@ -104,6 +105,15 @@ namespace Assets.Scripts
             InitHUD();
         }
 
+        private Building GetSceneBuilding()
+        {
+            return SceneManager.GetActiveScene().
+                GetRootGameObjects().
+                Select(x => x.GetComponent<Building>()).
+                Where(x => x != null).
+                FirstOrDefault();
+
+        }
 
         private void Chest_OnChestOpened(Chest obj)
         {

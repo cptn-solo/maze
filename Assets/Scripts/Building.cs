@@ -26,6 +26,5 @@ namespace Assets.Scripts
             spiderSpawnPoints = GetComponentsInChildren<SpiderSpawnPoint>()
                 .Select(x => x.transform).ToArray();
         }
-
     }
 }

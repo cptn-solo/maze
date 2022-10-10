@@ -13,6 +13,7 @@ namespace Assets.Scripts
         [SerializeField] private float camSpeed = 10.0f;
 
         [SerializeField] private LayerMask obstructionMask;
+        [SerializeField] private LayerMask translateDirMask;
 
         private bool listeningForScreenOrientation;
         private float camDistanceFactor = 1.0f;
@@ -33,6 +34,8 @@ namespace Assets.Scripts
         private bool isOrbiting;
         private bool isFollowing;
         private bool obscured;
+        
+        private readonly Collider[] translateDirBuff = new Collider[1];
 
         public float CameraSencitivity { get; set; } = .5f;
         public bool CameraControl { get; set; } = true;
@@ -63,7 +66,11 @@ namespace Assets.Scripts
             if (listeningForScreenOrientation)
                 StopCoroutine(ScreenOrientationMonitor());
         }
-
+        private void Update()
+        {
+            player.TranslateDirActive = Physics.OverlapSphereNonAlloc(
+                transform.position + transform.up * .04f, .01f, translateDirBuff, translateDirMask) == 1;
+        }
         private void LateUpdate()
         {
             if (player.TranslateDirActive)

@@ -1640,6 +1640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1811858399947128385}
   - component: {fileID: 1273193991642455341}
+  - component: {fileID: 334758885950907052}
   m_Layer: 0
   m_Name: Building
   m_TagString: Untagged
@@ -1682,6 +1683,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f85d5809762e14348a8f61be1dc25c1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &334758885950907052
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8081746280652900843}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.4927373, y: 2.395582, z: 2.4992566}
+  m_Center: {x: -0.048659325, y: 1.2478496, z: -0.048053026}
 --- !u!1 &8299117411755769004
 GameObject:
   m_ObjectHideFlags: 0

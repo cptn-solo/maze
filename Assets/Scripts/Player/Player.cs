@@ -35,15 +35,7 @@ namespace Assets.Scripts
 
         private Vector2 keyboardMoveDir = Vector2.zero;
         private Vector2 touchMoveDir = Vector2.zero;
-
-        protected override void ToggleTranslateDir()
-        {
-            base.ToggleTranslateDir();
-            TranslateDirActive =
-                transform.position.y < 2.48f &&
-                Mathf.Abs(transform.position.x) < 1.25f &&
-                Mathf.Abs(transform.position.z) < 1.25f;
-        }
+        
         protected override void ProcessMove()
         {
             base.ProcessMove();
