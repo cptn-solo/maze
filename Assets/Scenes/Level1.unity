@@ -2396,11 +2396,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1273193991642455341, guid: b00923fb6d6974a459fbf15151614c72,
-        type: 3}
-      propertyPath: playerMask.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
     - target: {fileID: 1811858399947128385, guid: b00923fb6d6974a459fbf15151614c72,
         type: 3}
       propertyPath: m_RootOrder
@@ -2460,11 +2455,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building
-      objectReference: {fileID: 0}
-    - target: {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72,
-        type: 3}
-      propertyPath: m_Layer
-      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b00923fb6d6974a459fbf15151614c72, type: 3}

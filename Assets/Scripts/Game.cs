@@ -64,6 +64,17 @@ namespace Assets.Scripts
             perks = GetComponent<PlayerPerkService>();
             prefs = GetComponent<PlayerPreferencesService>();
         }
+        private void OnEnable()
+        {
+            balances.OnBalanceChanged += Balances_OnBalanceChanged;
+            perks.OnPerkChanged += Perks_OnPerkChanged;
+        }
+
+        private void OnDisable()
+        {
+            balances.OnBalanceChanged -= Balances_OnBalanceChanged;
+            perks.OnPerkChanged -= Perks_OnPerkChanged;
+        }
 
         void Start()
         {
@@ -112,7 +123,6 @@ namespace Assets.Scripts
                 Select(x => x.GetComponent<Building>()).
                 Where(x => x != null).
                 FirstOrDefault();
-
         }
 
         private void Chest_OnChestOpened(Chest obj)
@@ -211,7 +221,6 @@ namespace Assets.Scripts
             return spider;
         }
 
-
         private IEnumerator StartSpawnEnemy(EnemyType enemyType)
         {
             switch (enemyType)
@@ -263,18 +272,6 @@ namespace Assets.Scripts
                 var prefab = source[Random.Range(0, source.Length)];
                 Instantiate(prefab, location.position + Vector3.up * .05f + .01f * i * location.forward, Quaternion.identity, collectables.transform);
             }
-        }
-
-        private void OnEnable()
-        {
-            balances.OnBalanceChanged += Balances_OnBalanceChanged;
-            perks.OnPerkChanged += Perks_OnPerkChanged;
-        }
-
-        private void OnDisable()
-        {
-            balances.OnBalanceChanged -= Balances_OnBalanceChanged;
-            perks.OnPerkChanged -= Perks_OnPerkChanged;
         }
 
         private IEnumerator PositionPlayer(Player player, Building building, bool startingPoint = false)

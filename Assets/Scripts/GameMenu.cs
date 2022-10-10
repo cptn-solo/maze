@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,16 +10,7 @@ namespace Assets.Scripts
 
         public event Action<int> OnLevelSelected;
 
-        private void OnEnable()
-        {
-            for (int i = 0; i < levelButtons.Length; i++)
-                levelButtons[i].onClick.AddListener(() => OnLevelSelected.Invoke(i));
-        }
-
-        private void OnDisable()
-        {
-            for (int i = 0; i < levelButtons.Length; i++)
-                levelButtons[i].onClick.RemoveListener(() => OnLevelSelected.Invoke(i));
-        }
+        public void LevelButtonPressed(int levelIdx) =>
+            OnLevelSelected?.Invoke(levelIdx);
     }
 }
