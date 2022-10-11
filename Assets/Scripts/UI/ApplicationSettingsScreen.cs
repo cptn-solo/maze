@@ -8,6 +8,7 @@ namespace Assets.Scripts.UI
     public class ApplicationSettingsScreen : MonoBehaviour
     {
         [SerializeField] private Button closeButton;
+        [SerializeField] private Button menuButton;
 
         [SerializeField] private Toggle musicToggle;
         [SerializeField] private Slider musicSlider;
@@ -26,6 +27,7 @@ namespace Assets.Scripts.UI
         [SerializeField] private PlayerPreferencesService playerPrefsService;
 
         internal Action OnCloseButtonPressed;
+        internal Action OnMenuButtonPressed;
 
         void Start()
         {
@@ -44,6 +46,7 @@ namespace Assets.Scripts.UI
         }
 
         public void Close() => OnCloseButtonPressed?.Invoke();
+        public void Menu() => OnMenuButtonPressed?.Invoke();
 
         private void OnEnable()
         {
@@ -59,6 +62,7 @@ namespace Assets.Scripts.UI
             antialiasingToggle.onValueChanged.AddListener(OnAntialiasing2xToggleChange);
 
             closeButton.onClick.AddListener(Close);
+            menuButton.onClick.AddListener(Menu);
 
             cameraSencitivitySlider.onValueChanged.AddListener(OnCameraSencitivityChange);
             cameraControlToggle.onValueChanged.AddListener(OnCameraControlChange);
@@ -81,8 +85,9 @@ namespace Assets.Scripts.UI
             cameraControlToggle.onValueChanged.RemoveListener(OnCameraControlChange);
 
             closeButton.onClick.RemoveListener(Close);
+            menuButton.onClick.RemoveListener(Menu);
         }
-        
+
         public bool FpsLimitToggle
         {
             get => PlayerPrefs.GetInt(PlayerPreferencesService.FpsLimitKey) != 0;

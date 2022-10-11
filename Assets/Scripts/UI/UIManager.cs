@@ -15,6 +15,8 @@ namespace Assets.Scripts.UI
 
         private InputSystemUIInputModule inputModule;
 
+        public GameRunner GameRunner { get; set; }
+
         private void Awake()
         {
             inputModule = GetComponent<InputSystemUIInputModule>();
@@ -24,6 +26,7 @@ namespace Assets.Scripts.UI
         {
             HUDScreen.OnSettingsButtonPressed += ShowSettingsScreen;
             SettingsScreen.OnCloseButtonPressed += CloseSettingsScreen;
+            SettingsScreen.OnMenuButtonPressed += ShowGameMenu;
             WallmartScreen.OnBuyPressed += BuyWallmartItem;
             WallmartScreen.OnCancelPressed += Game_OnWallmartLeft;
 
@@ -58,6 +61,7 @@ namespace Assets.Scripts.UI
         {
             HUDScreen.OnSettingsButtonPressed -= ShowSettingsScreen;
             SettingsScreen.OnCloseButtonPressed -= CloseSettingsScreen;
+            SettingsScreen.OnMenuButtonPressed -= ShowGameMenu;
             WallmartScreen.OnBuyPressed -= BuyWallmartItem;
             WallmartScreen.OnCancelPressed -= Game_OnWallmartLeft;
 
@@ -85,6 +89,11 @@ namespace Assets.Scripts.UI
         {
             HUDScreen.gameObject.SetActive(true);
             SettingsScreen.gameObject.SetActive(false);
+        }
+
+        private void ShowGameMenu()
+        {
+            GameRunner.LoadLobby();
         }
     }
 }

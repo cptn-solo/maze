@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.UI;
+using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,8 +13,11 @@ namespace Assets.Scripts
             DontDestroyOnLoad(this);
 
         private void Start() =>
+            LoadLobby();
+        public void LoadLobby()
+        {
             StartCoroutine(LoadLobbyScene());
-
+        }
         private IEnumerator LoadLobbyScene()
         {
             var op = SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Single);            
@@ -50,7 +55,26 @@ namespace Assets.Scripts
             };
 
             SceneManager.LoadSceneAsync(levelSceneName, LoadSceneMode.Single)
-                .completed += (op) => Debug.Log($"Level loaded: {levelSceneName}");
+                .completed += (op) => {
+                    AttachToUIManager(levelSceneName);
+                };
+        }
+
+        private void AttachToUIManager(string levelSceneName)
+        {
+            Debug.Log($"Level loaded: {levelSceneName}");
+
+            var scene = SceneManager.GetActiveScene();
+            var rootObjects = scene.GetRootGameObjects();
+            var uiManager = rootObjects.Select(x => x.GetComponent<UIManager>())
+                .Where(x => x != null)
+                .FirstOrDefault();
+
+            if (uiManager != default)
+            {
+                uiManager.GameRunner = this;
+                Debug.Log($"Level UI Manager attached: {levelSceneName}");
+            }
         }
     }
 }
