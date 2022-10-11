@@ -1468,12 +1468,12 @@ PrefabInstance:
         type: 3}
       propertyPath: playerPrefsService
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 998581040}
     - target: {fileID: 4519619534652498746, guid: a6f140b3d262fa94199b23e4afaca094,
         type: 3}
       propertyPath: audioPlaybackService
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 998581041}
     - target: {fileID: 4544056630036163719, guid: a6f140b3d262fa94199b23e4afaca094,
         type: 3}
       propertyPath: m_AnchorMax.y
