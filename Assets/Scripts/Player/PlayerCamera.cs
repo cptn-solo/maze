@@ -33,6 +33,7 @@ namespace Assets.Scripts
         private bool isOrbiting;
         private bool isFollowing;
         private bool obscured;
+        private bool cameraMovePause;
 
         public float CameraSencitivity { get; set; } = .5f;
         public bool CameraControl { get; set; } = true;
@@ -87,6 +88,8 @@ namespace Assets.Scripts
         {
             if (!player.TranslateDirActive)
                 Focus();
+
+            cameraMovePause = false;
         }
 
         private void Player_OnBeforeFadeOut(MovableUnit obj)
@@ -95,6 +98,7 @@ namespace Assets.Scripts
             StopCoroutine(FollowCoroutine());
             isOrbiting = false;
             StopCoroutine(OrbitCoroutine());
+            cameraMovePause = true;
         }
 
         private void Player_OnTranslateDirActiveChange(bool obj)
@@ -290,6 +294,9 @@ namespace Assets.Scripts
         
         private void PositionCameraTowardsCenter()
         {
+            if (cameraMovePause)
+                return;
+
             var buildingFloorY = Vector3.zero + Vector3.up * player.transform.position.y;
             var toPlayer = (player.transform.position - buildingFloorY).normalized;
             var rotX = Quaternion.AngleAxis(-cameraAngle, Quaternion.AngleAxis(90f, Vector3.up) * toPlayer);
