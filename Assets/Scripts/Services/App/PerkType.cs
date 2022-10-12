@@ -9,6 +9,8 @@ namespace Assets.Scripts
         Power,
         Shuriken,
         Minigun,
+        Shotgun,
+        Uzi,
     }
 
     public enum PlayerPerk

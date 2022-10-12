@@ -14,10 +14,17 @@ namespace Assets.Scripts
         private const string AnimSpeedFloat = "speed";
 
         private const string AnimMinigunBool = "minigun";
+        private const string AnimShotgunBool = "shotgun";
+        private const string AnimUziBool = "uzi";
 
         [SerializeField] private Transform launcher;
         [SerializeField] private Shell shell;
         [SerializeField] private Minigun minigun;
+        [SerializeField] private Shotgun shotgun;
+        [SerializeField] private Uzi uzi;
+
+        [SerializeField] private LayerMask translateDirMask;
+        private readonly Collider[] translateDirBuff = new Collider[1];
 
         public event Action<CollectableType, int> OnCollected;
         public event Action<WeaponType> OnWeaponSelected;
@@ -55,6 +62,13 @@ namespace Assets.Scripts
                 );
         }
 
+        public override void ToggleTranslateDir()
+        {
+            base.ToggleTranslateDir();
+            TranslateDirActive = Physics.OverlapSphereNonAlloc(
+                transform.position + transform.up * .04f, .01f, translateDirBuff, translateDirMask) == 1;
+        }
+
         protected override void OnAwake()
         {
             base.OnAwake();
@@ -68,8 +82,6 @@ namespace Assets.Scripts
             collector.OnCollected += Collector_OnCollected;
 
             hitbox.PlayerId = gameObject.ToString(); // to be replaced with network id
-
-            BindInputs();
         }
         protected override void OnStart()
         {

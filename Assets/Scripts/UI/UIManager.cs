@@ -81,18 +81,23 @@ namespace Assets.Scripts.UI
 
         private void ShowSettingsScreen()
         {
+            inputModule.enabled = false;
             HUDScreen.gameObject.SetActive(false);
             SettingsScreen.gameObject.SetActive(true);
+            inputModule.enabled = true;
         }
 
         private void CloseSettingsScreen()
         {
+            inputModule.enabled = false;
             HUDScreen.gameObject.SetActive(true);
             SettingsScreen.gameObject.SetActive(false);
+            inputModule.enabled = true;
         }
 
         private void ShowGameMenu()
         {
+            game.CleanupLevel();
             GameRunner.LoadLobby();
         }
     }

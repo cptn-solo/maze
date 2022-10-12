@@ -113,6 +113,8 @@ namespace Assets.Scripts
                 PerkType.NA,
                 PerkType.Power,
                 PerkType.Minigun,
+                PerkType.Shotgun,
+                PerkType.Uzi,
             })
             {
                 var key = PlayerPerkService.PerkKey(perk);
@@ -162,6 +164,8 @@ namespace Assets.Scripts
                 PerkType.NA,
                 PerkType.Power,
                 PerkType.Minigun,
+                PerkType.Shotgun,
+                PerkType.Uzi,
             })
             {
                 var key = PlayerPerkService.PerkKey(perk);

@@ -2,6 +2,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Assets.Scripts
 {
@@ -13,7 +14,7 @@ namespace Assets.Scripts
         private bool item2SelectRunning;
 
         private WeaponType currentWeapon = WeaponType.Shuriken;
-        private WeaponType stowedWeapon = WeaponType.Minigun;
+        private WeaponType stowedWeapon = WeaponType.NA;
         
         [SerializeField] private GameObject bombPrefab;
         [SerializeField] private GameObject landminePrefab;
@@ -23,7 +24,10 @@ namespace Assets.Scripts
         public void SelectWeapon(WeaponType weapon)
         {
             if (weapon != currentWeapon)
+            {
+                stowedWeapon = weapon;
                 OnWeaponSelect();
+            }
         }
         private void OnWeaponSelect()
         {
@@ -104,8 +108,12 @@ namespace Assets.Scripts
             PerkRateOfFire = PerkROF(currentWeapon, perkLevel);
 
             minigun.gameObject.SetActive(currentWeapon == WeaponType.Minigun);
+            shotgun.gameObject.SetActive(currentWeapon == WeaponType.Shotgun);
+            uzi.gameObject.SetActive(currentWeapon == WeaponType.Uzi);
 
             animator.SetBool(AnimMinigunBool, currentWeapon == WeaponType.Minigun);
+            animator.SetBool(AnimShotgunBool, currentWeapon == WeaponType.Shotgun);
+            animator.SetBool(AnimUziBool, currentWeapon == WeaponType.Uzi);
 
             yield return new WaitForSeconds(.3f);
 
@@ -122,6 +130,18 @@ namespace Assets.Scripts
         private IEnumerator AttackCoroutine()
         {
             attackRunning = true;
+
+            RangeWeapon rangeWeapon = currentWeapon switch
+            {
+                WeaponType.Minigun => minigun,
+                WeaponType.Shotgun => shotgun,
+                WeaponType.Uzi => uzi,
+                _ => null
+            };
+            
+            if (rangeWeapon != null)
+                rangeWeapon.SoundEvents = SoundEvents;
+
             var ammo = 0;
             var ammoCollectable = PlayerBalanceService.CollectableForWeapon(currentWeapon);
             if (ammoCollectable != CollectableType.NA)
@@ -134,7 +154,11 @@ namespace Assets.Scripts
                 }
                 else
                 {
-                    SoundEvents.OutOfAmmo();
+                    if (rangeWeapon != null)
+                        rangeWeapon.OutOfAmmo();
+                    else
+                        SoundEvents.OutOfAmmo();
+
                     yield return new WaitForSeconds(.1f);
                     attackRunning = false;
                 }
@@ -152,21 +176,29 @@ namespace Assets.Scripts
                 switch (currentWeapon)
                 {
                     case WeaponType.Minigun:
+                    case WeaponType.Shotgun:
+                    case WeaponType.Uzi:
                         {
                             float seconds = 1 / (float)PerkRateOfFire;
                             Debug.Log(seconds);
                             if (ammo <= 0)
                             {
-                                minigun.Attack(false);
-                                SoundEvents.OutOfAmmo();
+                                rangeWeapon.Attack(false);
+                                rangeWeapon.OutOfAmmo();
                                 
                                 yield return new WaitForSeconds(seconds);
                                 
                                 break;
                             }
 
-                            minigun.Attack(true);
-                            SoundEvents.MinigunShot();
+                            rangeWeapon.Attack(true);
+                            animator.SetBool(AnimAttackBool, true);
+
+                            yield return new WaitForSeconds(.05f);
+                            
+                            rangeWeapon.AfterEachShot();
+                            animator.SetBool(AnimAttackBool, false);
+
                             ammo--;
                             OnActiveWeaponAttack?.Invoke(currentWeapon, ammo);
 
@@ -187,10 +219,12 @@ namespace Assets.Scripts
                             shell.gameObject.SetActive(true);
 
                             SoundEvents.PlayerAttack();
-                            
-                            yield return new WaitForSeconds(seconds);
 
+                            yield return new WaitForSeconds(.01f);
+                            
                             animator.SetBool(AnimAttackBool, false);
+
+                            yield return new WaitForSeconds(seconds - .01f);
 
                             shell.gameObject.SetActive(false);
                             shell.transform.SetParent(launcher, false);
@@ -208,9 +242,13 @@ namespace Assets.Scripts
             switch (currentWeapon)
             {
                 case WeaponType.Minigun:
+                case WeaponType.Shotgun:
+                case WeaponType.Uzi:
                     {
                         Balances.SetBalance(ammoCollectable, ammo);
-                        minigun.Attack(false);
+                        
+                        rangeWeapon.Attack(false);
+                        
                         break;
                     }
                 default:

@@ -14,6 +14,8 @@ namespace Assets.Scripts
         {
             return weaponType switch
             {
+                WeaponType.Uzi=> PerkType.Uzi,
+                WeaponType.Shotgun => PerkType.Shotgun,
                 WeaponType.Minigun => PerkType.Minigun,
                 WeaponType.Shuriken => PerkType.Shuriken,
                 _ => PerkType.NA,
@@ -23,6 +25,8 @@ namespace Assets.Scripts
         {
             return wallmartItem switch
             {
+                WallmartItem.Uzi => PerkType.Uzi,
+                WallmartItem.Shotgun => PerkType.Shotgun,
                 WallmartItem.Minigun => PerkType.Minigun,
                 WallmartItem.Shuriken => PerkType.Shuriken,
                 WallmartItem.Shield => PerkType.Shield,
@@ -56,6 +60,11 @@ namespace Assets.Scripts
         {
             return AddPerk(PerkForWallmart(item), v);
         }
+
+        public int ShotgunLevel => CurrentPerk(PerkForWeapon(WeaponType.Shotgun));
+        public bool ShotgunUnlocked => ShotgunLevel > 0;
+        public int UziLevel => CurrentPerk(PerkForWeapon(WeaponType.Uzi));
+        public bool UziUnlocked => UziLevel > 0;
 
         public int ShurikenLevel => CurrentPerk(PerkForWeapon(WeaponType.Shuriken));
         public bool ShurikenUnlocked =>  ShurikenLevel > 0;

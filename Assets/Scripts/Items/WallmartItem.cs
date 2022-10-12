@@ -7,5 +7,7 @@
         Minigun,
         Shield,
         Power,
+        Shotgun,
+        Uzi,
     }
 }

@@ -349,6 +349,11 @@ namespace Assets.Scripts
             }
 
             zombie.FadeIn();
-        }        
+        }
+
+        internal void CleanupLevel()
+        {
+            player.ToggleInput(false);
+        }
     }
 }

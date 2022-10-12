@@ -6,5 +6,6 @@
         Shuriken,
         Minigun,
         Shotgun,
+        Uzi,
     }
 }

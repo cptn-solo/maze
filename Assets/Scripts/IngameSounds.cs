@@ -24,6 +24,7 @@ namespace Assets.Scripts
         [SerializeField] private AudioClip bombExplode;
 
         [SerializeField] private AudioClip spiderBeamAttack;
+        [SerializeField] private AudioClip uziShot;
 
         private AudioSource audioSource;
 
@@ -51,8 +52,10 @@ namespace Assets.Scripts
                 soundEvents.OnChestOpen += SoundEvents_OnChestOpen;
 
                 soundEvents.OnMinigunShot += SoundEvents_OnMinigunShot;
+                soundEvents.OnUziShot += SoundEvents_OnUziShot;
                 soundEvents.OnOutOfAmmo += SoundEvents_OnOutOfAmmo;
                 soundEvents.OnBombExplode += SoundEvents_OnBombExplode;
+
             }
         }
 
@@ -73,6 +76,7 @@ namespace Assets.Scripts
                 soundEvents.OnChestOpen -= SoundEvents_OnChestOpen;
 
                 soundEvents.OnMinigunShot -= SoundEvents_OnMinigunShot;
+                soundEvents.OnUziShot -= SoundEvents_OnUziShot;
                 soundEvents.OnOutOfAmmo -= SoundEvents_OnOutOfAmmo;
                 soundEvents.OnBombExplode -= SoundEvents_OnBombExplode;
             }
@@ -86,6 +90,8 @@ namespace Assets.Scripts
             audioSource.PlayOneShot(outOfAmmo);
         private void SoundEvents_OnMinigunShot(object sender, EventArgs e) =>
             audioSource.PlayOneShot(minigunShot);
+        private void SoundEvents_OnUziShot(object sender, EventArgs e) =>
+            audioSource.PlayOneShot(uziShot);
         private void SoundEvents_OnPlayerJump(object sender, EventArgs e) =>
             audioSource.PlayOneShot(jumpPlayer);        
         private void SoundEvents_OnChestOpen(object sender, EventArgs e) =>

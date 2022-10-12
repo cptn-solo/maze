@@ -34,11 +34,15 @@ namespace Assets.Scripts
             var levels = new Dictionary<WeaponType, int>() {
                 { WeaponType.Shuriken, perks.ShurikenLevel },
                 { WeaponType.Minigun, perks.MinigunLevel },
+                { WeaponType.Shotgun, perks.ShotgunLevel },
+                { WeaponType.Uzi, perks.UziLevel },
             };
             var info = new Dictionary<WeaponType, PerkInfo>
             {
                 { WeaponType.Shuriken, ShurikenPerks.PerkForLevel(levels[WeaponType.Shuriken]) },
                 { WeaponType.Minigun, MinigunPerks.PerkForLevel(levels[WeaponType.Minigun]) },
+                { WeaponType.Shotgun, ShotgunPerks.PerkForLevel(levels[WeaponType.Shotgun]) },
+                { WeaponType.Uzi, UziPerks.PerkForLevel(levels[WeaponType.Uzi]) },
             };
 
             balance.SetCurrentWeaponInfo(info[obj], balances.CurrentBalance(obj));
@@ -75,6 +79,22 @@ namespace Assets.Scripts
                         balance.SetCurrentWeaponInfo(
                             MinigunPerks.PerkForLevel(level),
                             balances.CurrentBalance(WeaponType.Minigun));
+                    break;
+                case PerkType.Shotgun:
+                    if (WeaponType.Shotgun != balance.CurrentWeapon)
+                        player.SelectWeapon(WeaponType.Shotgun);
+                    else
+                        balance.SetCurrentWeaponInfo(
+                            ShotgunPerks.PerkForLevel(level),
+                            balances.CurrentBalance(WeaponType.Shotgun));
+                    break;
+                case PerkType.Uzi:
+                    if (WeaponType.Uzi != balance.CurrentWeapon)
+                        player.SelectWeapon(WeaponType.Uzi);
+                    else
+                        balance.SetCurrentWeaponInfo(
+                            UziPerks.PerkForLevel(level),
+                            balances.CurrentBalance(WeaponType.Uzi));
                     break;
                 default:
                     break;

@@ -11,21 +11,17 @@ namespace Assets.Scripts
         {
             if (toggle)
             {
-                actions.Enable();
-                touches.enabled = true;
-            }                
+                BindInputs();
+            }
             else
             {
-                actions.Disable();
-                touches.enabled = false;
+                UnbindInput();
             }
         }
 
         private void BindInputs()
         {
             actions = new PlayerInputActions();
-
-            ToggleInput(true);
             
             actions.Default.Move.performed += Move_performed;
             actions.Default.Move.canceled += Move_canceled;
@@ -40,6 +36,34 @@ namespace Assets.Scripts
             actions.Mobile.Weapon.performed += Minigun_performed;
             actions.Mobile.Item1.performed += Item1_performed;
             actions.Mobile.Item2.performed += Item2_performed;
+
+            actions.Enable();
+
+            touches.enabled = true;
+
+        }
+
+        private void UnbindInput()
+        {
+            actions.Disable();
+
+            actions.Default.Move.performed -= Move_performed;
+            actions.Default.Move.canceled -= Move_canceled;
+            actions.Default.Jump.performed -= Jump_performed;
+            actions.Default.Attack.performed -= Attack_performed;
+            actions.Default.Weapon.performed -= Minigun_performed;
+            actions.Default.Item1.performed -= Item1_performed;
+            actions.Default.Item2.performed -= Item2_performed;
+
+            actions.Mobile.Jump.performed -= Jump_performed;
+            actions.Mobile.Attack.performed -= Attack_performed;
+            actions.Mobile.Weapon.performed -= Minigun_performed;
+            actions.Mobile.Item1.performed -= Item1_performed;
+            actions.Mobile.Item2.performed -= Item2_performed;
+
+            actions = null;
+
+            touches.enabled = false;
         }
 
         private void Move_performed(InputAction.CallbackContext obj) =>

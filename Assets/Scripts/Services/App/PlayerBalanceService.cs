@@ -17,6 +17,8 @@ namespace Assets.Scripts
             return weaponType switch
             {
                 WeaponType.Minigun => CollectableType.Minigun,
+                WeaponType.Shotgun => CollectableType.Minigun,
+                WeaponType.Uzi => CollectableType.Minigun,
                 _ => CollectableType.NA,
             };
         }

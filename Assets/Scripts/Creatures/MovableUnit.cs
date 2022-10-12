@@ -214,7 +214,7 @@ namespace Assets.Scripts
 
             translatedDir = moveDir.x * localRight + moveDir.y * localForward;
         }
-        protected virtual void ToggleTranslateDir() { }
+        public virtual void ToggleTranslateDir() { }
         protected virtual void ProcessMove() { }
 
         private void Update()

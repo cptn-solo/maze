@@ -15,6 +15,8 @@ namespace Assets.Scripts
                 { PerkType.Shield, Perks.ShieldLevel },
                 { PerkType.Shuriken, Perks.ShurikenLevel},
                 { PerkType.Minigun, Perks.MinigunLevel },
+                { PerkType.Shotgun, Perks.ShotgunLevel },
+                { PerkType.Uzi, Perks.UziLevel },
             };
             foreach (var perk in levels)
                 UpdatePerk(perk.Key, perk.Value);
@@ -25,6 +27,18 @@ namespace Assets.Scripts
             {
                 minigun.PerkDamage = PerkDamage(WeaponType.Minigun, level);
                 if (currentWeapon == WeaponType.Minigun)
+                    PerkRateOfFire = PerkROF(currentWeapon, level);
+            }
+            if (arg1 == PerkType.Shotgun && level > 0 && shotgun != null)
+            {
+                shotgun.PerkDamage = PerkDamage(WeaponType.Shotgun, level);
+                if (currentWeapon == WeaponType.Shotgun)
+                    PerkRateOfFire = PerkROF(currentWeapon, level);
+            }
+            if (arg1 == PerkType.Uzi && level > 0 && uzi != null)
+            {
+                uzi.PerkDamage = PerkDamage(WeaponType.Uzi, level);
+                if (currentWeapon == WeaponType.Uzi)
                     PerkRateOfFire = PerkROF(currentWeapon, level);
             }
 
@@ -57,6 +71,14 @@ namespace Assets.Scripts
                     MinigunPerks.PerkForLevel(level)
                     .WeaponPerks.Where(x => x.Key == WeaponPerk.HPDamage)
                     .Select(x => x.Value).FirstOrDefault(),
+                WeaponType.Shotgun =>
+                    ShotgunPerks.PerkForLevel(level)
+                    .WeaponPerks.Where(x => x.Key == WeaponPerk.HPDamage)
+                    .Select(x => x.Value).FirstOrDefault(),
+                WeaponType.Uzi =>
+                    UziPerks.PerkForLevel(level)
+                    .WeaponPerks.Where(x => x.Key == WeaponPerk.HPDamage)
+                    .Select(x => x.Value).FirstOrDefault(),
                 _ => 0
             };
 
@@ -68,6 +90,14 @@ namespace Assets.Scripts
                     .Select(x => x.Value).FirstOrDefault(),
                 WeaponType.Minigun =>
                     MinigunPerks.PerkForLevel(level)
+                    .WeaponPerks.Where(x => x.Key == WeaponPerk.FireRate)
+                    .Select(x => x.Value).FirstOrDefault(),
+                WeaponType.Shotgun =>
+                    ShotgunPerks.PerkForLevel(level)
+                    .WeaponPerks.Where(x => x.Key == WeaponPerk.FireRate)
+                    .Select(x => x.Value).FirstOrDefault(),
+                WeaponType.Uzi =>
+                    UziPerks.PerkForLevel(level)
                     .WeaponPerks.Where(x => x.Key == WeaponPerk.FireRate)
                     .Select(x => x.Value).FirstOrDefault(),
                 _ => 0
