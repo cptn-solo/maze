@@ -20,6 +20,11 @@ namespace Assets.Scripts
         [SerializeField] private GameObject landminePrefab;
 
         public int PerkRateOfFire { get; private set; } = 1;
+        
+        public void SetStowedWeapon(WeaponType weapon)
+        {
+            stowedWeapon = weapon;
+        }
 
         public void SelectWeapon(WeaponType weapon)
         {
@@ -98,7 +103,7 @@ namespace Assets.Scripts
 
         private IEnumerator ToggleWeapon()
         {
-            weaponSelectRunning = true;
+            weaponSelectRunning = true;            
 
             (stowedWeapon, currentWeapon) = (currentWeapon, stowedWeapon);
 

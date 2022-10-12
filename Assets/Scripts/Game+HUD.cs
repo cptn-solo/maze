@@ -53,6 +53,8 @@ namespace Assets.Scripts
 
             balance.StowedWeapon = stowedWeapon;
             balance.SetStowedAmmo(balances.CurrentBalance(stowedWeapon));
+
+            player.SetStowedWeapon(stowedWeapon);
         }
 
         private void UpdateHUDPerk(PerkType perk, int level)
