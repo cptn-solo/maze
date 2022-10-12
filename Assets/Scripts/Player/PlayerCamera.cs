@@ -91,13 +91,14 @@ namespace Assets.Scripts
 
         private void Player_OnBeforeFadeOut(MovableUnit obj)
         {
+            isFollowing = false;
+            StopCoroutine(FollowCoroutine());
+            isOrbiting = false;
+            StopCoroutine(OrbitCoroutine());
         }
 
         private void Player_OnTranslateDirActiveChange(bool obj)
         {
-            if (obj)
-                return;
-
             isOrbiting = false;
             isFollowing = false;
             StopCoroutine(OrbitCoroutine());
@@ -290,12 +291,10 @@ namespace Assets.Scripts
         private void PositionCameraTowardsCenter()
         {
             var buildingFloorY = Vector3.zero + Vector3.up * player.transform.position.y;
-            var toPlayer = (player.transform.position - buildingFloorY);
+            var toPlayer = (player.transform.position - buildingFloorY).normalized;
             var rotX = Quaternion.AngleAxis(-cameraAngle, Quaternion.AngleAxis(90f, Vector3.up) * toPlayer);
 
-            var cameraRay = new Ray(
-                buildingFloorY,
-                rotX * toPlayer.normalized);
+            var cameraRay = new Ray(buildingFloorY, rotX * toPlayer);
 
             var camCurrent = sceneCamera.transform.position;
 
