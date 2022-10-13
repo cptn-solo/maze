@@ -9,15 +9,17 @@ namespace Assets.Scripts
 {
     public class GameRunner: MonoBehaviour
     {
+        [SerializeField] private bool pauseBetweenLevels;
+
         private void Awake() =>
             DontDestroyOnLoad(this);
 
         private void Start() =>
             LoadLobby();
-        public void LoadLobby()
-        {
+        
+        public void LoadLobby() =>
             StartCoroutine(LoadLobbyScene());
-        }
+        
         private IEnumerator LoadLobbyScene()
         {
             var op = SceneManager.LoadSceneAsync("Lobby", LoadSceneMode.Single);            
@@ -26,7 +28,8 @@ namespace Assets.Scripts
             while (op.progress < .9f)
                 yield return null;
 
-            yield return new WaitForSecondsRealtime(3.0f);
+            if (pauseBetweenLevels)
+                yield return new WaitForSecondsRealtime(3.0f);
 
             op.allowSceneActivation = true;
 

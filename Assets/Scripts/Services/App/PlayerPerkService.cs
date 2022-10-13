@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -35,6 +36,24 @@ namespace Assets.Scripts
             };
         }
 
+        public KeyValuePair<WeaponType, int>[] UnlockedWeapons()
+        {
+            var list = new List<KeyValuePair<WeaponType, int>>();
+
+            foreach (var wep in new[]{
+                WeaponType.Shuriken,
+                WeaponType.Uzi,
+                WeaponType.Shotgun,
+                WeaponType.Minigun,
+             })
+            {
+                var weaponLevel = CurrentPerk(PerkForWeapon(wep));
+                if (weaponLevel > 0)
+                    list.Add(KeyValuePair.Create(wep, weaponLevel));
+            }
+            return list.ToArray();
+        }
+
         public int CurrentPerk(PerkType perkType) =>
             PlayerPrefs.GetInt(PerkKey(perkType));
         
@@ -60,7 +79,29 @@ namespace Assets.Scripts
         {
             return AddPerk(PerkForWallmart(item), v);
         }
+        internal PerkInfo CurrentPerkInfo(PlayerPerk playerPerk)
+        {
+            var curPerkInfo = playerPerk switch
+            {
+                PlayerPerk.Shield => ShieldPerks.PerkForLevel(ShieldLevel),
+                _ => default
+            };
 
+            return curPerkInfo;
+        }
+
+        internal PerkInfo CurrentPerkInfo(WeaponType weaponType)
+        {
+            var curPerkInfo = weaponType switch
+            {
+                WeaponType.Uzi => UziPerks.PerkForLevel(UziLevel),
+                WeaponType.Shotgun => ShotgunPerks.PerkForLevel(ShotgunLevel),
+                WeaponType.Minigun => MinigunPerks.PerkForLevel(MinigunLevel),
+                _ => ShurikenPerks.PerkForLevel(ShurikenLevel)
+            };
+
+            return curPerkInfo;
+        }
         public int ShotgunLevel => CurrentPerk(PerkForWeapon(WeaponType.Shotgun));
         public bool ShotgunUnlocked => ShotgunLevel > 0;
         public int UziLevel => CurrentPerk(PerkForWeapon(WeaponType.Uzi));

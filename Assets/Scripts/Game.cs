@@ -109,7 +109,7 @@ namespace Assets.Scripts
             foreach(var key in enemyKeys)
                 StartCoroutine(StartSpawnEnemy(key));
 
-            player.InitPerkedItems(); 
+            player.SelectWeapon(WeaponType.NA);
             
             StartCoroutine(PositionPlayer(player, building, true));
 
@@ -147,8 +147,12 @@ namespace Assets.Scripts
         private void Player_OnActiveWeaponAttack(WeaponType arg1, int arg2) =>
             balance.SetAmmo(arg2);
 
-        private void Player_OnWeaponSelected(WeaponType obj) =>
-            SwitchHUDWeapon(obj);
+        private void Player_OnWeaponSelected(WeaponType current, WeaponType stowed)
+        {
+            player.InitPerkedItems();
+
+            UpdateHUDWeapon(current, stowed);
+        }
 
         private void Zombie_OnUnitBeforeKilled(MovableUnit obj)
         {

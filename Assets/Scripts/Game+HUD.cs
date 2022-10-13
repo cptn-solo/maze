@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Assets.Scripts
+﻿namespace Assets.Scripts
 {
     public partial class Game
     {
@@ -12,49 +9,20 @@ namespace Assets.Scripts
             balance.SetItemAmmo(CollectableType.Bomb, balances.CurrentBalance(CollectableType.Bomb));
             balance.SetItemAmmo(CollectableType.Landmine, balances.CurrentBalance(CollectableType.Landmine));
 
-            var levels = new Dictionary<PerkType, int>() 
-            {
-                { PerkType.Shield, perks.ShieldLevel },
-            };
-            var info = new Dictionary<PerkType, PerkInfo>
-            {
-                { PerkType.Shield, ShieldPerks.PerkForLevel(levels[PerkType.Shield]) },
-            };
+            balance.SetPlayerInfo(
+                perks.CurrentPerkInfo(PlayerPerk.Shield),
+                balances.CurrentBalance(CollectableType.Coin));
 
-            balance.SetPlayerInfo(info[PerkType.Shield], balances.CurrentBalance(CollectableType.Coin));
-
-            SwitchHUDWeapon(WeaponType.Shuriken);
+            UpdateHUDWeapon(player.CurrentWeapon, player.StowedWeapon);
         }
 
-        private void SwitchHUDWeapon(WeaponType obj)
+        private void UpdateHUDWeapon(WeaponType current, WeaponType stowed)
         {
-            var prevWeapon = balance.CurrentWeapon;
-            var prevStowedWeapon = balance.StowedWeapon;
-
-            var levels = new Dictionary<WeaponType, int>() {
-                { WeaponType.Shuriken, perks.ShurikenLevel },
-                { WeaponType.Minigun, perks.MinigunLevel },
-                { WeaponType.Shotgun, perks.ShotgunLevel },
-                { WeaponType.Uzi, perks.UziLevel },
-            };
-            var info = new Dictionary<WeaponType, PerkInfo>
-            {
-                { WeaponType.Shuriken, ShurikenPerks.PerkForLevel(levels[WeaponType.Shuriken]) },
-                { WeaponType.Minigun, MinigunPerks.PerkForLevel(levels[WeaponType.Minigun]) },
-                { WeaponType.Shotgun, ShotgunPerks.PerkForLevel(levels[WeaponType.Shotgun]) },
-                { WeaponType.Uzi, UziPerks.PerkForLevel(levels[WeaponType.Uzi]) },
-            };
-
-            balance.SetCurrentWeaponInfo(info[obj], balances.CurrentBalance(obj));
-
-            var stowedWeapon = (prevWeapon == WeaponType.NA && 
-                levels.FirstOrDefault(x => x.Value > 0 && x.Key != obj)
-                    is KeyValuePair<WeaponType, int> option) ? option.Key : prevWeapon;
-
-            balance.StowedWeapon = stowedWeapon;
-            balance.SetStowedAmmo(balances.CurrentBalance(stowedWeapon));
-
-            player.SetStowedWeapon(stowedWeapon);
+            balance.SetCurrentWeaponInfo(
+                perks.CurrentPerkInfo(current), 
+                balances.CurrentBalance(current));
+            balance.StowedWeapon = stowed;
+            balance.SetStowedAmmo(balances.CurrentBalance(stowed));
         }
 
         private void UpdateHUDPerk(PerkType perk, int level)

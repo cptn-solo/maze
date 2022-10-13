@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace Assets.Scripts
 {
@@ -156,15 +155,16 @@ namespace Assets.Scripts
             })
             {
                 var key = PlayerBalanceService.BalanceKey(collectable);
-                PlayerPrefs.SetInt(key, 1001);
+                PlayerPrefs.SetInt(key, 5001);
             }
 
             // Most perks initialized as locked:
             foreach (var perk in new[] {
                 PerkType.NA,
                 PerkType.Power,
-                PerkType.Minigun,
+                PerkType.Uzi,
                 PerkType.Shotgun,
+                PerkType.Minigun,
             })
             {
                 var key = PlayerPerkService.PerkKey(perk);
@@ -175,7 +175,6 @@ namespace Assets.Scripts
             foreach (var perk in new[] {
                 PerkType.Shield,
                 PerkType.Shuriken,
-                PerkType.Uzi,
             })
             {
                 var key = PlayerPerkService.PerkKey(perk);

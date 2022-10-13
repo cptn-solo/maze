@@ -27,7 +27,7 @@ namespace Assets.Scripts
         private readonly Collider[] translateDirBuff = new Collider[1];
 
         public event Action<CollectableType, int> OnCollected;
-        public event Action<WeaponType> OnWeaponSelected;
+        public event Action<WeaponType, WeaponType> OnWeaponSelected;
         public event Action<WeaponType, int> OnActiveWeaponAttack;
 
         public PlayerBalanceService Balances { get; set; }

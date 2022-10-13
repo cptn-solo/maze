@@ -27,13 +27,13 @@ namespace Assets.Scripts
             actions.Default.Move.canceled += Move_canceled;
             actions.Default.Jump.performed += Jump_performed;
             actions.Default.Attack.performed += Attack_performed;
-            actions.Default.Weapon.performed += Minigun_performed;
+            actions.Default.Weapon.performed += Stowed_performed;
             actions.Default.Item1.performed += Item1_performed;
             actions.Default.Item2.performed += Item2_performed;
 
             actions.Mobile.Jump.performed += Jump_performed;
             actions.Mobile.Attack.performed += Attack_performed;
-            actions.Mobile.Weapon.performed += Minigun_performed;
+            actions.Mobile.Weapon.performed += Stowed_performed;
             actions.Mobile.Item1.performed += Item1_performed;
             actions.Mobile.Item2.performed += Item2_performed;
 
@@ -51,13 +51,13 @@ namespace Assets.Scripts
             actions.Default.Move.canceled -= Move_canceled;
             actions.Default.Jump.performed -= Jump_performed;
             actions.Default.Attack.performed -= Attack_performed;
-            actions.Default.Weapon.performed -= Minigun_performed;
+            actions.Default.Weapon.performed -= Stowed_performed;
             actions.Default.Item1.performed -= Item1_performed;
             actions.Default.Item2.performed -= Item2_performed;
 
             actions.Mobile.Jump.performed -= Jump_performed;
             actions.Mobile.Attack.performed -= Attack_performed;
-            actions.Mobile.Weapon.performed -= Minigun_performed;
+            actions.Mobile.Weapon.performed -= Stowed_performed;
             actions.Mobile.Item1.performed -= Item1_performed;
             actions.Mobile.Item2.performed -= Item2_performed;
 
@@ -78,7 +78,7 @@ namespace Assets.Scripts
         private void Attack_performed(InputAction.CallbackContext obj) =>
             OnAttack(obj.ReadValueAsButton());
 
-        private void Minigun_performed(InputAction.CallbackContext obj) =>
+        private void Stowed_performed(InputAction.CallbackContext obj) =>
             OnWeaponSelect();
 
         private void Item1_performed(InputAction.CallbackContext obj) =>

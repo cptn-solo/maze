@@ -9,7 +9,6 @@ namespace Assets.Scripts
 
         public void InitPerkedItems()
         {
-
             var levels = new Dictionary<PerkType, int>()
             {
                 { PerkType.Shield, Perks.ShieldLevel },

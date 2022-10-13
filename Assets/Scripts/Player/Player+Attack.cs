@@ -1,8 +1,8 @@
 ﻿
+using System;
 using System.Collections;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Assets.Scripts
 {
@@ -13,26 +13,21 @@ namespace Assets.Scripts
         private bool item1SelectRunning;
         private bool item2SelectRunning;
 
-        private WeaponType currentWeapon = WeaponType.Shuriken;
+        private WeaponType currentWeapon = WeaponType.NA;
         private WeaponType stowedWeapon = WeaponType.NA;
+
+        public WeaponType CurrentWeapon => currentWeapon;
+        public WeaponType StowedWeapon => stowedWeapon;
         
         [SerializeField] private GameObject bombPrefab;
         [SerializeField] private GameObject landminePrefab;
 
         public int PerkRateOfFire { get; private set; } = 1;
         
-        public void SetStowedWeapon(WeaponType weapon)
-        {
-            stowedWeapon = weapon;
-        }
-
         public void SelectWeapon(WeaponType weapon)
         {
-            if (weapon != currentWeapon)
-            {
-                stowedWeapon = weapon;
+            if (weapon == WeaponType.NA || weapon != currentWeapon)
                 OnWeaponSelect();
-            }
         }
         private void OnWeaponSelect()
         {
@@ -103,14 +98,22 @@ namespace Assets.Scripts
 
         private IEnumerator ToggleWeapon()
         {
-            weaponSelectRunning = true;            
+            weaponSelectRunning = true;
 
-            (stowedWeapon, currentWeapon) = (currentWeapon, stowedWeapon);
+            if (currentWeapon == WeaponType.NA)
+                currentWeapon = WeaponType.Shuriken;
+            
+            var unlocked = Perks.UnlockedWeapons();
 
-            OnWeaponSelected?.Invoke(currentWeapon);
+            var idxCurrent = Array.FindIndex<KeyValuePair<WeaponType, int>>(
+                unlocked, 0, (wep) => wep.Key == currentWeapon);
+            var idxStowed = idxCurrent + 1 < unlocked.Length ? idxCurrent + 1 : 0;
+            var idxNext = idxStowed + 1 < unlocked.Length ? idxStowed + 1 : 0;
 
-            var perkLevel = Perks.CurrentPerk(currentWeapon);
-            PerkRateOfFire = PerkROF(currentWeapon, perkLevel);
+            stowedWeapon = unlocked[idxNext].Key;
+            currentWeapon = unlocked[idxStowed].Key;
+
+            OnWeaponSelected?.Invoke(currentWeapon, stowedWeapon);
 
             minigun.gameObject.SetActive(currentWeapon == WeaponType.Minigun);
             shotgun.gameObject.SetActive(currentWeapon == WeaponType.Shotgun);
