@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -186,13 +185,13 @@ namespace Assets.Scripts
             
             var yOffset = Mathf.Tan(attachedCameraAngle * Mathf.Deg2Rad) * attachedCameraDistance;
 
-            bool lost = false;// camPosition.y != Mathf.Clamp(
-                    //camPosition.y, focusPoint.y, focusPoint.y + yOffset + .1f);
+            bool lost = camPosition.y != Mathf.Clamp(
+                    camPosition.y, focusPoint.y + yOffset - .1f, focusPoint.y + yOffset + .1f);
 
             if (!CameraControl && notMoved && !isFollowing && !isOrbiting)
                 StartCoroutine(OrbitCoroutine());
 
-            if ((!obscured || !notMoved) && (tooClose || tooFar))
+            if ((!obscured || !notMoved) && (tooClose || tooFar || lost))
             {
                 if (isOrbiting)
                 {
@@ -202,20 +201,27 @@ namespace Assets.Scripts
                 if (!isFollowing)
                     StartCoroutine(FollowCoroutine());
             }
-
-            if (lost)
-            {
-                isOrbiting = false;
-                isFollowing = false;
-                StopCoroutine(OrbitCoroutine());
-                StopCoroutine(FollowCoroutine());
-
-                Focus();
-            }
+            if (!notMoved)
+                StrafeAfterMove();
 
             sceneCamera.transform.LookAt(focusPoint);
 
         }
+
+        private void StrafeAfterMove()
+        {
+            var toCamera = PlaneOffset();
+            var cameraPlaneForward = Vector3.ProjectOnPlane(
+                sceneCamera.transform.forward, Vector3.up);
+            var xAngle = Vector3.SignedAngle(cameraPlaneForward.normalized, - toCamera.normalized, Vector3.up);
+                                    
+            var xOffset = Mathf.Tan(xAngle * Mathf.Deg2Rad) * toCamera.magnitude;
+
+            Debug.Log($"StrafeAfterMove: {xOffset}");
+
+            sceneCamera.transform.position += sceneCamera.transform.right * xOffset;
+        }
+
         private IEnumerator FollowCoroutine()
         {
             isFollowing = true;
