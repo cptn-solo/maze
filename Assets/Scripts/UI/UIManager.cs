@@ -1,8 +1,5 @@
 using System;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.InputSystem.OnScreen;
-using UnityEngine.InputSystem.UI;
 
 namespace Assets.Scripts.UI
 {

@@ -1,10 +1,8 @@
 ﻿using Assets.Scripts.UI;
-using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEditor.Progress;
 
 namespace Assets.Scripts
 {
