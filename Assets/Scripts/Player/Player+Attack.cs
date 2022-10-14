@@ -207,7 +207,8 @@ namespace Assets.Scripts
                             rangeWeapon.AfterEachShot();
                             animator.SetBool(AnimAttackBool, false);
 
-                            ammo--;
+                            ammo-= Mathf.Min(ammo, rangeWeapon.AmmoPerShot);
+                            
                             OnActiveWeaponAttack?.Invoke(currentWeapon, ammo);
 
                             yield return new WaitForSeconds(seconds);

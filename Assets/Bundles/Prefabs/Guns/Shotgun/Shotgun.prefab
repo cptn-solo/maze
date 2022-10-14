@@ -70,6 +70,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8192
   damagePerShot: 30
+  ammoPerShot: 10
+  maxRange: 0.8
+  effectiveRange: 0.2
 --- !u!1 &6818581812400734909
 GameObject:
   m_ObjectHideFlags: 0

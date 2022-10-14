@@ -8,7 +8,11 @@ namespace Assets.Scripts
 
         [SerializeField] private LayerMask targetMask;
         [SerializeField] private int damagePerShot = 1;
+        [SerializeField] protected int ammoPerShot = 1; // patch for shotgun
+        [SerializeField] protected float maxRange = 1.0f;
+        [SerializeField] protected float effectiveRange = 1.0f;
 
+        public int AmmoPerShot => ammoPerShot;
         public int PerkDamage { get => damagePerShot; set => damagePerShot = value; }
         public IngameSoundEvents SoundEvents { get; set; }
 
@@ -34,7 +38,7 @@ namespace Assets.Scripts
                 
             ShotSound();
 
-            if (!Physics.Raycast(transform.position, transform.forward, out var hitInfo, 1.0f, targetMask))
+            if (!Physics.Raycast(transform.position, transform.forward, out var hitInfo, maxRange, targetMask))
                 return;
 
             if (!hitInfo.collider.TryGetComponent<Hitbox>(out var hitbox))
@@ -43,7 +47,11 @@ namespace Assets.Scripts
             if (hitbox.CurrentHP <= 0)
                 return;
 
-            hitbox.DealDamage(PerkDamage);
+            var factor = hitInfo.distance < effectiveRange ? 
+                1 : 
+                ((maxRange - hitInfo.distance + effectiveRange) / maxRange);
+            
+            hitbox.DealDamage(Mathf.FloorToInt(PerkDamage * factor));
         }
     }
 }

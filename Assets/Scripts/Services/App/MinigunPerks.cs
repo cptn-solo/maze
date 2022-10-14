@@ -41,7 +41,7 @@ namespace Assets.Scripts
                 {
                     KeyValuePair.Create(WeaponPerk.ShieldDamage, 3),
                     KeyValuePair.Create(WeaponPerk.HPDamage, 10),
-                    KeyValuePair.Create(WeaponPerk.FireRate, 6),
+                    KeyValuePair.Create(WeaponPerk.FireRate, 8),
                 },
             };
         public static PerkInfo PerkForLevel(int currentPerk) => currentPerk switch
