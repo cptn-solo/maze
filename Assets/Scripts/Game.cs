@@ -46,16 +46,17 @@ namespace Assets.Scripts
 
         public void AttachToRunner(
             Player player,
-            IngameSoundEvents soundEvents,
             HUDMarkersView markers,
             PlayerBalanceService balances)
         {
             this.markers = markers;
             this.player = player;
-            this.soundEvents = soundEvents;
             this.balances = balances;
+            
+            soundEvents = GetComponentInChildren<IngameSoundEvents>();
 
             this.player.AttachCamera(sceneCamera);
+            this.player.SoundEvents = soundEvents;
             this.player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
             this.player.OnUnitKilled += Player_OnUnitKilled;
 
@@ -75,6 +76,7 @@ namespace Assets.Scripts
         internal void CleanupLevel()
         {
             this.player.AttachCamera(null);
+            this.player.SoundEvents = null;
             this.player.OnUnitBeforeKilled -= Player_OnUnitBeforeKilled;
             this.player.OnUnitKilled -= Player_OnUnitKilled;
         }

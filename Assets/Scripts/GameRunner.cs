@@ -14,12 +14,10 @@ namespace Assets.Scripts
         [SerializeField] private UIManager uiManager;
         [SerializeField] private GameObject playerPrefab;
 
-        private IngameSoundEvents soundEvents;
         private PlayerBalanceService balances;
         private PlayerPerkService perks;
         private PlayerPreferencesService prefs;
 
-        public IngameSoundEvents SoundEvents => soundEvents;
         public PlayerBalanceService Balances => balances;
         public PlayerPerkService Perks => perks;
         public PlayerPreferencesService Prefs => prefs;
@@ -30,7 +28,6 @@ namespace Assets.Scripts
 
         private void Awake()
         {
-            soundEvents = GetComponent<IngameSoundEvents>();
             balances = GetComponent<PlayerBalanceService>();
             perks = GetComponent<PlayerPerkService>();
             prefs = GetComponent<PlayerPreferencesService>();
@@ -50,6 +47,7 @@ namespace Assets.Scripts
         private void CreatePlayer()
         {
             player = Instantiate(playerPrefab).GetComponent<Player>();
+            DontDestroyOnLoad(player);
 
             player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled; ;
             player.OnWeaponSelected += Player_OnWeaponSelected;
@@ -57,7 +55,6 @@ namespace Assets.Scripts
             player.OnWallmartApproached += Player_OnWallmartApproached;
             player.OnWallmartLeft += Player_OnWallmartLeft;
 
-            player.SoundEvents = SoundEvents;
             player.Balances = Balances;
             player.Perks = Perks;
             player.Prefs = Prefs;
@@ -66,6 +63,8 @@ namespace Assets.Scripts
 
             //to level start:
             InitHUD();
+
+            player.BindInputEvents();
 
         }
         private void UiManager_OnBuyPressed(WallmartItem item, string playerId, PerkInfo info) =>
@@ -261,11 +260,16 @@ namespace Assets.Scripts
                 _ => "Level1"
             };
             
-            if (player != null)
-                player.ToggleInput(false);
+            if (uiManager.Game)
+            {
+                if (player != null)
+                    player.ToggleInput(false);
 
-            uiManager.Game = default;
-            
+                uiManager.Game.CleanupLevel();
+                uiManager.Game = default;
+            }
+
+
             SceneManager.LoadSceneAsync(levelSceneName, LoadSceneMode.Single)
                 .completed += (op) => {
                     AttachToScene(levelSceneName);
@@ -286,7 +290,7 @@ namespace Assets.Scripts
                 if (player == null)
                     CreatePlayer();
 
-                uiManager.Game.AttachToRunner(player, soundEvents, uiManager.Markers, balances);
+                uiManager.Game.AttachToRunner(player, uiManager.Markers, balances);
                 Debug.Log($"Level attached: {levelSceneName}");
             }
         }

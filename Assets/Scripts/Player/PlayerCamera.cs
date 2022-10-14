@@ -12,6 +12,7 @@ namespace Assets.Scripts
         [SerializeField] private float camSpeed = 10.0f;
 
         [SerializeField] private LayerMask obstructionMask;
+        [SerializeField] private bool avoidObstacles = false;
 
         private bool listeningForScreenOrientation;
         private float camDistanceFactor = 1.0f;
@@ -35,6 +36,7 @@ namespace Assets.Scripts
         private bool isOrbiting;
         private bool isFollowing;
         private bool obscured;
+        
         private bool cameraMovePause;
 
         public float CameraSencitivity { get; set; } = .5f;
@@ -191,7 +193,7 @@ namespace Assets.Scripts
             var yOffset = Mathf.Tan(attachedCameraAngle * Mathf.Deg2Rad) * attachedCameraDistance;
 
             bool lost = camPosition.y != Mathf.Clamp(
-                    camPosition.y, focusPoint.y + yOffset - .1f, focusPoint.y + yOffset + .1f);
+                    camPosition.y, focusPoint.y + yOffset - .2f, focusPoint.y + yOffset + .2f);
 
             if (!CameraControl && notMoved && !isFollowing && !isOrbiting)
                 StartCoroutine(OrbitCoroutine());
@@ -362,7 +364,8 @@ namespace Assets.Scripts
         }
         private Vector3 AvoidObstacles(Vector3 pos)
         {
-            return pos;
+            if (!avoidObstacles)
+                return pos;
 
             Vector3 lookPosition = pos;
             Vector3 lookDirection = (focusPoint - lookPosition).normalized;

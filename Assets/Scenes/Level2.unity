@@ -474,11 +474,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sounds
       objectReference: {fileID: 0}
-    - target: {fileID: 8340243710106309458, guid: f791c3785e35b6748875bf1dabcab29a,
-        type: 3}
-      propertyPath: soundEvents
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8340243710106309459, guid: f791c3785e35b6748875bf1dabcab29a,
         type: 3}
       propertyPath: m_RootOrder

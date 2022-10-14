@@ -48,7 +48,7 @@ namespace Assets.Scripts.UI
         public void Close() => OnCloseButtonPressed?.Invoke();
         public void Menu() => OnMenuButtonPressed?.Invoke();
 
-        private void OnEnable()
+        private void Awake()
         {
             fpsLimitToggle.onValueChanged.AddListener(OnFpsLimitToggleChange);
             fpsLowTestToggle.onValueChanged.AddListener(OnFpsLowTestToggleChange);
@@ -68,7 +68,7 @@ namespace Assets.Scripts.UI
             cameraControlToggle.onValueChanged.AddListener(OnCameraControlChange);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             fpsLimitToggle.onValueChanged.RemoveListener(OnFpsLimitToggleChange);
             fpsLowTestToggle.onValueChanged.RemoveListener(OnFpsLowTestToggleChange);

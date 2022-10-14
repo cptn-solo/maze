@@ -17,13 +17,13 @@ namespace Assets.Scripts.UI
         private void Awake()
         {
             balance = GetComponent<HUDBalance>();
+            settingsButton.onClick.AddListener(SettingsButtonPressed);
         }
 
-        private void OnEnable() =>
-            settingsButton.onClick.AddListener(SettingsButtonPressed);
-
-        private void OnDisable() =>
+        private void OnDestroy()
+        {
             settingsButton.onClick.RemoveListener(SettingsButtonPressed);
+        }
 
         private void SettingsButtonPressed() =>
             OnSettingsButtonPressed?.Invoke();

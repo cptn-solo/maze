@@ -7,22 +7,10 @@ namespace Assets.Scripts
     {
         private PlayerInputActions actions;
 
-        public void ToggleInput(bool toggle)
-        {
-            if (toggle)
-            {
-                BindInputs();
-            }
-            else
-            {
-                UnbindInput();
-            }
-        }
-
-        private void BindInputs()
+        public void BindInputEvents()
         {
             actions = new PlayerInputActions();
-            
+
             actions.Default.Move.performed += Move_performed;
             actions.Default.Move.canceled += Move_canceled;
             actions.Default.Jump.performed += Jump_performed;
@@ -37,35 +25,22 @@ namespace Assets.Scripts
             actions.Mobile.Item1.performed += Item1_performed;
             actions.Mobile.Item2.performed += Item2_performed;
 
-            actions.Enable();
-
-            touches.enabled = true;
-
         }
-
-        private void UnbindInput()
+        public void ToggleInput(bool toggle)
         {
-            actions.Disable();
-
-            actions.Default.Move.performed -= Move_performed;
-            actions.Default.Move.canceled -= Move_canceled;
-            actions.Default.Jump.performed -= Jump_performed;
-            actions.Default.Attack.performed -= Attack_performed;
-            actions.Default.Weapon.performed -= Stowed_performed;
-            actions.Default.Item1.performed -= Item1_performed;
-            actions.Default.Item2.performed -= Item2_performed;
-
-            actions.Mobile.Jump.performed -= Jump_performed;
-            actions.Mobile.Attack.performed -= Attack_performed;
-            actions.Mobile.Weapon.performed -= Stowed_performed;
-            actions.Mobile.Item1.performed -= Item1_performed;
-            actions.Mobile.Item2.performed -= Item2_performed;
-
-            actions = null;
-
-            touches.enabled = false;
+            if (toggle)
+            {
+                actions.Enable();
+                touches.enabled = true;
+            }
+            else
+            {
+                actions.Disable();
+                touches.enabled = false;
+            }
         }
 
+        
         private void Move_performed(InputAction.CallbackContext obj) =>
             keyboardMoveDir = obj.ReadValue<Vector2>();
 

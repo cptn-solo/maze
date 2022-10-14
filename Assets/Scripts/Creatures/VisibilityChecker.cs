@@ -20,7 +20,7 @@ namespace Assets.Scripts
         private Transform cam;
         private bool visible;
         public void AttachCamera(Camera cam) =>
-            this.cam = cam.transform;
+            this.cam = cam != null ? cam.transform : null;
 
         private void OnEnable()
         {

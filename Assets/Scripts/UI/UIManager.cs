@@ -1,5 +1,7 @@
 using System;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.InputSystem.OnScreen;
 using UnityEngine.InputSystem.UI;
 
 namespace Assets.Scripts.UI
@@ -18,8 +20,6 @@ namespace Assets.Scripts.UI
 
         public event Action OnMenuButtonPressed;
         public event Action<WallmartItem, string, PerkInfo> OnBuyPressed;
-
-        private InputSystemUIInputModule inputModule;
 
         private Game game;
 
@@ -46,39 +46,31 @@ namespace Assets.Scripts.UI
 
         private void Awake()
         {
-            inputModule = GetComponent<InputSystemUIInputModule>();
-            
-            DontDestroyOnLoad(this);
-        }
-
-        private void OnEnable()
-        {
             HUDScreen.OnSettingsButtonPressed += ShowSettingsScreen;
             SettingsScreen.OnCloseButtonPressed += CloseSettingsScreen;
             SettingsScreen.OnMenuButtonPressed += ShowGameMenu;
             WallmartScreen.OnBuyPressed += BuyWallmartItem;
             WallmartScreen.OnCancelPressed += WallmartLeft;
-        }
-        
-        private void Game_OnPlayerSpawned(object sender, System.EventArgs e)
-        {
-            HUDScreen.gameObject.SetActive(true);
-            inputModule.enabled = true;
-        }
 
-        private void Game_OnPlayerKilled(object sender, System.EventArgs e)
-        {
-            inputModule.enabled = false;
-            HUDScreen.gameObject.SetActive(false);
+            DontDestroyOnLoad(this);
         }
-
-        private void OnDisable()
+        private void OnDestroy()
         {
             HUDScreen.OnSettingsButtonPressed -= ShowSettingsScreen;
             SettingsScreen.OnCloseButtonPressed -= CloseSettingsScreen;
             SettingsScreen.OnMenuButtonPressed -= ShowGameMenu;
             WallmartScreen.OnBuyPressed -= BuyWallmartItem;
             WallmartScreen.OnCancelPressed -= WallmartLeft;
+        }
+
+        private void Game_OnPlayerSpawned(object sender, System.EventArgs e)
+        {
+            HUDScreen.gameObject.SetActive(true);
+        }
+
+        private void Game_OnPlayerKilled(object sender, System.EventArgs e)
+        {
+            HUDScreen.gameObject.SetActive(false);
         }
 
         private void BuyWallmartItem(WallmartItem item, string playerId, PerkInfo info) =>
@@ -89,24 +81,21 @@ namespace Assets.Scripts.UI
 
         private void ShowSettingsScreen()
         {
-            inputModule.enabled = false;
             HUDScreen.gameObject.SetActive(false);
             SettingsScreen.gameObject.SetActive(true);
-            inputModule.enabled = true;
         }
 
         private void CloseSettingsScreen()
         {
-            inputModule.enabled = false;
             HUDScreen.gameObject.SetActive(true);
             SettingsScreen.gameObject.SetActive(false);
-            inputModule.enabled = true;
         }
 
         private void ShowGameMenu()
         {
             Game.CleanupLevel();
             OnMenuButtonPressed?.Invoke();
+            SettingsScreen.gameObject.SetActive(false);
         }
         internal void WallmartApproached(PerkInfo e, string playerId, int playerBalance)
         {
