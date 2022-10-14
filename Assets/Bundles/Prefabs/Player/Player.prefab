@@ -259,12 +259,12 @@ MonoBehaviour:
   camSpeed: 5
   obstructionMask:
     serializedVersion: 2
-    m_Bits: 129
-  avoidObstacles: 0
-  attachedCameraAngle: 37
-  attachedCameraMaxDistance: 1.5
-  attachedCameraMinDistance: 0.5
-  attachedCameraDistance: 1
+    m_Bits: 131200
+  avoidObstacles: 1
+  attachedCameraAngle: 20
+  attachedCameraMaxDistance: 1
+  attachedCameraMinDistance: 0.4
+  attachedCameraDistance: 0.8
   attachedCameraOrbitSpeed: 60
   attachedCameraSpeed: 0.7
 --- !u!136 &3744990945522907042
