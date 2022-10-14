@@ -9,7 +9,16 @@ namespace Assets.Scripts.UI
         internal Action OnSettingsButtonPressed;
 
         [SerializeField] private Button settingsButton;
-        
+
+        private HUDBalance balance;
+
+        public HUDBalance Balance => balance;
+
+        private void Awake()
+        {
+            balance = GetComponent<HUDBalance>();
+        }
+
         private void OnEnable() =>
             settingsButton.onClick.AddListener(SettingsButtonPressed);
 

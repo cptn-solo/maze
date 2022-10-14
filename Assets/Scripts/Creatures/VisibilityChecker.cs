@@ -19,11 +19,8 @@ namespace Assets.Scripts
 
         private Transform cam;
         private bool visible;
-
-        private void Awake()
-        {
-            cam = Camera.main.transform;
-        }
+        public void AttachCamera(Camera cam) =>
+            this.cam = cam.transform;
 
         private void OnEnable()
         {
@@ -47,6 +44,12 @@ namespace Assets.Scripts
             {
                 if (!Time.inFixedTimeStep)
                     yield return new WaitForFixedUpdate();
+
+                if (cam == null)
+                {
+                    yield return new WaitForSeconds(0.5f);
+                    continue;
+                }
 
                 var direction = transform.position + .1f * transform.localScale.y * Vector3.up - cam.position;
                 Ray ray = default;

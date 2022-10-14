@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8340243710106309459}
   - component: {fileID: 8340243710106309453}
   - component: {fileID: 8340243710106309458}
+  - component: {fileID: 4592336308133583714}
   m_Layer: 0
   m_Name: Sounds
   m_TagString: Untagged
@@ -142,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b7c282052ec20b4b9fdc61001912682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundEvents: {fileID: 0}
+  soundEvents: {fileID: 4592336308133583714}
   attackPlayer: {fileID: 8300000, guid: f2b298fde2974784a99299914b49dee9, type: 3}
   attackZombie: {fileID: 0}
   killedPlayer: {fileID: 0}
@@ -158,3 +159,15 @@ MonoBehaviour:
   bombExplode: {fileID: 8300000, guid: 989e1271f9fd7aa498e6cf695cde701d, type: 3}
   spiderBeamAttack: {fileID: 8300000, guid: c65854bb196ba1c439dd482f1c8da482, type: 3}
   uziShot: {fileID: 8300000, guid: 490c00380274dfe44960b0be6b782367, type: 3}
+--- !u!114 &4592336308133583714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8340243710106309456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eabbab50e5442746ba7f223bf69192a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

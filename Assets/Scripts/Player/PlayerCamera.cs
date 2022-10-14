@@ -20,6 +20,9 @@ namespace Assets.Scripts
         private TouchInputProcessor touches;
         private Camera sceneCamera;
 
+        public void AttachCamera(Camera cam) =>
+            sceneCamera = cam;
+
         [SerializeField] private float attachedCameraAngle = 45.0f;
         [SerializeField] private float attachedCameraMaxDistance = 1.6f;
         [SerializeField] private float attachedCameraMinDistance = .4f;
@@ -41,7 +44,6 @@ namespace Assets.Scripts
         {
             player = GetComponent<Player>();
             touches = GetComponent<TouchInputProcessor>();
-            sceneCamera = Camera.main;            
         }
 
         private void OnEnable()
@@ -69,6 +71,9 @@ namespace Assets.Scripts
         }
         private void LateUpdate()
         {
+            if (sceneCamera == null)
+                return;
+
             if (player.TranslateDirActive)
             {
                 PositionCameraTowardsCenter();
@@ -216,8 +221,6 @@ namespace Assets.Scripts
             var xAngle = Vector3.SignedAngle(cameraPlaneForward.normalized, - toCamera.normalized, Vector3.up);
                                     
             var xOffset = Mathf.Tan(xAngle * Mathf.Deg2Rad) * toCamera.magnitude;
-
-            Debug.Log($"StrafeAfterMove: {xOffset}");
 
             sceneCamera.transform.position += sceneCamera.transform.right * xOffset;
         }

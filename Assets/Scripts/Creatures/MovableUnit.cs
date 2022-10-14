@@ -253,7 +253,7 @@ namespace Assets.Scripts
         {
             if (rb.position.y < outOfSceneYTreshold)
             {
-                OnUnitKilled.Invoke(this);
+                OnUnitKilled?.Invoke(this);
                 return;
             }
 

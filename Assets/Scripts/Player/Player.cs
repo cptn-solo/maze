@@ -36,13 +36,19 @@ namespace Assets.Scripts
         private bool inAttackState;
         private TouchInputProcessor touches;
         private PlayerCamera playerCamera;
+        private VisibilityChecker visibilityChecker;
         private AimTarget aim;
         private Collector collector;
         private Hitbox hitbox;
 
         private Vector2 keyboardMoveDir = Vector2.zero;
         private Vector2 touchMoveDir = Vector2.zero;
-        
+        public void AttachCamera(Camera cam)
+        {
+            playerCamera.AttachCamera(cam);
+            visibilityChecker.AttachCamera(cam);
+        }
+
         protected override void ProcessMove()
         {
             base.ProcessMove();
@@ -75,6 +81,7 @@ namespace Assets.Scripts
 
             touches = GetComponent<TouchInputProcessor>();
             playerCamera = GetComponent<PlayerCamera>();
+            visibilityChecker = GetComponent<VisibilityChecker>();
 
             aim = GetComponent<AimTarget>();
             hitbox = GetComponentInChildren<Hitbox>();

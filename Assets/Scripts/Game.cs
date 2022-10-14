@@ -10,7 +10,6 @@ namespace Assets.Scripts
 {
     public partial class Game : MonoBehaviour, IIngameMusicEvents
     {
-        [SerializeField] private GameObject playerPrefab;
         [SerializeField] private EnemyType[] enemyKeys;
         [SerializeField] private GameObject[] enemyPrefabs;
         [SerializeField] private GameObject[] buildingPrefabs;
@@ -26,54 +25,45 @@ namespace Assets.Scripts
         [SerializeField] private int MaxSpiderCount = 3;
         [SerializeField] private float enemySpawnInterval = 5.0f;
 
-        [SerializeField] private HUDScreen hud;
-        [SerializeField] private HUDMarkersView markers;
-        [SerializeField] private HUDLeaderBoardView score;
-        [SerializeField] private HUDBalance balance;
+        [SerializeField] private Camera sceneCamera;
 
         private GameObject enemies;
         private GameObject collectables;
         private Building building;
-        private Player player;
-
+        
         private Zombie[] zombies = new Zombie[10];
         private Spider[] spiders = new Spider[10];
         private Chest[] chests = new Chest[10];
         private Collectable[] drops = new Collectable[20];
 
-        private readonly string playerId = "Player";
-        private readonly string zombiesId = "NPCs";
-
-        private UnitInfo playerScoreInfo = 
-            new("Player", Color.green, 0, Color.green, 0, 0, Color.green);
-        private UnitInfo zombiesScoreInfo = 
-            new("NPCs", Color.yellow, 0, Color.red, 0, 0, Color.yellow);
-
         public event EventHandler OnPlayerSpawned;
         public event EventHandler OnPlayerKilled;
 
+        private HUDMarkersView markers;
+        private Player player;
         private IngameSoundEvents soundEvents;
         private PlayerBalanceService balances;
-        private PlayerPerkService perks;
-        private PlayerPreferencesService prefs;
 
-        private void Awake()
+        public void AttachToRunner(
+            Player player,
+            IngameSoundEvents soundEvents,
+            HUDMarkersView markers,
+            PlayerBalanceService balances)
         {
-            soundEvents = GetComponent<IngameSoundEvents>();
-            balances = GetComponent<PlayerBalanceService>();
-            perks = GetComponent<PlayerPerkService>();
-            prefs = GetComponent<PlayerPreferencesService>();
-        }
-        private void OnEnable()
-        {
-            balances.OnBalanceChanged += Balances_OnBalanceChanged;
-            perks.OnPerkChanged += Perks_OnPerkChanged;
-        }
+            this.markers = markers;
+            this.player = player;
+            this.soundEvents = soundEvents;
+            this.balances = balances;
 
-        private void OnDisable()
+            this.player.AttachCamera(sceneCamera);
+            this.player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
+            this.player.OnUnitKilled += Player_OnUnitKilled;
+        }
+        internal void CleanupLevel()
         {
-            balances.OnBalanceChanged -= Balances_OnBalanceChanged;
-            perks.OnPerkChanged -= Perks_OnPerkChanged;
+            this.player.AttachCamera(null);
+            this.player.OnUnitBeforeKilled -= Player_OnUnitBeforeKilled;
+            this.player.OnUnitKilled -= Player_OnUnitKilled;
         }
 
         void Start()
@@ -82,40 +72,16 @@ namespace Assets.Scripts
             collectables = new GameObject("Collectables");
 
             building = GetSceneBuilding();
-            player = Instantiate(playerPrefab).GetComponent<Player>();
-
-            player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
-            player.OnUnitKilled += Player_OnUnitKilled;
-            player.OnWeaponSelected += Player_OnWeaponSelected;
-            player.OnActiveWeaponAttack += Player_OnActiveWeaponAttack;
-            player.OnWallmartApproached += Player_OnWallmartApproached;
-            player.OnWallmartLeft += Player_OnWallmartLeft;
-            
-            player.SoundEvents = soundEvents;
-            player.Balances = balances;
-            player.Perks = perks;
-            player.Prefs = prefs;
 
             chests = building.GetComponentsInChildren<Chest>();
             foreach (var chest in chests)
                 chest.OnChestOpened += Chest_OnChestOpened;
 
-            score.AddPlayer(playerId);
-            score.UpdatePlayer(playerId, playerScoreInfo, true);
-            
-            score.AddPlayer(zombiesId);
-            score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
-
             foreach(var key in enemyKeys)
                 StartCoroutine(StartSpawnEnemy(key));
-
-            player.SelectWeapon(WeaponType.NA);
             
             StartCoroutine(PositionPlayer(player, building, true));
-
-            InitHUD();
         }
-
         private Building GetSceneBuilding()
         {
             return SceneManager.GetActiveScene().
@@ -131,28 +97,11 @@ namespace Assets.Scripts
             SpawnCollectables(obj.transform, chestCollectablePrefabs, Random.Range(7, 14));
         }
 
-        private void Player_OnUnitBeforeKilled(MovableUnit obj)
-        {
+        private void Player_OnUnitBeforeKilled(MovableUnit obj) =>
             OnPlayerKilled?.Invoke(obj, null);
-
-            balances.EnemyScore++;
-            zombiesScoreInfo.Score = balances.EnemyScore;
-            score.UpdatePlayer(zombiesId, zombiesScoreInfo, false);
-            balance.SetCoinX(balances.CurrentCoinX);
-        }
 
         private void Player_OnUnitKilled(MovableUnit obj) =>
             StartCoroutine(PositionPlayer((Player)obj, building));
-
-        private void Player_OnActiveWeaponAttack(WeaponType arg1, int arg2) =>
-            balance.SetAmmo(arg2);
-
-        private void Player_OnWeaponSelected(WeaponType current, WeaponType stowed)
-        {
-            player.InitPerkedItems();
-
-            UpdateHUDWeapon(current, stowed);
-        }
 
         private void Zombie_OnUnitBeforeKilled(MovableUnit obj)
         {
@@ -160,9 +109,6 @@ namespace Assets.Scripts
 
             SpawnCollectables(obj.transform, zombieCollectablePrefabs, Mathf.FloorToInt(obj.SizeScale * 5));
             balances.PlayerScore++;
-            playerScoreInfo.Score = balances.PlayerScore;
-            score.UpdatePlayer(playerId, playerScoreInfo, true);
-            balance.SetCoinX(balances.CurrentCoinX);
         }
         private void Zombie_OnUnitKilled(MovableUnit obj) =>
             StartCoroutine(PositionZombie((Zombie)obj, building));
@@ -173,24 +119,9 @@ namespace Assets.Scripts
 
             SpawnCollectables(obj.transform, spiderCollectablePrefabs, Mathf.FloorToInt(obj.SizeScale * 20));
             balances.PlayerScore += 10;
-            playerScoreInfo.Score = balances.PlayerScore;
-            score.UpdatePlayer(playerId, playerScoreInfo, true);
-            balance.SetCoinX(balances.CurrentCoinX);
         }
         private void Spider_OnUnitKilled(MovableUnit obj) =>
             StartCoroutine(PositionSpider((Spider)obj, building));
-
-
-        private void Balances_OnBalanceChanged(CollectableType arg1, int arg2) =>
-            UpdateHUDBalances(arg1, arg2);
-
-        private void Perks_OnPerkChanged(PerkType arg1, int arg2)
-        {
-            // update HUD button (weapon icon)
-            // update markers maybe (larger shield, shield color, etc.)
-            player.UpdatePerk(arg1, arg2);
-            UpdateHUDPerk(arg1, arg2);
-        }
 
         private Zombie GetZombie()
         {
@@ -353,11 +284,6 @@ namespace Assets.Scripts
             }
 
             zombie.FadeIn();
-        }
-
-        internal void CleanupLevel()
-        {
-            player.ToggleInput(false);
         }
     }
 }

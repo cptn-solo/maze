@@ -1,13 +1,35 @@
-﻿using System;
+﻿using Assets.Scripts.UI;
+using System;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace Assets.Scripts
 {
     public class PlayerBalanceService : MonoBehaviour
     {
         public event Action<CollectableType, int> OnBalanceChanged;
-        public int PlayerScore { get; set; } = 0; // zombies eliminated by player
-        public int EnemyScore { get; set; } = 0;// player eliminated by zombies and other npc
+        public event Action<int> OnPlayerScoreChanged;
+        public event Action<int> OnEnemyScoreChanged;
+        
+        private int playerScore = 0;
+        private int enemyScore = 0;
+        public int PlayerScore {
+            get => playerScore;
+            set
+            {
+                playerScore = value;
+                OnPlayerScoreChanged?.Invoke(playerScore);
+            }
+        }// zombies eliminated by player
+        public int EnemyScore {
+            get => enemyScore;
+            set
+            {
+                enemyScore = value;
+                OnEnemyScoreChanged?.Invoke(enemyScore);
+            }
+
+        }// player eliminated by zombies and other npc
 
         public int CurrentCoinX =>
             1 + Mathf.FloorToInt((PlayerScore / (1 + EnemyScore * .2f)) * .1f);

@@ -18,11 +18,25 @@ namespace Assets.Scripts.UI
         private bool prevIsPortrait;
         private readonly Dictionary<string, LeaderBoardItemView> leaders = new();
 
+        private const string playerId = "Player";
+        private const string enemyId = "NPCs";
+
+        private UnitInfo playerScoreInfo =
+            new(playerId, Color.green, 0, Color.green, 0, 0, Color.green);
+        private UnitInfo enemyScoreInfo =
+            new(enemyId, Color.yellow, 0, Color.red, 0, 0, Color.yellow);
+
         private void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
             listRectTransform = layoutGroup.GetComponent<RectTransform>();
             canvasScaler = GetComponent<CanvasScaler>();
+
+            AddPlayer(playerId);
+            UpdatePlayer(playerId, playerScoreInfo, true);
+
+            AddPlayer(enemyId);
+            UpdatePlayer(enemyId, enemyScoreInfo, false);
         }
 
         internal void AddPlayer(string id)
@@ -42,7 +56,19 @@ namespace Assets.Scripts.UI
             }
         }
 
-        internal void UpdatePlayer(string id, UnitInfo playerInfo, bool localPlayer)
+        internal void UpdatePlayer(int score)
+        {
+            playerScoreInfo.Score = score;
+            UpdatePlayer(playerId, playerScoreInfo, true);
+        }
+
+        internal void UpdateEnemy(int score)
+        {
+            enemyScoreInfo.Score = score;
+            UpdatePlayer(enemyId, enemyScoreInfo, false);
+        }
+
+        private void UpdatePlayer(string id, UnitInfo playerInfo, bool localPlayer)
         {
             if (leaders.TryGetValue(id, out var leaderView) && !leaderView.gameObject.IsDestroyed())
             {
