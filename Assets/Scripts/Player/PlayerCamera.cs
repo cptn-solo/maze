@@ -81,12 +81,10 @@ namespace Assets.Scripts
                 PositionCameraTowardsCenter();
             }
             else
-            {
-                if (touches.RightDelta is Vector2 delta && delta != default)
-                    Look(delta);
-
-                UpdateFocusPoint();
+            {                
                 PositionCameraBehindPlayer();
+                UpdateFocusPoint();
+
             }
         }
 
@@ -125,17 +123,17 @@ namespace Assets.Scripts
             sceneCamera.transform.position = camPosition;
         }
 
-        private void Look(Vector2 lookVector)
+        private bool Look(Vector2 lookVector)
         {
             if (!CameraControl)
-                return;
+                return false;
 
             if (lookVector == default)
-                return;
+                return false;
 
             if (float.IsInfinity(lookVector.x) ||
                 float.IsNaN(lookVector.x))
-                return;
+                return false;
 
             var toCamera = PlaneOffset();
             var angle = -lookVector.x * CameraSencitivity * .05f;
@@ -151,6 +149,8 @@ namespace Assets.Scripts
             camPosition = AvoidObstacles(pos);
 
             sceneCamera.transform.position = camPosition;
+            
+            return true;
         }
 
         private IEnumerator ScreenOrientationMonitor()
@@ -177,7 +177,11 @@ namespace Assets.Scripts
                 Focus();
                 return;
             }
-            
+            var freeLook = false;
+            if (touches.RightDelta is Vector2 delta && delta != default)
+                freeLook = Look(delta);
+
+
             bool notMoved = 
                 !previousFocusPoint.Equals(default) && 
                 !focusPoint.Equals(default) &&
@@ -208,7 +212,7 @@ namespace Assets.Scripts
                 if (!isFollowing)
                     StartCoroutine(FollowCoroutine());
             }
-            if (!notMoved)
+            if (!freeLook && !notMoved)
                 StrafeAfterMove();
 
             sceneCamera.transform.LookAt(focusPoint);

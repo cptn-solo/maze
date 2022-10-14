@@ -209,7 +209,7 @@ namespace Assets.Scripts
                 var randNoice = 
                     Vector3.forward * Random.Range(-.1f, .1f) + 
                     Vector3.right * Random.Range(-.1f, .1f) + 
-                    Vector3.up * Random.Range(-.1f, .1f);
+                    Vector3.up * Random.Range(.1f, .2f);
                 var pos = location.position + Vector3.up * (.05f + .02f * i);
 
                 Instantiate(prefab, pos + randNoice, Quaternion.identity, collectables.transform);
