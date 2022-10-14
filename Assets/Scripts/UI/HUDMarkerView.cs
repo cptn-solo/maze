@@ -28,21 +28,22 @@ namespace Assets.Scripts.UI
         private void Awake()
         {
             rectTransform = GetComponent<RectTransform>();
-            cam = Camera.main;
         }
 
-        public void Attach(RectTransform parent, Transform worldTarget, float scale)
+        public void Attach(RectTransform parent, Transform worldTarget, float scale, Camera cam)
         {
             rectTransform.SetParent(parent);
             rectTransform.localScale *= scale;
 
             this.worldTarget = worldTarget;
+            this.cam = cam;
         }
 
         public void Detach()
         {
             rectTransform.parent = null;
             worldTarget = null;
+            this.cam = null;
             this.gameObject.SetActive(false);
         }
 

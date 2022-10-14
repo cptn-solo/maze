@@ -150,6 +150,12 @@ MonoBehaviour:
   outOfSceneYTreshold: -10
   movePauseForRangeAttack: 2
   movePauseForMeleeAttack: 0.5
+  diedLayer:
+    serializedVersion: 2
+    m_Bits: 65536
+  aliveLayer:
+    serializedVersion: 2
+    m_Bits: 64
   bombPrefab: {fileID: 5815325690482891423, guid: baa56d58c8cb2d54e92adb7336406ccb,
     type: 3}
   landminePrefab: {fileID: 5815325690482891423, guid: 6168098ca70b2b6489a25f203cfe9596,
@@ -254,6 +260,7 @@ MonoBehaviour:
   obstructionMask:
     serializedVersion: 2
     m_Bits: 129
+  avoidObstacles: 0
   attachedCameraAngle: 37
   attachedCameraMaxDistance: 1.5
   attachedCameraMinDistance: 0.5

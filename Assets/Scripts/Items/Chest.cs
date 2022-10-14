@@ -10,6 +10,11 @@ namespace Assets.Scripts
         
         [SerializeField] private LayerMask openMask;
         [SerializeField] private float dropCooldownTime = 60.0f;
+        [SerializeField] private float dropPassableTime = 5.0f;
+
+        [SerializeField] private LayerMask maskWhenOpen;
+        [SerializeField] private LayerMask maskWhenClosed;
+        [SerializeField] private Transform passableBody;
 
         private const string AnimOpenBool = "open";
         private bool nearby = false;
@@ -58,10 +63,17 @@ namespace Assets.Scripts
 
             dropped = true;
 
+            passableBody.gameObject.layer = maskWhenOpen.FirstSetLayer();
+
             while (nearby)
                 yield return new WaitForSeconds(1.0f);
 
-            yield return new WaitForSeconds(dropCooldownTime);
+            
+            yield return new WaitForSeconds(dropPassableTime);
+            
+            passableBody.gameObject.layer = maskWhenClosed.FirstSetLayer();
+
+            yield return new WaitForSeconds(dropCooldownTime - dropPassableTime);
             
             dropped = false;
             nearby = false;

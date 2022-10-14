@@ -7,8 +7,12 @@ namespace Assets.Scripts.UI
     {
         [SerializeField] private GameObject markerPrefab;
         private readonly Dictionary<Transform, HUDMarkerView> markers = new();
+        
+        private Camera cam;
 
         private RectTransform rectTransform;
+        public void AttachCamera(Camera cam) =>
+            this.cam = cam;
 
         internal HUDMarkerView AddEnemy(IVisibleObject enemy, EnemyType enemyType) => 
             AddUnit(enemy);
@@ -25,7 +29,7 @@ namespace Assets.Scripts.UI
 
             var marker = Instantiate(markerPrefab).GetComponent<HUDMarkerView>();
             marker.OnMarkerBeingDestroyed += Marker_OnMarkerBeingDestroyed;
-            marker.Attach(rectTransform, transform, rectTransform.localScale.x);
+            marker.Attach(rectTransform, transform, rectTransform.localScale.x, cam);
             markers.Add(transform, marker);
 
             return marker;

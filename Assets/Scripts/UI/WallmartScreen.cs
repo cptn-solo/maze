@@ -19,6 +19,9 @@ namespace Assets.Scripts.UI
 
         public void ShowItemCard(PerkInfo info, string playerId, int playerBalance)
         {
+            if (info.WallmartItem == WallmartItem.NA)
+                return;
+
             var itemIndex = Array.IndexOf(itemIndexes, info.WallmartItem);
             var item = items[itemIndex];
 

@@ -27,6 +27,9 @@ namespace Assets.Scripts
         [SerializeField] private float movePauseForRangeAttack = 2.0f;
         [SerializeField] private float movePauseForMeleeAttack = .5f;
 
+        [SerializeField] protected LayerMask diedLayer;
+        [SerializeField] protected LayerMask aliveLayer;
+
         protected Building building;
 
         protected Vector2 moveDir;
@@ -124,10 +127,15 @@ namespace Assets.Scripts
             OnAwakeAction?.Invoke();
         }
 
-        protected virtual void OnGotKilled() =>
+        protected virtual void OnGotKilled()
+        {
+            gameObject.layer = diedLayer.FirstSetLayer();
             OnUnitBeforeKilled?.Invoke(this);
+        }
 
-        protected virtual void OnResurrected() { }
+        protected virtual void OnResurrected() {
+            gameObject.layer = aliveLayer.FirstSetLayer();
+        }
         protected virtual void OnRangeAttack()
         {
             if (!isCancelMoveOnRangeAttack)

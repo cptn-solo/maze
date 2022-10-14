@@ -162,9 +162,6 @@ namespace Assets.Scripts
             foreach (var perk in new[] {
                 PerkType.NA,
                 PerkType.Power,
-                PerkType.Uzi,
-                PerkType.Shotgun,
-                PerkType.Minigun,
             })
             {
                 var key = PlayerPerkService.PerkKey(perk);
@@ -175,10 +172,13 @@ namespace Assets.Scripts
             foreach (var perk in new[] {
                 PerkType.Shield,
                 PerkType.Shuriken,
+                PerkType.Uzi,
+                PerkType.Shotgun,
+                PerkType.Minigun,
             })
             {
                 var key = PlayerPerkService.PerkKey(perk);
-                PlayerPrefs.SetInt(key, 1);
+                PlayerPrefs.SetInt(key, 3);
             }
 
         }

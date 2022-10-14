@@ -62,6 +62,15 @@ MonoBehaviour:
   openMask:
     serializedVersion: 2
     m_Bits: 64
+  dropCooldownTime: 60
+  dropPassableTime: 5
+  maskWhenOpen:
+    serializedVersion: 2
+    m_Bits: 65536
+  maskWhenClosed:
+    serializedVersion: 2
+    m_Bits: 1
+  passableBody: {fileID: 8360378857913670214}
 --- !u!1 &2203950043119510309
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,6 +114,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: "\u0441\u0443\u043D\u0434\u0443\u043A"
+      objectReference: {fileID: 0}
+    - target: {fileID: 2628385038402765480, guid: 8e609090fdddfac4bad1c0892add3193,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3400841042306701330, guid: 8e609090fdddfac4bad1c0892add3193,
         type: 3}

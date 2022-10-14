@@ -52,6 +52,8 @@ namespace Assets.Scripts
             this.markers = markers;
             this.player = player;
             this.balances = balances;
+
+            this.markers.AttachCamera(sceneCamera);
             
             soundEvents = GetComponentInChildren<IngameSoundEvents>();
 
@@ -204,7 +206,13 @@ namespace Assets.Scripts
             for (int i = 0; i < cnt; i++)
             {
                 var prefab = source[Random.Range(0, source.Length)];
-                Instantiate(prefab, location.position + Vector3.up * .05f + .01f * i * location.forward, Quaternion.identity, collectables.transform);
+                var randNoice = 
+                    Vector3.forward * Random.Range(-.1f, .1f) + 
+                    Vector3.right * Random.Range(-.1f, .1f) + 
+                    Vector3.up * Random.Range(-.1f, .1f);
+                var pos = location.position + Vector3.up * (.05f + .02f * i);
+
+                Instantiate(prefab, pos + randNoice, Quaternion.identity, collectables.transform);
             }
         }
 

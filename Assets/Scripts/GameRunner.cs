@@ -202,7 +202,7 @@ namespace Assets.Scripts
                 _ => default
             };
             ;
-            if (!perkInfo.Equals(default))
+            if (!perkInfo.Equals(default) && perkInfo.WallmartItem != WallmartItem.NA)
                 uiManager.WallmartApproached(perkInfo, arg2, money);
         }
 

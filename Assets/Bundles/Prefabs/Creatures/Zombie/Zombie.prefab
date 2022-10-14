@@ -239,6 +239,17 @@ MonoBehaviour:
   rotationSpeed: 360
   fadeSpeed: 1
   jumpImpulse: 0
+  outOfSceneYTreshold: -10
+  movePauseForRangeAttack: 2
+  movePauseForMeleeAttack: 0.5
+  diedLayer:
+    serializedVersion: 2
+    m_Bits: 65536
+  aliveLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  rangeAttackEnabled: 0
+  rangeAttackInterval: 3
 --- !u!114 &6076792054930970521
 MonoBehaviour:
   m_ObjectHideFlags: 0
