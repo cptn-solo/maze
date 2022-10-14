@@ -69,7 +69,14 @@ namespace Assets.Scripts
         private float sizeScale = 1.0f;
         private bool isCancelMoveOnDealingDamage;
         private bool isCancelMoveOnRangeAttack;
+        
+        private VisibilityChecker visibilityChecker;
 
+        public virtual void AttachCamera(Camera cam)
+        {
+            sceneCamera = cam;
+            visibilityChecker.AttachCamera(cam);
+        }
         public float SizeScale
         {
             get => sizeScale;
@@ -106,11 +113,10 @@ namespace Assets.Scripts
 
         protected virtual void OnAwake()
         {
-            sceneCamera = Camera.main;
-
             rb = GetComponent<Rigidbody>();
             col = GetComponent<Collider>();
             battle = GetComponent<Battle>();
+            visibilityChecker = GetComponent<VisibilityChecker>();
 
             battle.OnBattleInfoChange += Battle_OnBattleInfoChange;
             battle.OnTakingDamage += Battle_OnTakingDamage;
@@ -219,6 +225,9 @@ namespace Assets.Scripts
 
         private void Update()
         {
+            if (sceneCamera == null)
+                return;
+
             ProcessMove();
 
             ToggleTranslateDir();
@@ -251,6 +260,9 @@ namespace Assets.Scripts
 
         private void FixedUpdate()
         {
+            if (sceneCamera == null)
+                return;
+
             if (rb.position.y < outOfSceneYTreshold)
             {
                 OnUnitKilled?.Invoke(this);

@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts
@@ -16,6 +15,8 @@ namespace Assets.Scripts
         [SerializeField] private GameObject[] zombieCollectablePrefabs;
         [SerializeField] private GameObject[] spiderCollectablePrefabs;
         [SerializeField] private GameObject[] chestCollectablePrefabs;
+        
+        [SerializeField] private Building building;
 
         [SerializeField] private Color playerMarkerColor = Color.green;
         [SerializeField] private Color zombieMarkerColor = Color.yellow;
@@ -29,7 +30,6 @@ namespace Assets.Scripts
 
         private GameObject enemies;
         private GameObject collectables;
-        private Building building;
         
         private Zombie[] zombies = new Zombie[10];
         private Spider[] spiders = new Spider[10];
@@ -58,6 +58,19 @@ namespace Assets.Scripts
             this.player.AttachCamera(sceneCamera);
             this.player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
             this.player.OnUnitKilled += Player_OnUnitKilled;
+
+            enemies = new GameObject("Enemies");
+            collectables = new GameObject("Collectables");
+
+            chests = building.GetComponentsInChildren<Chest>();
+
+            foreach (var chest in chests)
+                chest.OnChestOpened += Chest_OnChestOpened;
+            
+            foreach (var key in enemyKeys)
+                StartCoroutine(StartSpawnEnemy(key));
+
+            StartCoroutine(PositionPlayer(player, building, true));
         }
         internal void CleanupLevel()
         {
@@ -68,27 +81,6 @@ namespace Assets.Scripts
 
         void Start()
         {
-            enemies = new GameObject("Enemies");
-            collectables = new GameObject("Collectables");
-
-            building = GetSceneBuilding();
-
-            chests = building.GetComponentsInChildren<Chest>();
-            foreach (var chest in chests)
-                chest.OnChestOpened += Chest_OnChestOpened;
-
-            foreach(var key in enemyKeys)
-                StartCoroutine(StartSpawnEnemy(key));
-            
-            StartCoroutine(PositionPlayer(player, building, true));
-        }
-        private Building GetSceneBuilding()
-        {
-            return SceneManager.GetActiveScene().
-                GetRootGameObjects().
-                Select(x => x.GetComponent<Building>()).
-                Where(x => x != null).
-                FirstOrDefault();
         }
 
         private void Chest_OnChestOpened(Chest obj)
@@ -130,10 +122,13 @@ namespace Assets.Scripts
 
             var zombie = Instantiate(prefab).GetComponent<Zombie>();
             zombie.transform.SetParent(enemies.transform);
+
             zombie.OnUnitBeforeKilled += Zombie_OnUnitBeforeKilled;
             zombie.OnUnitKilled += Zombie_OnUnitKilled;
             zombie.SoundEvents = soundEvents;
             zombie.SizeScale = Random.Range(.5f, 2.0f);
+
+            zombie.AttachCamera(sceneCamera);
 
             zombie.gameObject.SetActive(false);
             
@@ -150,6 +145,8 @@ namespace Assets.Scripts
             spider.OnUnitKilled += Spider_OnUnitKilled;
             spider.SoundEvents = soundEvents;
             spider.SizeScale = Random.Range(.5f, 2.0f);
+
+            spider.AttachCamera(sceneCamera);
 
             spider.gameObject.SetActive(false);
 

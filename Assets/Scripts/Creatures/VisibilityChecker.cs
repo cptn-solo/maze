@@ -37,6 +37,10 @@ namespace Assets.Scripts
 
             StopCoroutine(nameof(CheckForVisible));
         }
+        private void OnDestroy()
+        {
+            this.cam = null;
+        }
 
         private IEnumerator CheckForVisible()
         {
