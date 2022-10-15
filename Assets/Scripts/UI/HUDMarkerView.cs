@@ -41,7 +41,7 @@ namespace Assets.Scripts.UI
 
         public void Detach()
         {
-            rectTransform.parent = null;
+            rectTransform.SetParent(null);
             worldTarget = null;
             this.cam = null;
             this.gameObject.SetActive(false);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.UI
@@ -34,10 +35,28 @@ namespace Assets.Scripts.UI
 
             return marker;
         }
+        internal void RemoveUnit(IVisibleObject unit)
+        {
+            var transform = unit.Transform;
+            RemoveMarker(transform);
+            unit.OnVisibilityChanged -= Unit_OnVisibilityChanged;
+            unit.OnInfoChanged -= Unit_OnInfoChanged;
+        }
+        internal void RemoveMarker(Transform unitTransform)
+        {
+            if (markers.TryGetValue(unitTransform, out var marker))
+            {
+                markers.Remove(unitTransform);
+                marker.Detach();
+                Destroy(marker.gameObject);
+            }
+        }
+
 
         private void Marker_OnMarkerBeingDestroyed(HUDMarkerView arg1, Transform arg2)
         {
-            markers.Remove(arg2);
+            if (arg2 != null && markers.TryGetValue(arg2, out var _))
+                markers.Remove(arg2);
         }
 
         private void Unit_OnInfoChanged(object sender, UnitInfo e)
@@ -52,17 +71,6 @@ namespace Assets.Scripts.UI
             var owner = (IVisibleObject)sender;
             if (markers.TryGetValue(owner.Transform, out var marker))
                 marker.gameObject.SetActive(e);
-        }
-
-        internal void RemoveMarker(IVisibleObject unit)
-        {
-            var transform = unit.Transform;
-            if (markers.TryGetValue(transform, out var marker))
-            {
-                unit.OnVisibilityChanged -= Unit_OnVisibilityChanged;
-                marker.Detach();
-                Destroy(marker.gameObject);
-            }
         }
 
         private void Awake() => rectTransform = GetComponent<RectTransform>();

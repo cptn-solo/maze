@@ -81,6 +81,9 @@ namespace Assets.Scripts
             this.player.SoundEvents = null;
             this.player.OnUnitBeforeKilled -= Player_OnUnitBeforeKilled;
             this.player.OnUnitKilled -= Player_OnUnitKilled;
+
+            if (player.TryGetComponent<Visibility>(out var unit))
+                markers.RemoveUnit(unit);
         }
 
         void Start()
