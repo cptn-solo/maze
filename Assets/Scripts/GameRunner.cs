@@ -254,6 +254,7 @@ namespace Assets.Scripts
         {
             var levelSceneName = idx switch
             {                
+                3 => "Level4",
                 2 => "Level3",
                 1 => "Level2",
                 _ => "Level1"
