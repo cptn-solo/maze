@@ -11,7 +11,6 @@ namespace Assets.Scripts
     {
         [SerializeField] private EnemyType[] enemyKeys;
         [SerializeField] private GameObject[] enemyPrefabs;
-        [SerializeField] private GameObject[] buildingPrefabs;
         [SerializeField] private GameObject[] zombieCollectablePrefabs;
         [SerializeField] private GameObject[] spiderCollectablePrefabs;
         [SerializeField] private GameObject[] chestCollectablePrefabs;
