@@ -116,5 +116,7 @@ namespace Assets.Scripts
         public int ShieldLevel => CurrentPerk(PerkType.Shield);
         public bool ShieldUnlocked => ShieldLevel > 0;
 
+        public int UnlockedLevel => CurrentPerk(PerkType.Level);
+
     }
 }

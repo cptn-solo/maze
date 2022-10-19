@@ -11,6 +11,7 @@ namespace Assets.Scripts
         Minigun,
         Shotgun,
         Uzi,
+        Level,
     }
 
     public enum PlayerPerk

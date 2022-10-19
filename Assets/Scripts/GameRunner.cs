@@ -247,17 +247,27 @@ namespace Assets.Scripts
             var gameMenu = rootObjects.Select(x => x.GetComponent<GameMenu>()).FirstOrDefault();
 
             if (gameMenu != default)
+            {
+                foreach (var lvl  in gameMenu.LevelButtons)
+                {
+                    lvl.Unlocked = perks.UnlockedLevel >= lvl.LevelId;
+                }
                 gameMenu.OnLevelSelected += GameMenu_OnLevelSelected;
+
+            }
         }
 
-        private void GameMenu_OnLevelSelected(int idx)
+        private void GameMenu_OnLevelSelected(int levelId)
         {
-            var levelSceneName = idx switch
+            if (perks.UnlockedLevel < levelId)
+                return;
+
+            var levelSceneName = levelId switch
             {                
-                4 => "Level5",
-                3 => "Level4",
-                2 => "Level3",
-                1 => "Level2",
+                5 => "Level5",
+                4 => "Level4",
+                3 => "Level3",
+                2 => "Level2",
                 _ => "Level1"
             };
             
