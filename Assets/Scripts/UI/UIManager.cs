@@ -63,11 +63,15 @@ namespace Assets.Scripts.UI
         private void Game_OnPlayerSpawned(object sender, System.EventArgs e)
         {
             HUDScreen.gameObject.SetActive(true);
+            Leaderboard.gameObject.SetActive(true);
+            Markers.gameObject.SetActive(true);
         }
 
         private void Game_OnPlayerKilled(object sender, System.EventArgs e)
         {
             HUDScreen.gameObject.SetActive(false);
+            Leaderboard.gameObject.SetActive(false);
+            Markers.gameObject.SetActive(false);
         }
 
         private void BuyWallmartItem(WallmartItem item, string playerId, PerkInfo info) =>
@@ -79,12 +83,18 @@ namespace Assets.Scripts.UI
         private void ShowSettingsScreen()
         {
             HUDScreen.gameObject.SetActive(false);
+            Leaderboard.gameObject.SetActive(false);
+            Markers.gameObject.SetActive(false);
+
             SettingsScreen.gameObject.SetActive(true);
         }
 
         private void CloseSettingsScreen()
         {
             HUDScreen.gameObject.SetActive(true);
+            Leaderboard.gameObject.SetActive(true);
+            Markers.gameObject.SetActive(true);
+
             SettingsScreen.gameObject.SetActive(false);
         }
 

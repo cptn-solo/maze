@@ -231,16 +231,15 @@ namespace Assets.Scripts
             player.Building = building;
 
             player.OnRespawned(sp.position, sp.rotation);
+            player.FadeIn();
+
+            OnPlayerSpawned?.Invoke(player, null);
 
             if (player.TryGetComponent<Visibility>(out var unit))
             {
                 unit.MarkerColor = playerMarkerColor;
                 markers.AddUnit(unit);
             }
-
-            player.FadeIn();
-
-            OnPlayerSpawned?.Invoke(player, null);
 
             player.ToggleInput(true);
         }

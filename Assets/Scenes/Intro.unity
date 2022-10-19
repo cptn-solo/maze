@@ -248,17 +248,22 @@ PrefabInstance:
     - target: {fileID: 72654366071587359, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 72654366071587359, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2828380664000034294, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
         type: 3}
       propertyPath: m_Name
       value: LeaderBoardCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2828380664000034294, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4458418253515371315, guid: e36b1aa56e6fda349b1d43816bbd9f6a,
         type: 3}
@@ -1685,6 +1690,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MarkersCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7512645509853922208, guid: cb1f637149e1d834aaf781bfd861891a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7512645509853922209, guid: cb1f637149e1d834aaf781bfd861891a,
         type: 3}
