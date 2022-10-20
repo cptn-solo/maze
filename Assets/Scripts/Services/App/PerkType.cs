@@ -34,6 +34,8 @@ namespace Assets.Scripts
     public struct PerkInfo
     {
         public WallmartItem WallmartItem;
+        public int LevelId;
+
         public WeaponType WeaponType;
 
         public int Price;

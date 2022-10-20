@@ -51,6 +51,7 @@ namespace Assets.Scripts
             player.OnWeaponSelected += Player_OnWeaponSelected;
             player.OnActiveWeaponAttack += Player_OnActiveWeaponAttack;
             player.OnWallmartApproached += Player_OnWallmartApproached;
+            player.OnLevelWallmartApproached += Player_OnLevelWallmartApproached;
             player.OnWallmartLeft += Player_OnWallmartLeft;
 
             player.Balances = Balances;
@@ -185,23 +186,34 @@ namespace Assets.Scripts
 
         private void Player_OnWallmartLeft() =>
             uiManager.WallmartLeft();
+        private void Player_OnLevelWallmartApproached(int levelId, string playerId)
+        {
+            var currentPerk = Perks.CurrentPerk(PerkType.Level);
+            if (currentPerk >= levelId) //unlocked, tp embedded into the mart will handle the rest
+                return;
 
-        private void Player_OnWallmartApproached(WallmartItem arg1, string arg2)
+            var money = Balances.CurrentBalance(CollectableType.Coin);
+            var perkInfo = LevelPerks.PerkForWallmartItem(levelId);
+            if (!perkInfo.Equals(default) && perkInfo.WallmartItem != WallmartItem.NA)
+                uiManager.WallmartApproached(perkInfo, playerId, money);
+        }
+        private void Player_OnWallmartApproached(WallmartItem itemType, string playerId)
         {
             var money = Balances.CurrentBalance(CollectableType.Coin);
-            var currentPerk = Perks.CurrentPerk(arg1);
-            var perkInfo = arg1 switch
+            var currentPerk = Perks.CurrentPerk(itemType);
+            var perkInfo = itemType switch
             {
                 WallmartItem.Uzi => UziPerks.PerkForWallmartItem(currentPerk),
                 WallmartItem.Shotgun => ShotgunPerks.PerkForWallmartItem(currentPerk),
                 WallmartItem.Minigun => MinigunPerks.PerkForWallmartItem(currentPerk),
                 WallmartItem.Shield => ShieldPerks.PerkForWallmartItem(currentPerk),
                 WallmartItem.Shuriken => ShurikenPerks.PerkForWallmartItem(currentPerk),
+                WallmartItem.Level => LevelPerks.PerkForWallmartItem(currentPerk),
                 _ => default
             };
             ;
             if (!perkInfo.Equals(default) && perkInfo.WallmartItem != WallmartItem.NA)
-                uiManager.WallmartApproached(perkInfo, arg2, money);
+                uiManager.WallmartApproached(perkInfo, playerId, money);
         }
 
         internal bool BuyItem(WallmartItem item, string playerId, PerkInfo info)
@@ -275,7 +287,8 @@ namespace Assets.Scripts
             {
                 if (player != null)
                     player.ToggleInput(false);
-
+                
+                uiManager.Game.OnLevelPortalEntered -= GameMenu_OnLevelSelected;
                 uiManager.Game.CleanupLevel();
                 uiManager.Game = default;
             }
@@ -291,17 +304,20 @@ namespace Assets.Scripts
         {
             Debug.Log($"Level loaded: {levelSceneName}");
 
-            uiManager.Game = SceneManager.GetActiveScene().GetRootGameObjects()
+            var game = SceneManager.GetActiveScene().GetRootGameObjects()
                 .Select(x => x.GetComponent<Game>())
                 .Where(x => x != null)
                 .FirstOrDefault();
 
-            if (uiManager.Game != default)
+            if (game != default)
             {
+                uiManager.Game = game;
+
                 if (player == null)
                     CreatePlayer();
 
-                uiManager.Game.AttachToRunner(player, uiManager.Markers, balances);
+                game.OnLevelPortalEntered += GameMenu_OnLevelSelected;
+                game.AttachToRunner(player, uiManager.Markers, balances);
                 Debug.Log($"Level attached: {levelSceneName}");
             }
         }

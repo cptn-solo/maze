@@ -5,13 +5,16 @@ namespace Assets.Scripts
 
     public class Wallmart : MonoBehaviour
     {
-        [SerializeField] private WallmartItem itemType;
+        [SerializeField] protected WallmartItem itemType;
         [SerializeField] private LayerMask buyerMask;
+
+        protected virtual void ShowUIWallmart(Player player) =>
+            player.ShowWallmart(itemType);
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.CheckColliderMask(buyerMask) && other.TryGetComponent<Player>(out var player))
-                player.ShowWallmart(itemType);
+                ShowUIWallmart(player);
             
         }
         private void OnTriggerExit(Collider other)

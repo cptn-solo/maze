@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 4432949135300203340}
   - component: {fileID: 140906050}
   - component: {fileID: 5833617177888138373}
-  - component: {fileID: 1370616449236596092}
+  - component: {fileID: 3738253032322511883}
   m_Layer: 0
   m_Name: WallmartLevel
   m_TagString: Untagged
@@ -206,7 +206,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.16524668, y: 0.1495142, z: 0.09642545}
   m_Center: {x: 0.00064169616, y: 0.85027456, z: 0.008212727}
---- !u!114 &1370616449236596092
+--- !u!114 &3738253032322511883
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -215,13 +215,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8503637481897142906}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db18b6937ff49844d859bd7f4880db0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 7bc0e6a138461b642875da56cdf3ff81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemType: 0
+  itemType: 7
   buyerMask:
     serializedVersion: 2
     m_Bits: 64
+  thumbnailAnimator: {fileID: 8445261251551459002}
+  cellCube: {fileID: 7253908823800031417}
+  tp: {fileID: 6339799855093350413}
+  levelId: 1
 --- !u!1 &9187251894591491283
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,6 +407,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 73a4af26ffe271247a4eb568cfc5def1, type: 3}
+--- !u!114 &6339799855093350413 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4053952884448678383, guid: 73a4af26ffe271247a4eb568cfc5def1,
+    type: 3}
+  m_PrefabInstance: {fileID: 8050737162927362530}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f242feaf9dc7c74c9b3f0e6ca006565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7619185240408527287 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 433821453169803349, guid: 73a4af26ffe271247a4eb568cfc5def1,

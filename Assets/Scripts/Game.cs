@@ -29,7 +29,7 @@ namespace Assets.Scripts
 
         private GameObject enemies;
         private GameObject collectables;
-        
+        private WallmartLevel[] levelMarts;
         private Zombie[] zombies = new Zombie[10];
         private Spider[] spiders = new Spider[10];
         private Chest[] chests = new Chest[10];
@@ -37,6 +37,7 @@ namespace Assets.Scripts
 
         public event EventHandler OnPlayerSpawned;
         public event EventHandler OnPlayerKilled;
+        public event Action<int> OnLevelPortalEntered;
 
         private HUDMarkersView markers;
         private Player player;
@@ -61,11 +62,20 @@ namespace Assets.Scripts
             this.player.OnUnitBeforeKilled += Player_OnUnitBeforeKilled;
             this.player.OnUnitKilled += Player_OnUnitKilled;
 
+            this.player.Perks.OnPerkChanged += Perks_OnPerkChanged;
+
             enemies = new GameObject("Enemies");
             collectables = new GameObject("Collectables");
 
-            chests = building.GetComponentsInChildren<Chest>();
+            levelMarts = building.GetComponentsInChildren<WallmartLevel>();
+            var unlockedLevel = this.player.Perks.CurrentPerk(PerkType.Level);
+            foreach (var mart in levelMarts)
+            {
+                mart.Unlocked = unlockedLevel >= mart.LevelId;
+                mart.OnEnterLevelPortal += Mart_OnEnterLevelPortal;
+            }
 
+            chests = building.GetComponentsInChildren<Chest>();
             foreach (var chest in chests)
                 chest.OnChestOpened += Chest_OnChestOpened;
             
@@ -74,15 +84,33 @@ namespace Assets.Scripts
 
             StartCoroutine(PositionPlayer(player, building, true));
         }
+
+        private void Mart_OnEnterLevelPortal(int levelId) =>
+            OnLevelPortalEntered?.Invoke(levelId);
+
         internal void CleanupLevel()
         {
             this.player.AttachCamera(null);
             this.player.SoundEvents = null;
             this.player.OnUnitBeforeKilled -= Player_OnUnitBeforeKilled;
             this.player.OnUnitKilled -= Player_OnUnitKilled;
+            this.player.Perks.OnPerkChanged -= Perks_OnPerkChanged;
+
+            foreach (var mart in levelMarts)
+                mart.OnEnterLevelPortal -= Mart_OnEnterLevelPortal;
+
+            foreach (var chest in chests)
+                chest.OnChestOpened -= Chest_OnChestOpened;
 
             if (player.TryGetComponent<Visibility>(out var unit))
                 markers.RemoveUnit(unit);
+        }
+
+        private void Perks_OnPerkChanged(PerkType arg1, int arg2)
+        {
+            if (arg1 == PerkType.Level)
+                foreach (var mart in levelMarts)
+                    mart.Unlocked = arg2 >= mart.LevelId;
         }
 
         void Start()

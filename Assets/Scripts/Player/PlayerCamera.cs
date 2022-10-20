@@ -237,7 +237,7 @@ namespace Assets.Scripts
 
             var optimalDistance = attachedCameraDistance;
 
-            while (isFollowing)
+            while (isFollowing && sceneCamera != null)
             {
                 var toCamera = PlaneOffset();
                 var distance = toCamera.magnitude;
@@ -279,7 +279,7 @@ namespace Assets.Scripts
             var timeAtSpeed = Mathf.Abs(angle) / attachedCameraOrbitSpeed;
             var elapsedTime = 0f;
 
-            while (elapsedTime < timeAtSpeed)
+            while (elapsedTime < timeAtSpeed && sceneCamera != null)
             {
                 if (previousFocusPoint != focusPoint)
                     break;

@@ -156,7 +156,7 @@ namespace Assets.Scripts
             })
             {
                 var key = PlayerBalanceService.BalanceKey(collectable);
-                PlayerPrefs.SetInt(key, 5001);
+                PlayerPrefs.SetInt(key, 200001);
             }
 
             // Most perks initialized as locked:
@@ -169,6 +169,16 @@ namespace Assets.Scripts
                 PlayerPrefs.SetInt(key, 0);
             }
 
+            // Some perks initialized as unlocked:
+            foreach (var perk in new[] {
+            PerkType.Level,
+            })
+            {
+                var key = PlayerPerkService.PerkKey(perk);
+                PlayerPrefs.SetInt(key, 1);
+            }
+
+
             // Some perks are initially unlocked:
             foreach (var perk in new[] {
                 PerkType.Shield,
@@ -176,7 +186,6 @@ namespace Assets.Scripts
                 PerkType.Uzi,
                 PerkType.Shotgun,
                 PerkType.Minigun,
-                PerkType.Level,
             })
             {
                 var key = PlayerPerkService.PerkKey(perk);

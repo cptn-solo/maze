@@ -579,6 +579,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5855822384464696494, guid: b00923fb6d6974a459fbf15151614c72,
+        type: 3}
+      propertyPath: levelId
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6667483435166758274, guid: b00923fb6d6974a459fbf15151614c72,
         type: 3}
       propertyPath: m_IsActive
@@ -609,6 +614,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8068443579534953994, guid: b00923fb6d6974a459fbf15151614c72,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: dde61317c1bf4384ebaae1cdec205f76, type: 2}
     - target: {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72,
         type: 3}
       propertyPath: m_Name

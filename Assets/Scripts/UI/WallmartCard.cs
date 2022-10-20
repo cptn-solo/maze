@@ -3,14 +3,13 @@ using Assets.Scripts.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class WallmartCard : MonoBehaviour
 {
     [SerializeField] private WallmartItem itemType;
     [SerializeField] private Button buyButton;
     [SerializeField] private Button cancelButton;
     [SerializeField] private TextMeshProUGUI priceLabel;
-    [SerializeField] private TextMeshProUGUI titleLabel;
+    [SerializeField] protected TextMeshProUGUI titleLabel;
     [SerializeField] private CardRow[] cardRows;
 
     private const string SpriteShield = "shield";
@@ -27,17 +26,10 @@ public class WallmartCard : MonoBehaviour
 
     private string playerId;
     
-    private PerkInfo perkInfo;
+    protected PerkInfo perkInfo;
 
-    public void SetPurchaseInfo(string playerId, PerkInfo info, bool enabled) {
-        this.playerId = playerId;
-        perkInfo = info;
-
-        priceLabel.color = enabled ? 
-            Color.green :
-            Color.red;
-        priceLabel.text = $"{perkInfo.Price}";
-
+    protected virtual void ApplyValues()
+    {
         if (perkInfo.WeaponPerks != null)
             for (int i = 0; i < perkInfo.WeaponPerks.Length; i++)
             {
@@ -48,7 +40,7 @@ public class WallmartCard : MonoBehaviour
 
                 SetRowValues(perk.Value, icon, caption, row);
             }
-        
+
         if (perkInfo.PlayerPerks != null)
             for (int i = 0; i < perkInfo.PlayerPerks.Length; i++)
             {
@@ -59,7 +51,19 @@ public class WallmartCard : MonoBehaviour
 
                 SetRowValues(perk.Value, icon, caption, row);
             }
+    }
 
+    public void SetPurchaseInfo(string playerId, PerkInfo info, bool enabled) {
+        this.playerId = playerId;
+        perkInfo = info;
+
+        priceLabel.color = enabled ? 
+            Color.green :
+            Color.red;
+        priceLabel.text = $"{perkInfo.Price}";
+        
+        ApplyValues();
+        
         buyButton.gameObject.SetActive(enabled);
         cancelButton.gameObject.SetActive(!enabled);
     }
