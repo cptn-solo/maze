@@ -446,8 +446,6 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 3935691605891884070, guid: c2ca2e6b7acd509449249dbc0c130581, type: 3}
   - {fileID: 3935691605891884070, guid: 28d247b7cea780f4784cba89c2ad016c, type: 3}
-  buildingPrefabs:
-  - {fileID: 8081746280652900843, guid: b00923fb6d6974a459fbf15151614c72, type: 3}
   zombieCollectablePrefabs:
   - {fileID: 1930925136135088810, guid: 496a099fe9a74684485a9a828f991b02, type: 3}
   - {fileID: 1930925136135088810, guid: f6da6478405beb449bb098577e6690a9, type: 3}

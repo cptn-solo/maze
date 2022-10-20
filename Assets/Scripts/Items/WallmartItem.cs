@@ -9,5 +9,6 @@
         Power,
         Shotgun,
         Uzi,
+        Level,
     }
 }

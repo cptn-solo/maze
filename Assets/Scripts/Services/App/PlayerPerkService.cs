@@ -32,6 +32,7 @@ namespace Assets.Scripts
                 WallmartItem.Shuriken => PerkType.Shuriken,
                 WallmartItem.Shield => PerkType.Shield,
                 WallmartItem.Power => PerkType.Power,
+                WallmartItem.Level => PerkType.Level,
                 _ => PerkType.NA,
             };
         }
